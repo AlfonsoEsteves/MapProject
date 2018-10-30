@@ -1,0 +1,15 @@
+How to keep groups of units (more or less) stable?
+
+Maybe units could have categories,
+And units search a certain category in some cycles' steps.
+And the step should also define the type of interaction:
+  damage
+  pick up resource
+  give resoure
+
+
+
+
+Another option is that units can transform resources
+  A unit that looks for blue, and when it finds blue, it either consumes it or changes it into red
+  A unit that looks for red, and when it finds red, it either consumes it or changes it into blue

@@ -1,0 +1,33 @@
+Allowing units to move at different speeds allow them to chase and reach one another, or escape.
+
+Example, the fastest unit moves once every 2 frames, the second every 3, and so on.
+
+The bad thing about this could be the fact that the map HPF data should be updated each time a descrete unit of time passes.
+
+This makes harder for changes to "overlap".
+
+Note that it takes the same amount of processing to update a chunk if it had only one change or multiple changes.
+
+That is why chunk changes overlaping in the same frame is good.
+
+But then I realized it is not that important, because multiple changes in a chunk is not going to happen very often anyway.
+
+Base chunks are small, 2 units can build in it at the same time, but it will not be often.
+Big chunks change only if a whole subarea changes, and that won't happen very often either.
+
+
+
+
+
+
+
+
+
+First I thought about redrawing the units in intermidiate places as it moves through tiles.
+  But that brings up the issue of intermediate collisions.
+  I don't want intermediate collisions, so units will move "drastically" rather than "smoothly".
+
+I would still have to deal with the issue of detecting collisions when units try to swap.
+  But at least I can deal with that at arrival time, instead of an intermediate frame.
+
+Also, smooth movement may not look as good when moving upwards through steps.

@@ -1,0 +1,14 @@
+por ejemplo, en vez de correr la simulacion a 10 fps
+  correrla a 60
+
+una unidad normal que ejecute su turno cada 6 frames
+  una mas rapida cada 5, 4, o 3 turnos
+
+si una unidad esta transicionando de un tile a otro
+  que figure en ambos
+  como las unidades no colicionas, esto puede quedar bastante bien
+
+
+
+esta el tema de las coliciones
+  capas que una unidad casi salio de un tile, deberia colisionar con otro objeto que apenas empieza a entrar??

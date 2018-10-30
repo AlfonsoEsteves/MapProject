@@ -1,0 +1,7 @@
+For this first version,
+  the goal is to create a lot of emergent behaviour with the simplest mechanics possible.
+  It doesn't matter if things are 100% abstract and don't make any human sense.
+
+Maybe a good subgoal is trying to have both:
+  groups of units that settle in a good place
+  groups of units that migrate (but the group remains)

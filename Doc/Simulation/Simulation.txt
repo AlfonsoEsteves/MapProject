@@ -1,0 +1,29 @@
+I want emergent behaviour.
+
+I think:
+  To create emergent behaviour there has to be a balance between static and volatile things.
+
+If things are to static, new structures will not appear.
+
+If things are to volatile structures will last just a short time.
+
+So...
+I want units to have a predifined behaviour, but that can change now and then.
+
+I also want units to be able to create new units, I think that that could bring a lot of emergent behaviour.
+  And I want the creator unit to also predifine the behaviour of its created units.
+
+This is an example of how to implement such thing:
+
+Unit 1:
+red
+blue
+blue
+*mark*
+green
+blue
+*mark*
+
+That unit would look for red, then for blue, then for blue again, and then it would try to create
+  a new unit that looks for green and then for blue, and then it would start the cycle again.
+

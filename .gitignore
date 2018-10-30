@@ -1,0 +1,6 @@
+!VSProject/
+VSProject/*
+!VSProject/Map/
+VSProject/Map/*
+!VSProject/Map/*.h
+!VSProject/Map/*.cpp

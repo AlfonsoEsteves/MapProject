@@ -1,0 +1,5 @@
+Should I restert instructions them when a instraction is succesfully executed?
+
+This would force me to add some if statements (otherwise the last functions may never be executed)
+
+But on the other hand, it allows me to define priorities

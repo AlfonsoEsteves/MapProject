@@ -1,0 +1,52 @@
+que los generadores generes recursos lentos
+  si 2 recursos colisionan generan uno mas rapido
+
+
+
+
+consumir recurso
+  si tiene
+  si hay cerca
+  inlcuso si lo tiene que ir a buscar lejor o armarlo
+producir unidad
+  si tiene los recursos necesarios cerca
+  si no hay otra unidad cerca
+llevar recurso al padre
+  igual que el primero
+llevar recurso a cualquiera que lo precise
+depositar recurso
+attackar
+
+acentarce: buscar refugio o construirlo, si el refugio esta muy lleno construlle uno mas grande
+
+
+What is the difference between a unit and a resource??
+  when a resource changes and starts creating other resources it is considered a unit, and can not be carried anymore.
+
+consume resource X if there is X at a Y distance
+produce unit X
+
+
+
+
+
+
+
+
+
+
+
+
+Things that I want units to be capable of:
+  throw things that damage at enemies
+
+cast defenders: they remain close to the parent and attack foreings units
+
+quick units that can move through an army and sypply it
+
+
+
+
+
+questions:
+  will units be capable or creating any unit or they should pick up base resources?

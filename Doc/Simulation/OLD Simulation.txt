@@ -1,0 +1,91 @@
+The map is gonna have generators.
+
+These generators will fire flying essences after a certain amount of time.
+  That unit of time will be constant for a generator over time, but can vary among distinct generators.
+  Inverse to the frequency is how much an flying essence lasts.
+
+Units can build different mechanisms to transform those flying essences in other type of essences.
+
+
+
+Spark essence:
+  It changes direction randomly. When it is <=3 to a unit it follows and damages it.
+
+Thunder essence:
+  It flies, but when it passes over a unit it creates a thunder that damages the unit.
+  I should encourage this spell to be casted from high places.
+    For instance, in the first frame it has to be 1 separeted from the ground, then 2, then 3, and so on.
+    If the ground isn't far enough below, the thunder will be triggered, even if there was no unit beneath.
+
+Spin essence:
+  It follows a wall with the left or right hand rule.
+  Depending on what side got into contact with a wall first.
+    If it gets into contact with 2 walls at both sides at the same time, it ignores those walls.
+
+
+
+
+
+If a place gets too deadly, how are units gonna get in it???
+  how to stop enemies and let allays move in???
+Note: deadly places hard to colonize are cool!
+
+Maybe, I could cast a shield that renders you invulnerable to the spells.
+I don't like it much though, it is just too easy... 
+  it makes purposeless to try to create a device that would deactivate the fortress defenses
+
+
+
+Buildable structures:
+
+accumulator:
+  as it gets hit by energy it stucks up food that the units can consume
+
+repulsor:
+  desvia la energia
+
+thunder creator
+
+spark creator
+
+compuerta and
+
+note that a repulsor can be used as a compuerta or
+
+key setter
+  sets the key of the unit, the unit will produce energy of that key and its filters will be of that key 
+
+key filter
+
+
+
+
+
+
+
+A computer is useless if it doesn't have an input
+The most importat thing to measure is units.
+  whether a unit passes a certain tile
+  or whether a unit gets close to a certain area
+    for instance to close a wall
+
+
+
+
+
+
+una bola de fuego que salo por un pasillo nunca va a alcanzar a la gente que sale pero si a la que entra
+  eso esta bueno
+
+podria implementar "onda de choque" que te empija uno hacia afuera
+si la intercalo con un activador normal,
+  puedo activar un lanzador de bolas de fuego
+  empujarlo uno hacia afuera
+  y repetir, para cubrir una superficie
+
+
+
+
+UN ASPECTO IMPORTANTE
+  COMO VAN A SER LAS UNIDAD LO SUFICIENTEMENTE INTELIGENTES PARA ESPERAR QUE UN MECANISMO SE EJECUTE???
+     talves las unidades tienen que quedar inmoviles mientras una energia q castiaron se mueve, incluse si esa energia se transforma en otra

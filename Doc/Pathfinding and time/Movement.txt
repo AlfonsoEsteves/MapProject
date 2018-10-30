@@ -1,0 +1,13 @@
+There will not be unit collision because of a main reason:
+  When the first unit of a group of units gets into a corridor, all the other units will consider the corridor blocked.
+
+Secondary reason:
+  I have to update very frequently the HPF matrices.
+
+How am I gonna deal with groups of units clumped together?
+  Maybe I could make one of the units in the group remain behind, maybe the first to acquire its turn would be the easiest thing to implement.
+
+
+
+
+Note: making all paths backtrackable is important for pathfinding, so I shouldn't allow units throw themselves over cliffs.

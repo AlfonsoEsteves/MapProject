@@ -1,0 +1,30 @@
+When a unit picks up a resource, it puts it insede the next block in the steps. Right before the closing bracket.
+
+search red
+search blue
+create unit{
+}
+
+That example would insert in the block a red, then a blue, and then it would create a red>blue unit, and it would empty its block.
+
+Giving resource is similar
+
+search red
+search blue
+give resource to parent{
+}
+
+
+
+
+
+search unit
+create unit
+give unit to parent
+give unit to any
+attack unit
+
+
+When a complex unit is picked up:
+  will it be put at the end of the block, entirely, or just the resource it represents??
+    I think the resource it represents, which could be complex

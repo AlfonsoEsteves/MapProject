@@ -1,0 +1,29 @@
+estoy considerando hacer que los generadoes aumenten o disminullan su rate si son poco gastados o muy gastados respectivamente
+O MEJOR AUN
+  que los recursos se desplazen muy lentamente, osea que si un generador no es visitado or mucho tiempo, va a generar mucho
+    pero despues de que se recogem los recursos desparramados, lo mejor es emigrar
+
+
+el sistema actual no favorece a los que tienen ciclos complejos
+  sino q favorece a los que buscan 1 o 2 recursos
+
+
+
+
+estaba pensando que un grupo grando , por ejemplo 100 unitdaes, nunca va a migrar
+  mientras hayan 1 generador que le genere el recurso que buscan
+
+Por eso estaba pensando
+  en que capas las unidades deberias registrar que tan seguido un recurso que persiguen desaparece
+  si los recursos que persiguen desaparecen constantemente, significa que deberian buscar priorizando areas con mas de 1 recursos
+    osea, areas con un alto numero de recursos, el vez de conformarce con que tengo 1
+
+
+
+
+hacer que las unidades tengan 2 de velocidad y valla incrementando por gerarquia de creacion
+
+
+
+
+I need units to consume/kill other units

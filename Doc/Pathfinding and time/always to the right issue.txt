@@ -1,0 +1,7 @@
+To avoid the always to the right issue:
+I can have 2 methods that have the following order harcoded:
+right, down, left, up
+up, left, down, right
+
+This way, in the scenarios where is has to move diagonally with dijstra
+  it will always split its chances of going (for example) right or down fifty fifty.

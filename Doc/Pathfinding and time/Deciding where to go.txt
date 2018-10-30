@@ -1,0 +1,24 @@
+Before finding a path, the unit has to find a destination.
+For instance, if a unit wants to gather a specific resource,
+  how is it going to find it?
+
+I could indicate how many resources there are in each chunk in each level.
+
+But that would have a similar problem to HPF with Chunk Confinment.
+The problem is that the unit will prefere to go to the other corner of the megachunk
+  instead of going to an adjacent megachunk, even if it is 2 tiles away.
+
+I can remove CC from my HPF implementation, and I can do something similar for finding destinations.
+Let's say I em looking for gold.
+I check whether there is gold in my chunk0
+If not I check whether there is gold in my chunk1
+I keep on like that, and finaly, I see that there is gold in my chunk5
+Now, I start a A* looking for a chunk4 with gold, and if is in a different chunk5, it does not matter.
+
+
+
+
+
+
+
+if the unit has gold and it is looking for more gold. I could decrease the amount of gold in its chunks, execute the gold search, and then increase it again.

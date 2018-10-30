@@ -1,0 +1,57 @@
+There are a lot of things to consider in pathfinding:
+  efficiency
+  finding short paths
+  tolerance to map changes
+
+There are different map parts:
+  open places with little to no obstacles
+  mazes places
+
+I have to remember to keep the same level of 
+
+I will use Hierarchical Pathfinding.
+
+One problem of HPF is that it doesn't give the shortest path.
+That is normally OK, but there are some scenarious where it takes pretty bad paths.
+For instance, when the unit is one chunk away, it could be very near of its destination tile.
+Let's say, it is at 1 distance of the destination chunk and at 3 distance of the destination  tile.
+The unit will move inside the chunk in the following step, and then muve inside the chunk.
+But it could be posible that to get to the destination tile without getting out of the chunk
+  the unit may have to do an intricate long path.
+
+In order to avoid this I could make the unit check dummy movement, when it is near enough its destination tile.
+Dummy movement is to shorten the orthogonal distances to the destination in each step.
+  It tries to shorten the longest orthogonal distance, untill it reaches the diagonal, then it moves diagonally.
+  But if the longest orthogonal distance can not be shortened because of an obstacle, it shortens the other one.
+
+There are more fail-tolerant options compared with dummy movement, but they all have over-head.
+
+A like this approach because it uses 2 complementary algorithms:
+  HPF: guarantees a solution, but not a perfect one
+  DM: guarantees a perfect solution if it finds one
+
+
+
+
+How is DM gonna work when going to an intermediate chunk (or area)?
+  Maybe I should just move in a straight orthogonal line.
+
+
+
+REGARDING PATH FINDING FREQUENCY:
+
+How often is the unit going to execute its pathfinding algorithm.
+Note that each time the unit gets into a new base chunk, it has to execute dijkstra at least in the lowest level.
+  I think the best thing is probably to calculate the path at all the levels each time the unit changes of base chunk.
+    Because you would avoid calculating an incorrect base area dijstra.
+    Plus, in case the unit needs to go back to its previous base chunk, it is just 1 tile away, so the dijkstra would be instantaneous.
+
+Is the unit going to execute path-finding in the lowest level every frame?
+  Initially I thought "no way, I'm gonna find a path once and save it".
+  But then I learned that CPU runs faster if you use less memory, because more things can be stores in the cashe.
+
+Maybe I could record whether the unit can continue with DM, if that is the case, I am not going to store the path.
+But if the unit needs to use dijkstra, I will store the path.
+  There is a painful question to answer: a path in 3D space will usually have around 10 steps, but could have more than a hundred
+
+

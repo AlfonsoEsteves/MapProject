@@ -1,0 +1,6 @@
+So the big issue is:
+  what to do if the topology changes?
+  If I force the unit to go to a certain chunk, I may be forcing it to travel a gigantic path.
+
+The solution is to remember how far away that chunk was, if an obstacles appears and the distance becomes grater
+  than it was before, then the whole path is recalculated.

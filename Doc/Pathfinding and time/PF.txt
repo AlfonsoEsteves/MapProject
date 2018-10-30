@@ -1,0 +1,29 @@
+There are 2 issues when removing Chunk Confinement from HPF.
+
+Let's say we have the following megacuncks:
+A B
+C D
+
+Issue 1:
+I want to move from C to A. Imagine that with CC it would be 10 superchunk movements, but without CC it would be just 3.
+So instead of going upwards, I would go right, up, and left.
+The issue is that when I move to D, the next megachunk of my path will probably be A, the one I came from.
+  So I would have to remember not to go back to A, and that my destination chunk is A.
+
+Issue 2:
+Imagine the same scenario, but you already start in D.
+You would move to A, because that is the next megachunk of your path, then back to D because you realized the path would be shorter.
+
+
+
+
+Note that this issues not only happen diagonally.
+I could try to move two megachunks upwards, but after moving into the first, I realize that the shorter path at the superchunk
+  level is going back down, and then right, up, up, and left.
+
+
+
+
+
+
+I think the issue 2 isn't too bad. 

@@ -1,0 +1,48 @@
+
+
+
+Matrix of bool wastes CPU cache
+
+
+
+
+
+
+Reflect about that there is going to be a lot of single-area chunks
+
+
+
+
+
+
+
+Dummy movement towards area can be much more performant
+
+
+
+
+
+
+
+
+change integers for chars or shorts where possible
+
+
+
+
+
+ver si puedo correr la sim en modo NO debug de VS
+
+
+
+
+
+capas puedo hacer que los vichos chequen por recursos solo al principio del turno
+
+
+
+
+
+para identificar que partes del codigo me enlentencen mas la simulacion
+podria crear un macro que sea:
+SLOW_DOWN for(int i=0;i<20;i++){slowDownArray[i]=!slowDownArray[i]}

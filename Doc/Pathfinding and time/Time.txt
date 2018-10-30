@@ -1,0 +1,27 @@
+How am I gonna deal with units trying to perform the same task:
+  moving to the same tile
+  building something in the same tile
+  picking things up from the same tile
+
+I don't like unit order, because it can give the first units different behaviour compared to the later ones.
+
+Ideally, the game would execute all the units at the same time (all-together-execution).
+  But some times, the actions can collide, like when 2 units move to the same tile, or try to pick up the same thing.
+
+So I will have to define an order for those cases.
+
+In order to make order more democratic I will constantly change it.
+  So there will not be first-units and last-units.
+
+Even though there are collitions, the important thing about all-together-execution is that units don't take into account
+  what other units do in the same frame.
+
+Note that there are 2 ways of implementing the all-together-execution.
+  Executing the a phase where all units decide their actions, and then the second where they actually perform them.
+  Having 2 copies of the map, the current-one and the next-one.
+    Which is the current or futere map will switch constantly in each frame.
+
+I like more the second because it doesn't require stopping all the threads in the middle of the frame in order to start the second phase.
+
+For multithreading I will have to put all units that could potentially interact in the same thread.
+  And I will also have to be careful with order reassigning.
