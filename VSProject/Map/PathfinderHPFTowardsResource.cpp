@@ -1,6 +1,6 @@
 #include "Common.h"
 
-//This method should be used only to start the pathfinding and to reset after a new obstacle obstructed the path
+//This method should be used only to start the pathfinding and to reset it after a new obstacle obstructs the current path
 int Unit::resetPathTowardsResource() {
 #	ifdef SAFE
 	for (int i = 0; i < LEVELS - 1; i++) {
@@ -106,6 +106,33 @@ Area * Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destA
 
 	circularArrayStart = 0;
 	circularArrayEnd = 0;
+
+	//asd
+	std::list<Area*>::iterator it;
+	std::list<Area*>::iterator end = oriArea->adjacentAreas.end();
+	bool foward = (rand() % 2 == 0);
+	if (foward) {
+		it = oriArea->adjacentAreas.begin();
+		end = oriArea->adjacentAreas.end();
+	}
+	else {
+		asd
+	}
+	while (true) {
+		if (foward) {
+			it++;
+			if (it == end) {//Check this after moving the pointer
+				break;
+			}
+		}
+		else {
+			if (it == end) {//Check this before moving the pointer
+				break;
+			}
+			it--;
+		}
+	}
+	//asd
 
 	//I add the branches' beginnings to the queue
 	for (std::list<Area*>::iterator it = oriArea->adjacentAreas.begin(); it != oriArea->adjacentAreas.end(); it++) {
