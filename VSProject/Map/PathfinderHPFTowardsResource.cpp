@@ -107,41 +107,36 @@ Area * Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destA
 	circularArrayStart = 0;
 	circularArrayEnd = 0;
 
-	//asd
+	//It adds the branches' beginnings to the queue
 	std::list<Area*>::iterator it;
-	std::list<Area*>::iterator end = oriArea->adjacentAreas.end();
-	bool foward = (rand() % 2 == 0);
+	std::list<Area*>::iterator listBeginning = oriArea->adjacentAreas.begin();
+	std::list<Area*>::iterator listEnd = oriArea->adjacentAreas.end();
+	bool foward = (rand() % 2 == 0);//It randomizes the iteration order to solve the "always right issue"
 	if (foward) {
 		it = oriArea->adjacentAreas.begin();
-		end = oriArea->adjacentAreas.end();
 	}
 	else {
-		asd
+		it = oriArea->adjacentAreas.end();
 	}
 	while (true) {
-		if (foward) {
-			it++;
-			if (it == end) {//Check this after moving the pointer
-				break;
-			}
-		}
-		else {
-			if (it == end) {//Check this before moving the pointer
+		if(!foward) {
+			if (it == listBeginning) {
 				break;
 			}
 			it--;
 		}
-	}
-	//asd
-
-	//I add the branches' beginnings to the queue
-	for (std::list<Area*>::iterator it = oriArea->adjacentAreas.begin(); it != oriArea->adjacentAreas.end(); it++) {
 		Area* branch = *it;
 		branch->pathFindingBranch = branch;
 		branch->lastCheckedByUnit = this;
 		branch->lastCheckedAtTime = time;
 		circularArrayOfAreas[circularArrayEnd] = branch;
 		circularArrayEnd++;
+		if (foward) {
+			it++;
+			if (it == listEnd) {
+				break;
+			}
+		}
 	}
 
 	int distance = 1;
@@ -171,18 +166,22 @@ Area * Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destA
 			firstAreaOfTheNextDistance = circularArrayEnd;
 		}
 
-		Area* area = circularArrayOfAreas[circularArrayStart];
+		Area* currentArea = circularArrayOfAreas[circularArrayStart];
 		circularArrayStart = (circularArrayStart + 1) % CIRCULAR_ARRAY_OF_AREAS;
 
-		if (area->superArea == destArea || area->resources[lookingForResource]>0) {
-			chunksToBeTraveled[area->lvl] = distance;
-			return area->pathFindingBranch;
+		if (currentArea->superArea == destArea || currentArea->resources[lookingForResource]>0) {
+			chunksToBeTraveled[currentArea->lvl] = distance;
+			return currentArea->pathFindingBranch;
 		}
-		for (std::list<Area*>::iterator it = area->adjacentAreas.begin(); it != area->adjacentAreas.end(); it++)
-		{
+
+		//It checks the current area's adjacent areas
+		//Regarding the "always right issue", remember that it is irrelevant the order the adjacent areas are iterated here
+		//Even if the area that ends up reaching the goal could differ, the branch won't differ, and it is the branch what
+		//determines where the unit will go
+		for (std::list<Area*>::iterator it = currentArea->adjacentAreas.begin(); it != currentArea->adjacentAreas.end(); it++) {
 			Area * followingArea = *it;
 			if (followingArea->lastCheckedByUnit != this || followingArea->lastCheckedAtTime != time) {
-				followingArea->pathFindingBranch = area->pathFindingBranch;
+				followingArea->pathFindingBranch = currentArea->pathFindingBranch;
 				followingArea->lastCheckedByUnit = this;
 				followingArea->lastCheckedAtTime = time;
 				circularArrayOfAreas[circularArrayEnd] = followingArea;
