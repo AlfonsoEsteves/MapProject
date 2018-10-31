@@ -194,9 +194,19 @@ Area * Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destA
 int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 	circularArrayStart = 0;
 	circularArrayEnd = 0;
+
+	//It adds the branches' beginnings to the queue
+	int dir;
+	bool foward = (rand() % 2 == 0);//It randomizes the iteration order to solve the "always right issue"
 	for (int i = 0; i < 4; i++) {
-		int nextTileX = x + getX(i);
-		int nextTileY = y + getY(i);
+		if (foward) {
+			dir = i;
+		}
+		else {
+			dir = 3 - i;
+		}
+		int nextTileX = x + getX(dir);
+		int nextTileY = y + getY(dir);
 		int nextTileZ = steppableTileHeight(x, y, z, nextTileX, nextTileY);
 		if (nextTileZ != -1) {
 			tileWasLastCheckedByUnit[nextTileX][nextTileY][nextTileZ] = this;
@@ -204,7 +214,7 @@ int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 			circularArrayOfTiles[circularArrayEnd].x = nextTileX;
 			circularArrayOfTiles[circularArrayEnd].y = nextTileY;
 			circularArrayOfTiles[circularArrayEnd].z = nextTileZ;
-			circularArrayOfTiles[circularArrayEnd].direction = i;
+			circularArrayOfTiles[circularArrayEnd].direction = dir;
 			circularArrayEnd++;
 		}
 	}
@@ -255,6 +265,10 @@ int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 			current = current->sharesTileWithObject;
 		}
 
+		//It checks the current tile's adjacent tiles
+		//Regarding the "always right issue", remember that it is irrelevant the order the adjacent tiles are iterated here
+		//Even if the tile that ends up reaching the goal could differ, the branch won't differ, and it is the branch what
+		//determines where the unit will go
 		for (int i = 0; i < 4; i++) {
 			int tileNextX = tileX + getX(i);
 			int tileNextY = tileY + getY(i);
