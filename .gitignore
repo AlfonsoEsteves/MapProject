@@ -4,3 +4,4 @@ VSProject/*
 VSProject/Map/*
 !VSProject/Map/*.h
 !VSProject/Map/*.cpp
+!VSProject/Map/*.dll
