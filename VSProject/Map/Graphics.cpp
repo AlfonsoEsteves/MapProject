@@ -80,8 +80,8 @@ bool graphics_init()
 
 	screenSurface = SDL_GetWindowSurface(window);
 
-	//string path = "C:/Users/Usuario/Documents/Projects/MapProject/Resources/";
-	string path = "C:/Users/alfonso.esteves/Documents/Otros/MapProject/Resources/";
+	string path = "C:/Users/Usuario/Documents/Projects/MapProject/Resources/";
+	//string path = "C:/Users/alfonso.esteves/Documents/Otros/MapProject/Resources/";
 
 	blackTopImage = loadSurface(path + "Images/black_top.bmp");
 	blackLeftImage = loadSurface(path + "Images/black_left.bmp");

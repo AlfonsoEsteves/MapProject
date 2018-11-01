@@ -41,7 +41,7 @@
 
 #define RESOURCE_TYPES 6
 
-//#define CALCULATE_HASH_AT_TIME 500
+//#define CALCULATE_HASH_AT_TIME 300
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
