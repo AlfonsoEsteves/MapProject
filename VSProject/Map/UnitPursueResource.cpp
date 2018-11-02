@@ -79,7 +79,7 @@ bool Unit::checkReachedResource() {
 				printf("Unit reached resource\n\n");
 			}
 #			endif
-			life = LIFE + LIFE * cycleLength / 3;
+			life += LIFE * cycleLength / 3;
 			areasMap[x][y][z]->decreaseResource(lookingForResource);
 			current->removeFromTile();
 			current->alive = false;

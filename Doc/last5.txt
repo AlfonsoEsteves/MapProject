@@ -1,30 +1,22 @@
-When a unit picks up a resource, it puts it insede the next block in the steps. Right before the closing bracket.
+When a unit picks up a resource, it puts it insede its bag.
+The unit can perform different operations with its bag contente:
+  combine
+  create unit
+  release
 
-search red
-search blue
-create unit{
-}
+The rest of the operations are:
+search [resource] [distance] 
+go to parent
+attack [unit]
 
-That example would insert in the block a red, then a blue, and then it would create a red>blue unit, and it would empty its block.
-
-Giving resource is similar
-
-search red
-search blue
-give resource to parent{
-}
-
-
-
-
-
-search unit
-create unit
-give unit to parent
-give unit to any
-attack unit
+Conditinals:
+if [resource] [closeness]
+if [parent] [closeness]
 
 
 When a complex unit is picked up:
   will it be put at the end of the block, entirely, or just the resource it represents??
     I think the resource it represents, which could be complex
+
+
+

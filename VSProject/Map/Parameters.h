@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 29
+#define SEED 30
 #define FRAME_DURATION 50
 
 //200

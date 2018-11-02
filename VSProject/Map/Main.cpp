@@ -4,13 +4,6 @@ SDL_Event e;
 
 void execute_game_frame();
 
-el siguiente paso seria hacer que se resten la vida cuando una unidad come a otra
-  eso va a hacer que las convinaciones buenas duren un poco mas
-  y va a permitir que las unidades grandes que son estables sigan variando (ya que podria quedar con poca vida y starvear)
-  si la unidad no es capas de matar igual va y se suicida
-	de lo contrario o no hace nada o persigue a la misma unidad sin comerla
-  si 2 unidades se crusan pero no se intentan comer no pasa nada
-
 int main(int argc, char* args[])
 {
 	#ifdef DEBUG
