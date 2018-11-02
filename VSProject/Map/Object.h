@@ -15,6 +15,7 @@ public:
 	int x, y, z;
 	Object* sharesTileWithObject;
 	char resourceType;
+	unsigned char objectType;
 
 	//An object can delete itself, but it can not delete another object.
 	//If A wants to delete B, A has to set B's active to false, and B will eventually be deleted
@@ -24,11 +25,15 @@ public:
 	int id;
 #	endif
 
-	Object(int _x, int _y, int _z);
+	Object(unsigned char _objectType, int _x, int _y, int _z);
 	virtual ~Object();
 	virtual void execute()=0;
 	virtual unsigned char type()=0;
 	void removeFromTile();
 	void addToTile();
+
+#	ifdef DEBUG
+	void checkTileIsOccupiedByAliveObjects();
+#	endif
 };
 

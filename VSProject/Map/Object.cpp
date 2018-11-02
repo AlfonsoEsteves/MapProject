@@ -5,7 +5,7 @@ int debug_objectsCreated = 0;
 int debug_objectsDestroyed = 0;
 #endif
 
-Object::Object(int _x, int _y, int _z)
+Object::Object(unsigned char _objectType, int _x, int _y, int _z)
 {
 #	ifdef DEBUG
 	id = debug_objectsCreated;
@@ -15,6 +15,7 @@ Object::Object(int _x, int _y, int _z)
 	}
 	lastExecutedObject = -id;
 #	endif
+	objectType = _objectType;
 	x = _x;
 	y = _y;
 	z = _z;
@@ -51,3 +52,15 @@ void Object::removeFromTile() {
 	sharesTileWithObject = NULL;
 #	endif
 }
+
+#ifdef DEBUG
+void Object::checkTileIsOccupiedByAliveObjects() {
+	Object* current = unitsMap[x][y][z];
+	while (current != NULL) {
+		if (!current->alive) {
+			error("Only alive objects can occupy the tiles");
+		}
+		current = current->sharesTileWithObject;
+	}
+}
+#endif

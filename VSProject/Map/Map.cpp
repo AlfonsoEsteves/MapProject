@@ -21,6 +21,9 @@ void execute_frame()
 
 		if (object->alive) {
 			object->execute();
+#			ifdef DEBUG
+			object->checkTileIsOccupiedByAliveObjects();
+#			endif
 		}
 		//The execution may have set alive to false
 		if (!object->alive) {

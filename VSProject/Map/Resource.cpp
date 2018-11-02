@@ -1,6 +1,6 @@
 #include "Common.h"
 
-Resource::Resource(int _x, int _y, int _z, char _resourceType) : Object(_x, _y, _z) {
+Resource::Resource(int _x, int _y, int _z, char _resourceType) : Object(objectResource, _x, _y, _z) {
 	resourceType = _resourceType;
 	objects[(time + (rand() % RESOURCE_SLOWNESS)) % BUCKETS].push_back(this);
 }

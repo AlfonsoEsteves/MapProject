@@ -213,17 +213,6 @@ void createTerrainWithMidPointDisplacement() {
 			double h10 = height[x + 1][y] * ponderation10;
 			double h11 = height[x + 1][y + 1] * ponderation11;
 			int tileHeight = h00 + h01 + h10 + h11;
-
-
-
-
-			/*
-			if (ponderation00 == 1) {
-				tileHeight += 3;
-			}
-			*/
-
-
 			fill(i, j, 0, tileHeight);
 		}
 	}

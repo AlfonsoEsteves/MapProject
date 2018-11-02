@@ -89,4 +89,5 @@ public:
 	void checkIfPathfindingResetIsNeeded();
 	unsigned char type();
 	void adjustResourceType();
+	bool hasBrackets();
 };

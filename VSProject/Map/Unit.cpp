@@ -4,7 +4,7 @@
 int debug_unitCount = 0;
 #endif
 
-Unit::Unit(int _x, int _y, int _z, int _life) : Object(_x, _y, _z)
+Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 {
 	life = _life;
 
@@ -71,7 +71,9 @@ void Unit::execute() {
  		error("Units can only execute resource searches or open brackets");
 	}
 #	endif
-	objects[(time + slowness) % BUCKETS].push_back(this);
+	if (alive) {
+		objects[(time + slowness) % BUCKETS].push_back(this);
+	}
 }
 
 void Unit::createUnit() {
@@ -271,3 +273,12 @@ void Unit::checkUnitSteps(Unit* unit) {
 	}
 }
 #endif
+
+bool Unit::hasBrackets() {
+	for (int i = 0; i < cycleLength; i++) {
+		if (cycle[i] == OPEN_BRACKET) {
+			return true;
+		}
+	}
+	return false;
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 30
+#define SEED 34
 #define FRAME_DURATION 50
 
 //200
@@ -26,8 +26,8 @@
 #define CIRCULAR_ARRAY_OF_TILES 10000
 #define CIRCULAR_ARRAY_OF_AREAS 10000
 
-#define VIEW_WIDTH 69
-#define VIEW_HEIGHT 69
+#define VIEW_WIDTH 61
+#define VIEW_HEIGHT 61
 
 //This should be grater than the slowest object cycle
 #define BUCKETS 701
@@ -47,8 +47,9 @@
 #define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME 670
-#define DEBUG_OBJECT 100069
+#define DEBUG_TIME 213
+//#define DEBUG_OBJECT 462
+#define DEBUG_OBJECT 390
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

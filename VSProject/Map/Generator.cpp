@@ -1,6 +1,6 @@
 #include "Common.h"
 
-Generator::Generator(int _x, int _y, int _z) : Object(_x, _y, _z)
+Generator::Generator(int _x, int _y, int _z) : Object(objectGenerator, _x, _y, _z)
 {
 	resourceGeneration = rand() % RESOURCE_TYPES;
 	resourceType = -1;

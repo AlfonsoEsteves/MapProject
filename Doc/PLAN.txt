@@ -1,0 +1,5 @@
+voy a hacer que las unidades no aborten si no hay (o si se aleja) el recurso que buscan
+
+luego
+
+voy a implementar lo de la bag

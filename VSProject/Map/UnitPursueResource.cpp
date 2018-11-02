@@ -79,12 +79,41 @@ bool Unit::checkReachedResource() {
 				printf("Unit reached resource\n\n");
 			}
 #			endif
-			life += LIFE * cycleLength / 3;
-			areasMap[x][y][z]->decreaseResource(lookingForResource);
-			current->removeFromTile();
-			current->alive = false;
-			cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
-			checkIfPathfindingResetIsNeeded();
+			if (current->objectType == objectUnit) {
+				Unit* currentUnit = (Unit*)current;
+				if (life > currentUnit->life) {
+					life -= currentUnit->life;
+				}
+				else {
+					currentUnit->alive = false;
+				}
+				if(currentUnit->life > life) {
+					currentUnit->life -= life;
+				}
+				else {
+					alive = false;
+				}
+			}
+			else {
+				current->alive = false;
+			}
+			if (alive) {
+				life += LIFE * cycleLength / 2;
+				if (hasBrackets()) {
+					life += LIFE * cycleLength / 2;
+				}
+				cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+				checkIfPathfindingResetIsNeeded();
+			}
+			else{
+				areasMap[x][y][z]->decreaseResource(resourceType);
+				removeFromTile();
+			}
+			if (!current->alive) {
+				areasMap[x][y][z]->decreaseResource(current->resourceType);
+				current->removeFromTile();
+				current->alive = false;
+			}
 			return true;
 		}
 		current = current->sharesTileWithObject;

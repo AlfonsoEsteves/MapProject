@@ -20,3 +20,24 @@ When a complex unit is picked up:
 
 
 
+
+
+
+
+que pueda seleccionar nuevos destinos especifics (q no sea solo el creator)
+
+
+
+
+
+
+Maybe the best thing is to allow units to take away resources from other units intead of letting them give.
+  Because giving resources can break the desired sequence in the receiving unit
+
+
+
+
+
+how am I gonna insert specific instructions like: combine, conditions, createUnit???
+  well
+    I coul have an instruction that is: "convert last resource into a specific instration"

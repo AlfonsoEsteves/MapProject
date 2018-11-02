@@ -219,7 +219,7 @@ void graphics_draw_map() {
 									Unit* unit = (Unit*)current;
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-									if (unitHasBrackets(unit)) {
+									if (unit->hasBrackets()) {
 										position.y = screenY[i][j][k] + 1;
 										SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									}
@@ -360,15 +360,6 @@ void graphics_close()
 	}
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-}
-
-bool unitHasBrackets(Unit* unit) {
-	for (int i = 0; i < unit->cycleLength; i++) {
-		if (unit->cycle[i] == OPEN_BRACKET) {
-			return true;
-		}
-	}
-	return false;
 }
 
 string stepName(int step) {
