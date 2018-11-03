@@ -133,9 +133,9 @@ void Unit::createUnit() {
 }
 
 void Unit::modifyCycle(int chancesOfAddingStep) {
-	if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_SIZE) {//Add a step or a block
+	if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_LENGTH) {//Add a step or a block
 		int x = rand() % (cycleLength + 1);
-		if (rand() % CHANCES_OF_ADDING_A_BLOCK_STEP == 0 && cycleLength < MAX_CYCLE_SIZE - 2) {
+		if (rand() % CHANCES_OF_ADDING_A_BLOCK_STEP == 0 && cycleLength < MAX_CYCLE_LENGTH - 2) {
 			for (int i = cycleLength + 2; i > x + 2; i--) {
 				cycle[i] = cycle[i - 3];
 			}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #define OPEN_BRACKET RESOURCE_TYPES
 #define CLOSE_BRACKET (RESOURCE_TYPES+1)
 
@@ -8,7 +10,7 @@
 #define CHANCES_OF_ADDING_A_STEP 6
 #define CHANCES_OF_ADDING_A_BLOCK_STEP (RESOURCE_TYPES + 1)
 
-#define MAX_CYCLE_SIZE 15
+#define MAX_CYCLE_LENGTH 15
 
 #define PATH_NOT_FOUND -1
 #define PATH_OUTDATED -2
@@ -56,11 +58,13 @@ public:
 
 	int slowness;//The amount of turns the unit has to wait after moving
 	
-	char cycle[MAX_CYCLE_SIZE];
+	char cycle[MAX_CYCLE_LENGTH];
 	char cycleLength;
 	char cycleCurrentStep;
 
 	char lookingForResource;
+
+	std::vector<char> bag;
 
 	//Pathfinding vars
 	bool hasToResetPath;

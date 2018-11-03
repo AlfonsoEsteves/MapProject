@@ -160,6 +160,14 @@ void graphics_draw_text() {
 				SDL_BlitSurface(message, NULL, screenSurface, &position);
 				SDL_FreeSurface(message);
 			}
+
+			for (int i = 0; i < selectedUnit->bag.size(); i++) {
+				format("%s <<", stepName(selectedUnit->bag[i]).c_str());
+				message = TTF_RenderText_Solid(font, formated, textColor);
+				SDL_Rect position = { 20, 400 + i * 15, 0, 0 };
+				SDL_BlitSurface(message, NULL, screenSurface, &position);
+				SDL_FreeSurface(message);
+			}
 		}
 	}
 #	ifdef DEBUG
