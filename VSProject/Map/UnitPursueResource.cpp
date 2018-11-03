@@ -30,33 +30,39 @@ void Unit::pursueResource() {
 				attemptedMovement = dijkstraTowardsResourceOrArea(true);
 			}
 		}
-		if (attemptedMovement == -1) {
-			//If the path adjustment fails, the unit will calculate its path again in the next iteration
-			//It is important not to do it in this iteration because the checked areas and tiles
+		if (attemptedMovement == PATH_OUTDATED) {
+			//If the path adjustment is outdated, the unit will calculate its path again in the next iteration
+			//It is important not to do it in the next iteration because the checked areas and tiles
 			//already have their lastCheckedAtTime variables set to the current time
-			cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
 			checkIfPathfindingResetIsNeeded();
+			return;
 		}
-		else {
-			Area* oldArea = areasMap[x][y][z];
-			removeFromTile();
+		else if (attemptedMovement == PATH_NOT_FOUND) {
+			attemptedMovement = rand() % 4;
 			int nextX = x + getX(attemptedMovement);
 			int nextY = y + getY(attemptedMovement);
-			z = steppableTileHeight(x, y, z, nextX, nextY);
-			x = nextX;
-			y = nextY;
-			addToTile();
-
-			if (oldArea != areasMap[x][y][z]) {
-				oldArea->decreaseResource(resourceType);
-				areasMap[x][y][z]->increaseResource(resourceType);
+			if (steppableTileHeight(x, y, z, nextX, nextY) == -1) {
+				return;
 			}
+		}
+		Area* oldArea = areasMap[x][y][z];
+		removeFromTile();
+		int nextX = x + getX(attemptedMovement);
+		int nextY = y + getY(attemptedMovement);
+		z = steppableTileHeight(x, y, z, nextX, nextY);
+		x = nextX;
+		y = nextY;
+		addToTile();
 
-			checkReachedResource();		
+		if (oldArea != areasMap[x][y][z]) {
+			oldArea->decreaseResource(resourceType);
+			areasMap[x][y][z]->increaseResource(resourceType);
+		}
 
-			if (areasMap[x][y][z] == baseDestinationArea) {
-				reachedDestinationBaseArea = true;
-			}
+		checkReachedResource();		
+
+		if (areasMap[x][y][z] == baseDestinationArea) {
+			reachedDestinationBaseArea = true;
 		}
 	}
 }

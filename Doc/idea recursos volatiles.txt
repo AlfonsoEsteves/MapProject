@@ -1,0 +1,6 @@
+talvez puedo tener un medidor de que tan frequentemente una zona pasa de tener un determinado recurso a no tenerlo
+  un funcion de esto y de la distancia, una unidad podria dismissear el area por ser muy poco confiable y lejana
+
+mas q medir la frecuencia
+  talvez deberia medir el % de tiempo que pasa con o sin,
+    nose, pero tomar en cuenta que si una zona genera y pirede recursos constantemente, podria abastecer a un gran numero de units, incluso si seguido se queda basia

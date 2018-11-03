@@ -23,7 +23,7 @@ int Unit::resetPathTowardsResource() {
 		oriAreas[area->lvl] = area;
 		area = area->superArea;
 		if (area == NULL) {
-			return -1;
+			return PATH_NOT_FOUND;
 		}
 	}
 
@@ -62,7 +62,7 @@ int Unit::adjustPathTowardsResource() {
 				return resetPathTowardsResource(reachedArea->lvl);
 			}
 			else {
-				return -1;
+				return PATH_OUTDATED;
 			}
 		}
 
@@ -74,7 +74,7 @@ int Unit::adjustPathTowardsResource() {
 				return resetPathTowardsResourceOrDestinationSuperArea(reachedArea->lvl);
 			}
 			else {
-				return -1;
+				return PATH_OUTDATED;
 			}
 		}
 
@@ -97,7 +97,7 @@ int Unit::resetPathTowardsResourceOrDestinationSuperArea(int startingMacroLevel)
 }
 
 //The last parameter indicates weather the ori is one lvl bellow dest or not
-Area * Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destArea, bool adjusting) {
+Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destArea, bool adjusting) {
 #	ifdef DEBUG
 	if (oriArea == destArea) {
 		error("findNextAreaTowardsResourceOrArea should not be called with the same origin and destination area");
@@ -238,7 +238,7 @@ int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 					printf("Current path is too long, expected %d tiles or less\n\n", tilesToBeTraveled);
 				}
 #				endif
-				return -1;
+				return PATH_OUTDATED;
 			}
 			firstTileOfTheNextDistance = circularArrayEnd;
 		}

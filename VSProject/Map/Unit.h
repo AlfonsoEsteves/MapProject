@@ -3,12 +3,15 @@
 #define OPEN_BRACKET RESOURCE_TYPES
 #define CLOSE_BRACKET (RESOURCE_TYPES+1)
 
-#define LIFE 100
+#define LIFE 200
 
 #define CHANCES_OF_ADDING_A_STEP 6
 #define CHANCES_OF_ADDING_A_BLOCK_STEP (RESOURCE_TYPES + 1)
 
 #define MAX_CYCLE_SIZE 15
+
+#define PATH_NOT_FOUND -1
+#define PATH_OUTDATED -2
 
 #ifdef DEBUG
 extern int debug_unitCount;
