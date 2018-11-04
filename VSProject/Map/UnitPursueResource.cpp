@@ -105,10 +105,12 @@ bool Unit::checkReachedResource() {
 			}
 			if (alive) {
 				life += LIFE * cycleLength / 2;
-				if (hasBrackets()) {
+				if (hasDuplicate()) {
 					life += LIFE * cycleLength / 2;
 				}
-				bag.push_back(lookingForResource);
+				if (bag.size() < MAX_CYCLE_LENGTH) {
+					bag.push_back(lookingForResource);
+				}
 				cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
 				checkIfPathfindingResetIsNeeded();
 			}

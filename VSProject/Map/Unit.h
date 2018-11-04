@@ -2,13 +2,13 @@
 
 #include <vector>
 
-#define OPEN_BRACKET RESOURCE_TYPES
-#define CLOSE_BRACKET (RESOURCE_TYPES+1)
+#define INSTRUCTION_DUPLICATE RESOURCE_TYPES 
+#define INSTRUCTIONS INSTRUCTION_DUPLICATE + 1
 
 #define LIFE 200
 
 #define CHANCES_OF_ADDING_A_STEP 6
-#define CHANCES_OF_ADDING_A_BLOCK_STEP (RESOURCE_TYPES + 1)
+#define CHANCES_OF_ADDING_A_DUPLICATION_INSTRUCTION 5
 
 #define MAX_CYCLE_LENGTH 15
 
@@ -46,7 +46,6 @@ private:
 
 #	ifdef DEBUG
 	void checkDestinationAreas();
-	void checkUnitSteps(Unit* unit);
 #	endif
 
 #	ifdef LOG_PF
@@ -96,5 +95,6 @@ public:
 	void checkIfPathfindingResetIsNeeded();
 	unsigned char type();
 	void adjustResourceType();
-	bool hasBrackets();
+	bool hasDuplicate();
+	bool cycleIsCorrect();
 };

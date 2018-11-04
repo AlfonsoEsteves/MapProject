@@ -63,7 +63,7 @@ void Unit::execute() {
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		pursueResource();
 	}
-	else if (cycle[cycleCurrentStep] == OPEN_BRACKET) {
+	else if (cycle[cycleCurrentStep] == INSTRUCTION_DUPLICATE) {
 		createUnit();
 	}
 #	ifdef DEBUG
@@ -77,121 +77,59 @@ void Unit::execute() {
 }
 
 void Unit::createUnit() {
-	char openness = 1;
-	char oldIndex = cycleCurrentStep + 1;
-	int newLife = (life * 9) / 10;
-	if (newLife > 0) {
-		Unit * unit = new Unit(x, y, z, newLife);
-		unit->cycleLength = 0;
-		char newIndex = 0;
-		while (true) {
-#			ifdef DEBUG
-			if (oldIndex >= cycleLength) {
-				error("All blocks should close before the end of the cycle");
+	if (bag.size() > 0) {
+		int newLife = (life * 9) / 10;
+		if (newLife > 0) {
+			Unit * unit = new Unit(x, y, z, newLife);
+			for (int i = 0; i < bag.size(); i++) {
+				unit->cycle[i] = bag[i];
 			}
-#			endif
-			if (cycle[oldIndex] == OPEN_BRACKET) {
-				openness++;
-			}
-			if (cycle[oldIndex] == CLOSE_BRACKET) {
-				openness--;
-				if (openness == 0) {
-					break;
-				}
-			}
-			unit->cycle[newIndex] = cycle[oldIndex];
-			unit->cycleLength++;
-			oldIndex++;
-			newIndex++;
-		}
-		unit->adjustResourceType();
-#		ifdef DEBUG
-		checkUnitSteps(unit);
-#		endif
-	}
-	else {
-		while (true) {
-#			ifdef DEBUG
-			if (oldIndex == cycleLength) {
-				error("All blocks should close before the end of the cycle");
-			}
-#			endif
-			if (cycle[oldIndex] == OPEN_BRACKET) {
-				openness++;
-			}
-			if (cycle[oldIndex] == CLOSE_BRACKET) {
-				openness--;
-				if (openness == 0) {
-					break;
-				}
-			}
-			oldIndex++;
+			unit->cycleLength = (char)bag.size();
+			unit->adjustResourceType();
+			bag.clear();
 		}
 	}
-	cycleCurrentStep = (oldIndex + 1) % cycleLength;
+	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
 	checkIfPathfindingResetIsNeeded();
 }
 
 void Unit::modifyCycle(int chancesOfAddingStep) {
-	if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_LENGTH) {//Add a step or a block
-		int x = rand() % (cycleLength + 1);
-		if (rand() % CHANCES_OF_ADDING_A_BLOCK_STEP == 0 && cycleLength < MAX_CYCLE_LENGTH - 2) {
-			for (int i = cycleLength + 2; i > x + 2; i--) {
-				cycle[i] = cycle[i - 3];
-			}
-			cycle[x] = OPEN_BRACKET;
-			cycle[x + 1] = (lookingForResource + rand() % (RESOURCE_TYPES - 1) + 1) % RESOURCE_TYPES;
-			cycle[x + 2] = CLOSE_BRACKET;//It closes with a curly bracket
-			cycleLength += 3;
-			if (x <= cycleCurrentStep) {
-				cycleCurrentStep += 3;
-			}
-		}
-		else {
+	do {
+		if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_LENGTH) {//Add a step or a block
+			life = LIFE;
+			int x = rand() % (cycleLength + 1);
 			for (int i = cycleLength; i > x; i--) {
 				cycle[i] = cycle[i - 1];
 			}
-			cycle[x] = (lookingForResource + rand() % (RESOURCE_TYPES - 1) + 1) % RESOURCE_TYPES;
+			if (rand() % CHANCES_OF_ADDING_A_DUPLICATION_INSTRUCTION == 0) {
+				cycle[x] = INSTRUCTION_DUPLICATE;
+			}
+			else {
+				cycle[x] = (lookingForResource + rand() % (RESOURCE_TYPES - 1) + 1) % RESOURCE_TYPES;
+			}
 			cycleLength++;
 			if (x <= cycleCurrentStep) {
 				cycleCurrentStep++;
 			}
 		}
-		life = LIFE;
-	}
-	else {//Remove a step or a block
-		char x;
-		char y;
-		do {
-			x = rand() % cycleLength;
-		} while (cycle[x] >= RESOURCE_TYPES);
-		y = x;
-		//I check if the step (or block) is the only step of a block. If that is the case, then I should remove the containing block too
-		while (x > 0 && y < cycleLength - 1 && cycle[x - 1] == OPEN_BRACKET && cycle[y + 1] == CLOSE_BRACKET) {
-			x--;
-			y++;
-		}
-		int stepsRemoved = y - x + 1;
-		cycleLength -= stepsRemoved;
-		if (cycleLength > 0) {
-			for (int i = x; i < cycleLength; i++) {
-				cycle[i] = cycle[i + stepsRemoved];
-			}
-			if (cycleCurrentStep >= x){
-				if (cycleCurrentStep <= y) {
-					cycleCurrentStep = x % cycleLength;
+		else {//Remove a step or a block
+			if (cycleLength > 1) {
+				life = LIFE;
+				int x = rand() % cycleLength;
+				for (int i = x; i < cycleLength - 1; i++) {
+					cycle[i] = cycle[i + 1];
+				}
+				if (x < cycleCurrentStep) {
+					cycleCurrentStep--;
 				}
 				else {
-					cycleCurrentStep -= stepsRemoved;
+					cycleCurrentStep = cycleCurrentStep % (cycleLength - 1);
 				}
-
 			}
-			life = LIFE;
+			cycleLength--;
 		}
-	}
-#	ifdef DEBUG
-	checkUnitSteps(this);
-#	endif
+
+	} while (!cycleIsCorrect());
 }
 
 void Unit::adjustResourceType() {
@@ -201,16 +139,9 @@ void Unit::adjustResourceType() {
 		availableResource[i] = true;
 	}
 	int hash = 0;
-	int openness = 0;
 	for (int i = 0; i < cycleLength; i++) {
 		hash += cycle[i];
-		if (cycle[i] == OPEN_BRACKET) {
-			openness++;
-		}
-		else if (cycle[i] == CLOSE_BRACKET) {
-			openness--;
-		}
-		else if (openness == 0) {
+		if (cycle[i] < RESOURCE_TYPES) {
 			if (availableResource[cycle[i]]) {
 				availableResource[cycle[i]] = false;
 				availableResources--;
@@ -240,45 +171,23 @@ void Unit::adjustResourceType() {
 	checkIfPathfindingResetIsNeeded();
 }
 
-#ifdef DEBUG
-void Unit::checkUnitSteps(Unit* unit) {
-	int openness = 0;
-	for (int i = 0; i < unit->cycleLength; i++) {
-		if (unit->cycle[i] == OPEN_BRACKET) {
-			openness++;
-			if (unit->cycle[i + 1] == CLOSE_BRACKET) {
-				error("A steps block can not be empty");
-			}
-		}
-		if (unit->cycle[i] == CLOSE_BRACKET) {
-			openness--;
-			if (openness < 0) {
-				error("It can not close more brackets than it opens");
-			}
-		}
-		if (unit->cycleCurrentStep == i){
-			if (openness > 1) {
-				error("The unit can not execute a block inner content");
-			}
-			if (openness == 1 && unit->cycle[i] != OPEN_BRACKET) {
-				error("The unit can not execute a block inner content");
-			}
-		}
-		if (unit->cycleCurrentStep > unit->cycleLength) {
-			error("There is no such step");
-		}
-	}
-	if (openness != 0) {
-		error("All brackets should be closed");
-	}
-}
-#endif
-
-bool Unit::hasBrackets() {
+bool Unit::hasDuplicate() {
 	for (int i = 0; i < cycleLength; i++) {
-		if (cycle[i] == OPEN_BRACKET) {
+		if (cycle[i] == INSTRUCTION_DUPLICATE) {
 			return true;
 		}
 	}
 	return false;
+}
+
+bool Unit::cycleIsCorrect() {
+	for (int i = 0; i < cycleLength; i++) {
+		if (cycle[i] == INSTRUCTION_DUPLICATE) {
+			int p = (i + cycleLength - 1) % cycleLength;
+			if (cycle[p] == INSTRUCTION_DUPLICATE) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
