@@ -1,8 +1,5 @@
 #include "Common.h"
 
-const int SCREEN_WIDTH = 1200;
-const int SCREEN_HEIGHT = 750;
-
 int viewX = MAP_WIDTH / 2 - VIEW_WIDTH / 2;
 int viewY = MAP_WIDTH / 2 - VIEW_WIDTH / 2;
 int viewZ = MAP_HEIGHT / 2 - VIEW_HEIGHT / 2;
@@ -80,39 +77,36 @@ bool graphics_init()
 
 	screenSurface = SDL_GetWindowSurface(window);
 
-	string path = "C:/Users/Usuario/Documents/Projects/MapProject/Resources/";
-	//string path = "C:/Users/alfonso.esteves/Documents/Otros/MapProject/Resources/";
-
-	blackTopImage = loadSurface(path + "Images/black_top.bmp");
-	blackLeftImage = loadSurface(path + "Images/black_left.bmp");
-	blackLeftPlusImage = loadSurface(path + "Images/black_left_plus.bmp");
-	blackRightImage = loadSurface(path + "Images/black_right.bmp");
-	blackRightPlusImage = loadSurface(path + "Images/black_right_plus.bmp");
-	groundImage = loadSurface(path + "Images/ground.bmp");
-	groundTopImage = loadSurface(path + "Images/ground_top.bmp");
-	grassImage = loadSurface(path + "Images/grass.bmp");
-	grassTopImage = loadSurface(path + "Images/grass_top.bmp");
-	waterTopImage = loadSurface(path + "Images/water_top.bmp");
-	generatorImage = loadSurface(path + "Images/generator.bmp");
-	generatorTopImage = loadSurface(path + "Images/generator_top.bmp");
-	unitImage[0] = loadSurface(path + "Images/unitRed.bmp");
-	unitImage[1] = loadSurface(path + "Images/unitYellow.bmp");
-	unitImage[2] = loadSurface(path + "Images/unitGreen.bmp");
-	unitImage[3] = loadSurface(path + "Images/unitSky.bmp");
-	unitImage[4] = loadSurface(path + "Images/unitBlue.bmp");
-	unitImage[5] = loadSurface(path + "Images/unitPurple.bmp");
-	unitImage[6] = loadSurface(path + "Images/unitBlack.bmp");
-	unitImage[7] = loadSurface(path + "Images/unitWhite.bmp");
-	resourceImages[0] = loadSurface(path + "Images/resourceRed.bmp");
-	resourceImages[1] = loadSurface(path + "Images/resourceYellow.bmp");
-	resourceImages[2] = loadSurface(path + "Images/resourceGreen.bmp");
-	resourceImages[3] = loadSurface(path + "Images/resourceSky.bmp");
-	resourceImages[4] = loadSurface(path + "Images/resourceBlue.bmp");
-	resourceImages[5] = loadSurface(path + "Images/resourcePurple.bmp");
-	resourceImages[6] = loadSurface(path + "Images/resourceBlack.bmp");
-	resourceImages[7] = loadSurface(path + "Images/resourceWhite.bmp");
+	blackTopImage = loadSurface(RESOURCES_PATH + "Images/black_top.bmp");
+	blackLeftImage = loadSurface(RESOURCES_PATH + "Images/black_left.bmp");
+	blackLeftPlusImage = loadSurface(RESOURCES_PATH + "Images/black_left_plus.bmp");
+	blackRightImage = loadSurface(RESOURCES_PATH + "Images/black_right.bmp");
+	blackRightPlusImage = loadSurface(RESOURCES_PATH + "Images/black_right_plus.bmp");
+	groundImage = loadSurface(RESOURCES_PATH + "Images/ground.bmp");
+	groundTopImage = loadSurface(RESOURCES_PATH + "Images/ground_top.bmp");
+	grassImage = loadSurface(RESOURCES_PATH + "Images/grass.bmp");
+	grassTopImage = loadSurface(RESOURCES_PATH + "Images/grass_top.bmp");
+	waterTopImage = loadSurface(RESOURCES_PATH + "Images/water_top.bmp");
+	generatorImage = loadSurface(RESOURCES_PATH + "Images/generator.bmp");
+	generatorTopImage = loadSurface(RESOURCES_PATH + "Images/generator_top.bmp");
+	unitImage[0] = loadSurface(RESOURCES_PATH + "Images/unitRed.bmp");
+	unitImage[1] = loadSurface(RESOURCES_PATH + "Images/unitYellow.bmp");
+	unitImage[2] = loadSurface(RESOURCES_PATH + "Images/unitGreen.bmp");
+	unitImage[3] = loadSurface(RESOURCES_PATH + "Images/unitSky.bmp");
+	unitImage[4] = loadSurface(RESOURCES_PATH + "Images/unitBlue.bmp");
+	unitImage[5] = loadSurface(RESOURCES_PATH + "Images/unitPurple.bmp");
+	unitImage[6] = loadSurface(RESOURCES_PATH + "Images/unitBlack.bmp");
+	unitImage[7] = loadSurface(RESOURCES_PATH + "Images/unitWhite.bmp");
+	resourceImages[0] = loadSurface(RESOURCES_PATH + "Images/resourceRed.bmp");
+	resourceImages[1] = loadSurface(RESOURCES_PATH + "Images/resourceYellow.bmp");
+	resourceImages[2] = loadSurface(RESOURCES_PATH + "Images/resourceGreen.bmp");
+	resourceImages[3] = loadSurface(RESOURCES_PATH + "Images/resourceSky.bmp");
+	resourceImages[4] = loadSurface(RESOURCES_PATH + "Images/resourceBlue.bmp");
+	resourceImages[5] = loadSurface(RESOURCES_PATH + "Images/resourcePurple.bmp");
+	resourceImages[6] = loadSurface(RESOURCES_PATH + "Images/resourceBlack.bmp");
+	resourceImages[7] = loadSurface(RESOURCES_PATH + "Images/resourceWhite.bmp");
 	
-	font = TTF_OpenFont((path + "OpenSans-Regular.ttf").c_str(), 14);
+	font = TTF_OpenFont((RESOURCES_PATH + "OpenSans-Regular.ttf").c_str(), 14);
 	
 	for (int i = 0; i < VIEW_WIDTH; i++) {
 		for (int j = 0; j < VIEW_WIDTH; j++) {

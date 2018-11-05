@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 44
+#define SEED 45
 
 //200
 #define UNIT_COUNT 100
@@ -16,9 +16,6 @@
 
 #define CIRCULAR_ARRAY_OF_TILES 10000
 #define CIRCULAR_ARRAY_OF_AREAS 10000
-
-#define VIEW_WIDTH 60
-#define VIEW_HEIGHT 60
 
 //This should be grater than the slowest object cycle
 #define BUCKETS 701
