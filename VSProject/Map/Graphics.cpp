@@ -27,7 +27,7 @@ SDL_Surface* grassTopImage = NULL;
 SDL_Surface* waterTopImage = NULL;
 SDL_Surface* generatorImage = NULL;
 SDL_Surface* generatorTopImage = NULL;
-SDL_Surface* unitImage[6];
+SDL_Surface* unitImage[RESOURCE_TYPES];
 SDL_Surface* resourceImages[RESOURCE_TYPES];
 
 int screenX[VIEW_WIDTH][VIEW_WIDTH];
@@ -46,7 +46,7 @@ SDL_Surface* loadSurface(std::string path)
 	{
 		error("Unable to load image");
 	}
-	else
+	else 
 	{
 		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
 		if (optimizedSurface == NULL)
@@ -101,12 +101,16 @@ bool graphics_init()
 	unitImage[3] = loadSurface(path + "Images/unitSky.bmp");
 	unitImage[4] = loadSurface(path + "Images/unitBlue.bmp");
 	unitImage[5] = loadSurface(path + "Images/unitPurple.bmp");
+	unitImage[6] = loadSurface(path + "Images/unitBlack.bmp");
+	unitImage[7] = loadSurface(path + "Images/unitWhite.bmp");
 	resourceImages[0] = loadSurface(path + "Images/resourceRed.bmp");
 	resourceImages[1] = loadSurface(path + "Images/resourceYellow.bmp");
 	resourceImages[2] = loadSurface(path + "Images/resourceGreen.bmp");
 	resourceImages[3] = loadSurface(path + "Images/resourceSky.bmp");
 	resourceImages[4] = loadSurface(path + "Images/resourceBlue.bmp");
 	resourceImages[5] = loadSurface(path + "Images/resourcePurple.bmp");
+	resourceImages[6] = loadSurface(path + "Images/resourceBlack.bmp");
+	resourceImages[7] = loadSurface(path + "Images/resourceWhite.bmp");
 	
 	font = TTF_OpenFont((path + "OpenSans-Regular.ttf").c_str(), 14);
 	
@@ -162,7 +166,7 @@ void graphics_draw_text() {
 			}
 
 			for (int i = 0; i < selectedUnit->bag.size(); i++) {
-				format("%s <<", stepName(selectedUnit->bag[i]).c_str());
+				format("%s", stepName(selectedUnit->bag[i]).c_str());
 				message = TTF_RenderText_Solid(font, formated, textColor);
 				SDL_Rect position = { 20, 400 + i * 15, 0, 0 };
 				SDL_BlitSurface(message, NULL, screenSurface, &position);
@@ -384,8 +388,14 @@ string stepName(int step) {
 		return "blue";
 	case 5:
 		return "purple";
+	case 6:
+		return "black";
+	case 7:
+		return "white";
 	case INSTRUCTION_DUPLICATE:
-		return "x";
+		return "DUPLICATE";
+	case INSTRUCTION_NEW_INSTRUCTION:
+		return "NEW INSTRUCTION";
 	}
 	return NULL;
 }

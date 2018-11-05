@@ -66,9 +66,12 @@ void Unit::execute() {
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_DUPLICATE) {
 		createUnit();
 	}
+	else if (cycle[cycleCurrentStep] == INSTRUCTION_NEW_INSTRUCTION) {
+		newInstruction();
+	}
 #	ifdef DEBUG
 	else {
- 		error("Units can only execute resource searches or open brackets");
+ 		error("Wrong instruction");
 	}
 #	endif
 	if (alive) {
@@ -78,6 +81,14 @@ void Unit::execute() {
 
 void Unit::createUnit() {
 	if (bag.size() > 0) {
+
+
+		//TEMPORARY
+		life += LIFE;
+
+
+
+
 		int newLife = (life * 9) / 10;
 		if (newLife > 0) {
 			Unit * unit = new Unit(x, y, z, newLife);
@@ -94,42 +105,39 @@ void Unit::createUnit() {
 }
 
 void Unit::modifyCycle(int chancesOfAddingStep) {
-	do {
-		if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_LENGTH) {//Add a step or a block
+	if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_LENGTH) {//Add a step or a block
+		life = LIFE;
+		int x = rand() % (cycleLength + 1);
+		for (int i = cycleLength; i > x; i--) {
+			cycle[i] = cycle[i - 1];
+		}
+		cycle[x] = (lookingForResource + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
+		cycleLength++;
+		if (x <= cycleCurrentStep) {
+			cycleCurrentStep++;
+		}
+	}
+	else {//Remove a step or a block
+		cycleLength--;
+		if (cycleLength > 0) {
 			life = LIFE;
 			int x = rand() % (cycleLength + 1);
-			for (int i = cycleLength; i > x; i--) {
-				cycle[i] = cycle[i - 1];
+			for (int i = x; i < cycleLength; i++) {
+				cycle[i] = cycle[i + 1];
 			}
-			if (rand() % CHANCES_OF_ADDING_A_DUPLICATION_INSTRUCTION == 0) {
-				cycle[x] = INSTRUCTION_DUPLICATE;
+			if (x < cycleCurrentStep) {
+				cycleCurrentStep--;
 			}
 			else {
-				cycle[x] = (lookingForResource + rand() % (RESOURCE_TYPES - 1) + 1) % RESOURCE_TYPES;
-			}
-			cycleLength++;
-			if (x <= cycleCurrentStep) {
-				cycleCurrentStep++;
+				cycleCurrentStep = cycleCurrentStep % cycleLength;
 			}
 		}
-		else {//Remove a step or a block
-			if (cycleLength > 1) {
-				life = LIFE;
-				int x = rand() % cycleLength;
-				for (int i = x; i < cycleLength - 1; i++) {
-					cycle[i] = cycle[i + 1];
-				}
-				if (x < cycleCurrentStep) {
-					cycleCurrentStep--;
-				}
-				else {
-					cycleCurrentStep = cycleCurrentStep % (cycleLength - 1);
-				}
-			}
-			cycleLength--;
-		}
-
-	} while (!cycleIsCorrect());
+	}
+/*#	ifdef DEBUG
+	if (!cycleIsCorrect()) {
+		error("wrong cycle");
+	}
+#	endif*/
 }
 
 void Unit::adjustResourceType() {
@@ -171,6 +179,14 @@ void Unit::adjustResourceType() {
 	checkIfPathfindingResetIsNeeded();
 }
 
+int Unit::calculateWorth() {
+	int w = (LIFE * cycleLength) / 6;
+	if (hasDuplicate()) {
+		w += (LIFE * cycleLength * cycleLength) / 4;
+	}
+	return w;
+}
+
 bool Unit::hasDuplicate() {
 	for (int i = 0; i < cycleLength; i++) {
 		if (cycle[i] == INSTRUCTION_DUPLICATE) {
@@ -180,14 +196,23 @@ bool Unit::hasDuplicate() {
 	return false;
 }
 
-bool Unit::cycleIsCorrect() {
-	for (int i = 0; i < cycleLength; i++) {
-		if (cycle[i] == INSTRUCTION_DUPLICATE) {
-			int p = (i + cycleLength - 1) % cycleLength;
-			if (cycle[p] == INSTRUCTION_DUPLICATE) {
-				return false;
-			}
+void Unit::newInstruction() {
+	if (bag.size() > 0) {
+
+
+		//TEMPORARY
+		life += LIFE;
+
+
+
+		int resource = bag[bag.size() - 1];
+		if (resource % 2 == 0) {
+			bag[bag.size() - 1] = INSTRUCTION_DUPLICATE;
+		}
+		else {
+			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
 		}
 	}
-	return true;
+	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+	checkIfPathfindingResetIsNeeded();
 }

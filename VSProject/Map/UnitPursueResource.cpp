@@ -91,30 +91,27 @@ bool Unit::checkReachedResource() {
 					life -= currentUnit->life;
 				}
 				else {
-					currentUnit->alive = false;
+					alive = false;
 				}
 				if(currentUnit->life > life) {
 					currentUnit->life -= life;
 				}
 				else {
-					alive = false;
+					currentUnit->alive = false;
 				}
 			}
 			else {
 				current->alive = false;
 			}
 			if (alive) {
-				life += LIFE * cycleLength / 2;
-				if (hasDuplicate()) {
-					life += LIFE * cycleLength / 2;
-				}
+				life += calculateWorth();
 				if (bag.size() < MAX_CYCLE_LENGTH) {
 					bag.push_back(lookingForResource);
 				}
 				cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
 				checkIfPathfindingResetIsNeeded();
 			}
-			else{
+			else {
 				areasMap[x][y][z]->decreaseResource(resourceType);
 				removeFromTile();
 			}

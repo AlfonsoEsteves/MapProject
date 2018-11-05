@@ -3,12 +3,12 @@
 #include <vector>
 
 #define INSTRUCTION_DUPLICATE RESOURCE_TYPES 
-#define INSTRUCTIONS INSTRUCTION_DUPLICATE + 1
+#define INSTRUCTION_NEW_INSTRUCTION RESOURCE_TYPES + 1
+#define INSTRUCTIONS RESOURCE_TYPES + 2
 
-#define LIFE 200
+#define LIFE 220
 
 #define CHANCES_OF_ADDING_A_STEP 6
-#define CHANCES_OF_ADDING_A_DUPLICATION_INSTRUCTION 5
 
 #define MAX_CYCLE_LENGTH 15
 
@@ -88,7 +88,7 @@ public:
 
 	//bool dummyMovementSeemsFine;
 
-	Unit(int _x, int _y, int _z,  int _life);
+	Unit(int _x, int _y, int _z, int _life);
 	~Unit();
 	void execute();
 	void modifyCycle(int chancesOfDecreasing);
@@ -96,5 +96,6 @@ public:
 	unsigned char type();
 	void adjustResourceType();
 	bool hasDuplicate();
-	bool cycleIsCorrect();
+	int calculateWorth();
+	void newInstruction();
 };

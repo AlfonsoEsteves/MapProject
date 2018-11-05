@@ -1,5 +1,16 @@
-voy a hacer que las unidades no aborten si no hay (o si se aleja) el recurso que buscan
+hacer que las unidades se den recursos
 
-luego
+solo se le puede dar un recurso a aquella unidad que lo busca
+  de lo contrario le voy a romper la sequencia que esta creando
 
-voy a implementar lo de la bag
+ambos se tienen que dirigir al otro, de lo contrario van a perder mucho tiempo buscandoce
+
+va a haber una instruccion que aumenta en 1 el recurso recogido (no se si el ultimo o todos)
+  o sino, mergear todos los recursos en el bag con la funcion de hash
+
+voy a incrementar la cantidad de recursos, para que sea mas critico, de lo contrario siempre se puede encontrar un recurso cerca
+
+
+
+
+lo mejor para cada unidad es consumir el recurso opuesto

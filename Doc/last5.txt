@@ -40,4 +40,4 @@ Maybe the best thing is to allow units to take away resources from other units i
 
 how am I gonna insert specific instructions like: combine, conditions, createUnit???
   well
-    I coul have an instruction that is: "convert last resource into a specific instration"
+    I coul have an instruction that is: "convert last resource into a specific instrution"

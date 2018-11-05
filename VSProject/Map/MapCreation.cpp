@@ -29,7 +29,7 @@ void map_init()
 	}
 
 	createTerrainWithMidPointDisplacement();
-	/*
+	
 	int dir = rand() % 400;
 	tunnel(MAP_WIDTH / 2, MAP_WIDTH / 2, MAP_HEIGHT / 2, dir, 100, 550);
 	tunnel(MAP_WIDTH / 2, MAP_WIDTH / 2, MAP_HEIGHT / 2, (dir + 200) % 400, 100, 550);
@@ -50,7 +50,7 @@ void map_init()
 				}
 			}
 		}
-	}*/
+	}
 
 	for (int i = 0; i < MAP_WIDTH; i++) {
 		for (int j = 0; j < MAP_WIDTH; j++) {
@@ -70,7 +70,7 @@ void map_init()
 			z = rand() % MAP_HEIGHT;
 		} while (!tileIsSteppable(x, y, z));
 
-		Unit * unit = new Unit(x, y, z, LIFE);
+		Unit * unit = new Unit(x, y, z, rand() % LIFE + 10);
 		for (int i = rand() % 3; i >= 0; i--) {
 			unit->modifyCycle(1);
 		}
