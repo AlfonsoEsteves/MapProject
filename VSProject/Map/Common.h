@@ -27,6 +27,8 @@ extern Object* selected;
 
 extern char formated[256];
 
+extern int frameDuration;
+
 #ifdef DEBUG
 extern int lastExecutedObject;
 /*extern int debug_areasCreated;

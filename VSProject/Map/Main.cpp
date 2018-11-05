@@ -2,6 +2,8 @@
 
 SDL_Event e;
 
+int frameDuration = 50;
+
 void execute_game_frame();
 
 int main(int argc, char* args[])
@@ -23,8 +25,8 @@ int main(int argc, char* args[])
 
 	while (!programExecutionQuit) {
 		newTime = SDL_GetTicks();
-		if (newTime - oldTime>FRAME_DURATION) {
-			oldTime += FRAME_DURATION;
+		if (newTime - oldTime > frameDuration) {
+			oldTime += frameDuration;
 			execute_game_frame();
 
 #			ifdef LOG_TIME
@@ -99,6 +101,7 @@ void readInput() {
 			case SDLK_KP_0:
 				jump = 7 - jump;
 				break;
+
 			case SDLK_KP_2:
 				viewX += jump;
 				break;
@@ -121,6 +124,20 @@ void readInput() {
 
 			case SDLK_KP_3:
 				viewZ--;
+				break;
+
+			case SDLK_KP_PLUS:
+				if (frameDuration > 20) {
+					frameDuration = frameDuration / 2;
+				}
+				printf("Frame duration: %d\n", frameDuration);
+				break;
+
+			case SDLK_KP_MINUS:
+				if (frameDuration < 2000) {
+					frameDuration = frameDuration * 2;
+				}
+				printf("Frame duration: %d\n", frameDuration);
 				break;
 
 			case SDLK_ESCAPE:

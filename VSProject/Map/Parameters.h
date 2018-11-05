@@ -1,7 +1,6 @@
 #pragma once
 
-#define SEED 42
-#define FRAME_DURATION 50
+#define SEED 44
 
 //200
 #define UNIT_COUNT 100
