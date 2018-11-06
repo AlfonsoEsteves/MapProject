@@ -79,7 +79,59 @@ bool Unit::checkReachedResource() {
 #	endif
 	Object* current = unitsMap[x][y][z];
 	while (current != NULL) {
-		if (current->resourceType == lookingForResource) {
+		bool foundInCurrentUnitBag = false;
+		bool pickUpUnit = false;
+		if (current->objectType == objectUnit) {
+			Unit* currentUnit = (Unit*)current;
+			//for (int i = 0; i < currentUnit->bag.size(); i++) {
+			//	if (currentUnit->bag[i] == lookingForResource) {
+			//		currentUnit->bag.erase(currentUnit->bag.begin() + i);
+			//		foundInCurrentUnitBag = true;
+			//	}
+			//}
+			if (!foundInCurrentUnitBag) {
+				if (currentUnit->resourceType == lookingForResource) {
+					if (life > currentUnit->life) {
+						life -= currentUnit->life;
+					}
+					else {
+						areasMap[x][y][z]->decreaseResource(resourceType);
+						removeFromTile();
+						alive = false;
+					}
+					if (currentUnit->life > life) {
+						currentUnit->life -= life;
+					}
+					else {
+						pickUpUnit = true;
+					}
+				}
+			}
+		}
+		else {
+			if (current->resourceType == lookingForResource) {
+				pickUpUnit = true;
+			}
+		}
+		if (pickUpUnit) {
+			areasMap[x][y][z]->decreaseResource(current->resourceType);
+			current->removeFromTile();
+			current->alive = false;
+		}
+		if (pickUpUnit || foundInCurrentUnitBag) {
+			life += calculateWorth();
+			if (bag.size() < MAX_CYCLE_LENGTH) {
+				bag.push_back(lookingForResource);
+			}
+			cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+			checkIfPathfindingResetIsNeeded();
+		}
+		if (!alive || pickUpUnit || foundInCurrentUnitBag) {
+			return true;
+		}
+		current = current->sharesTileWithObject;
+
+		/*if (current->resourceType == lookingForResource) {
 #			ifdef LOG_PF
 			if (unitId == DEBUG_UNIT) {
 				printf("Unit reached resource\n\n");
@@ -122,7 +174,7 @@ bool Unit::checkReachedResource() {
 			}
 			return true;
 		}
-		current = current->sharesTileWithObject;
+		current = current->sharesTileWithObject;*/
 	}
 	return false;
 }

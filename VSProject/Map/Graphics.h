@@ -3,8 +3,8 @@
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 750
 
-#define RESOURCES_PATH string("C:/Users/Usuario/Documents/Projects/MapProject/Resources/")
-//#define RESOURCES_PATH string("C:/Users/alfonso.esteves/Documents/Otros/MapProject/Resources/")
+//#define RESOURCES_PATH string("C:/Users/Usuario/Documents/Projects/MapProject/Resources/")
+#define RESOURCES_PATH string("C:/Users/alfonso.esteves/Documents/Otros/MapProject/Resources/")
 
 #define VIEW_WIDTH 90
 #define VIEW_HEIGHT 90

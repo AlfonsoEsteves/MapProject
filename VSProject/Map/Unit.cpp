@@ -133,11 +133,6 @@ void Unit::modifyCycle(int chancesOfAddingStep) {
 			}
 		}
 	}
-/*#	ifdef DEBUG
-	if (!cycleIsCorrect()) {
-		error("wrong cycle");
-	}
-#	endif*/
 }
 
 void Unit::adjustResourceType() {
