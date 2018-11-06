@@ -27,18 +27,10 @@ extern Object* selected;
 
 extern char formated[256];
 
-extern int frameDuration;
+extern unsigned int frameDuration;
 
 #ifdef DEBUG
 extern int lastExecutedObject;
-/*extern int debug_areasCreated;
-extern int debug_areasDestroyed;
-extern int debug_chunksCreated;
-extern int debug_chunksDestroyed;
-extern int debug_unitsCreated;
-extern int debug_unitsDestroyed;
-extern int debug_generatorsCreated;
-extern int debug_generatorsDestroyed;*/
 #endif
 
 void format(const char *fmt, ...);

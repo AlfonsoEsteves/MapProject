@@ -2,7 +2,7 @@
 
 SDL_Event e;
 
-int frameDuration = 50;
+unsigned int frameDuration = 50;
 
 void execute_game_frame();
 

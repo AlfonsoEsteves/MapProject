@@ -1,0 +1,22 @@
+Como puedo crear sinergia entre unidades?
+  
+Talves q el desecho de algunas sea bueno para otras
+
+ejemplo basico:
+
+4 recursos basicos y 4 recursos complejos
+redB
+blueB
+yellowB
+greenB
+redC
+blueC
+yellowC
+greenC
+
+consumir un recurso basico da vida
+consumir un recurso complejo da un poco mas de vida y genera un recurso basico de desperdicio
+
+La unidad tiene un tipo preferido de recurso, por ejemplo red (ya sea basico o complejo)
+cuando la unidad consume redC, genera un desecho greenB, blueB, o yelloB
+  esto va a depender del hash de la unidad o alguna otra caracteristica fija de la unidad
