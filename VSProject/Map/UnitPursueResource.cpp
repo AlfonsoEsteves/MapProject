@@ -93,17 +93,18 @@ bool Unit::checkReachedResource() {
 				if (currentUnit->resourceType == lookingForResource) {
 					if (life > currentUnit->life) {
 						life -= currentUnit->life;
+						pickUpUnit = true;
 					}
 					else {
 						areasMap[x][y][z]->decreaseResource(resourceType);
 						removeFromTile();
 						alive = false;
-					}
-					if (currentUnit->life > life) {
-						currentUnit->life -= life;
-					}
-					else {
-						pickUpUnit = true;
+						if (currentUnit->life > life) {
+							currentUnit->life -= life;
+						}
+						else {
+							pickUpUnit = true;
+						}
 					}
 				}
 			}
@@ -125,56 +126,12 @@ bool Unit::checkReachedResource() {
 			}
 			cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
 			checkIfPathfindingResetIsNeeded();
+			return true;
 		}
-		if (!alive || pickUpUnit || foundInCurrentUnitBag) {
+		if (!alive) {
 			return true;
 		}
 		current = current->sharesTileWithObject;
-
-		/*if (current->resourceType == lookingForResource) {
-#			ifdef LOG_PF
-			if (unitId == DEBUG_UNIT) {
-				printf("Unit reached resource\n\n");
-			}
-#			endif
-			if (current->objectType == objectUnit) {
-				Unit* currentUnit = (Unit*)current;
-				if (life > currentUnit->life) {
-					life -= currentUnit->life;
-				}
-				else {
-					alive = false;
-				}
-				if(currentUnit->life > life) {
-					currentUnit->life -= life;
-				}
-				else {
-					currentUnit->alive = false;
-				}
-			}
-			else {
-				current->alive = false;
-			}
-			if (alive) {
-				life += calculateWorth();
-				if (bag.size() < MAX_CYCLE_LENGTH) {
-					bag.push_back(lookingForResource);
-				}
-				cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
-				checkIfPathfindingResetIsNeeded();
-			}
-			else {
-				areasMap[x][y][z]->decreaseResource(resourceType);
-				removeFromTile();
-			}
-			if (!current->alive) {
-				areasMap[x][y][z]->decreaseResource(current->resourceType);
-				current->removeFromTile();
-				current->alive = false;
-			}
-			return true;
-		}
-		current = current->sharesTileWithObject;*/
 	}
 	return false;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 46
+#define SEED 48
 
 //200
 #define UNIT_COUNT 100
@@ -29,13 +29,13 @@
 
 #define RESOURCE_TYPES 8
 
-#define CALCULATE_HASH_AT_TIME 50
+//#define CALCULATE_HASH_AT_TIME 400
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME 1398
+#define DEBUG_TIME -1
 #define DEBUG_OBJECT -1
 
 #ifdef DEBUG

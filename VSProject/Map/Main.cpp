@@ -40,16 +40,16 @@ int main(int argc, char* args[])
 #			endif
 
 #			ifdef CALCULATE_HASH_AT_TIME
-			if (time == CALCULATE_HASH_AT_TIME) {
-				int hash = 0;
-				for (int i = 0; i < BUCKETS; i++) {
-					for (std::list<Object*>::iterator it = objects[i].begin(); it != objects[i].end(); it++)
-					{
-						Object* object = *it;
-						hash = (hash + object->x + object->y * 7 + object->z * 49) % 1000;
-					}
+			int hash = 0;
+			for (int i = 0; i < BUCKETS; i++) {
+				for (std::list<Object*>::iterator it = objects[i].begin(); it != objects[i].end(); it++)
+				{
+					Object* object = *it;
+					hash = (hash + object->x + object->y * 7 + object->z * 49) % 1000;
 				}
-				printf("HASH: %d\n", hash);
+			}
+			printf("%d:%d ", time, hash);
+			if (time == CALCULATE_HASH_AT_TIME) {
 				pause();
 			}
 #			endif
@@ -154,5 +154,5 @@ void readInput() {
 void execute_game_frame() {
 	readInput();
 	execute_frame();
-	//graphics_draw();
+	graphics_draw();
 }
