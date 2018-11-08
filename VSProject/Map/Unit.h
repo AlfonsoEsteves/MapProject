@@ -25,6 +25,8 @@ class Area;
 class Unit : public Object{
 private:
 	bool checkReachedResource();
+	bool checkReachedResourceGive();
+	bool checkReachedResourceSearch();
 	void pursueResource();
 	void createUnit();
 
@@ -99,4 +101,6 @@ public:
 	bool hasDuplicate();
 	int calculateWorth();
 	void newInstruction();
+	void giveResource(Unit* taker);
+	void aquireResource();
 };
