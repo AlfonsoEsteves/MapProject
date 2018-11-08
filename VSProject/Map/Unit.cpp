@@ -51,6 +51,9 @@ void Unit::execute() {
 #	endif
 	life--;
 	if (life == 0) {
+		if (resourceSearchStatus != -1) {
+			aca deberia desmarcar lo que se busca o lo que se ofrece
+		}
 		modifyCycle(CHANCES_OF_ADDING_A_STEP);
 		if (cycleLength == 0) {
 			removeFromTile();
@@ -170,7 +173,7 @@ void Unit::adjustResourceType() {
 		areasMap[x][y][z]->increaseResource(newResourceType);
 		resourceType = newResourceType;
 	}
-	checkIfPathfindingResetIsNeeded();
+	nextStep(false);
 }
 
 int Unit::calculateWorth() {
