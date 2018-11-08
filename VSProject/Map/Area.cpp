@@ -41,6 +41,17 @@ Area::~Area()
 }
 
 void Area::increaseResource(int resource) {
+
+
+
+	if (chunk->x == 132 && chunk->y == 264 && chunk->z == 12) {
+		printf("");
+	}
+
+
+
+
+
 	resources[resource]++;
 	if (superArea != NULL) {
 		superArea->increaseResource(resource);

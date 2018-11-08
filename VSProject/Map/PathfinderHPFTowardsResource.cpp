@@ -14,12 +14,12 @@ int Unit::resetPathTowardsResource() {
 
 	Area * area = areasMap[x][y][z];
 
-	if (area->resources[lookingForResource]>0) {
+	if (area->resources[resourceSearchStatus]>0) {
 		lowestDestinationAreaReached = area;
 		return dijkstraTowardsResourceOrArea(false);
 	}
 
-	while (area->resources[lookingForResource]==0) {
+	while (area->resources[resourceSearchStatus]==0) {
 		oriAreas[area->lvl] = area;
 		area = area->superArea;
 		if (area == NULL) {
@@ -35,7 +35,7 @@ int Unit::resetPathTowardsResource() {
 int Unit::adjustPathTowardsResource() {
 	Area * reachedArea = areasMap[x][y][z];
 
-	if (reachedArea->resources[lookingForResource]>0) {
+	if (reachedArea->resources[resourceSearchStatus]>0) {
 		lowestDestinationAreaReached = reachedArea;
 		baseDestinationArea = NULL;
 		return dijkstraTowardsResourceOrArea(false);
@@ -49,7 +49,7 @@ int Unit::adjustPathTowardsResource() {
 
 		//Even if the unit didn't reach its lowestDestinationAreaReached, a resource may 
 		//have popped up nearby, so the lowestDestinationAreaReached should be updated.
-		if (reachedArea->superArea->resources[lookingForResource]>0) {
+		if (reachedArea->superArea->resources[resourceSearchStatus]>0) {
 			lowestDestinationAreaReached = reachedArea->superArea;
 			return resetPathTowardsResource(reachedArea->lvl);
 		}
@@ -58,7 +58,7 @@ int Unit::adjustPathTowardsResource() {
 		if (reachedArea->lvl == lowestDestinationAreaReached->lvl - 1) {
 			//I check that the lowestDestinationAreaReached still has the resource
 			//  because it could have been removed
-			if (lowestDestinationAreaReached->resources[lookingForResource] > 0) {
+			if (lowestDestinationAreaReached->resources[resourceSearchStatus] > 0) {
 				return resetPathTowardsResource(reachedArea->lvl);
 			}
 			else {
@@ -70,7 +70,7 @@ int Unit::adjustPathTowardsResource() {
 		if (reachedArea->superArea != destinationSuperAreas[reachedArea->lvl]) {
 			//I check that the destinationSuperArea still has the resource
 			//  because it could have been removed
-			if (lowestDestinationAreaReached->resources[lookingForResource] > 0) {
+			if (lowestDestinationAreaReached->resources[resourceSearchStatus] > 0) {
 				return resetPathTowardsResourceOrDestinationSuperArea(reachedArea->lvl);
 			}
 			else {
@@ -169,7 +169,7 @@ Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destAr
 		Area* currentArea = circularArrayOfAreas[circularArrayStart];
 		circularArrayStart = (circularArrayStart + 1) % CIRCULAR_ARRAY_OF_AREAS;
 
-		if (currentArea->superArea == destArea || currentArea->resources[lookingForResource]>0) {
+		if (currentArea->superArea == destArea || currentArea->resources[resourceSearchStatus]>0) {
 			chunksToBeTraveled[currentArea->lvl] = distance;
 			return currentArea->pathFindingBranch;
 		}
@@ -258,7 +258,7 @@ int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 
 		Object* current = unitsMap[tileX][tileY][tileZ];
 		while (current != NULL) {
-			if (current->resourceType == lookingForResource) {
+			if (current->resourceType == resourceSearchStatus) {
 				tilesToBeTraveled = distance;
 				return direction;
 			}

@@ -100,8 +100,7 @@ void Unit::createUnit() {
 			bag.clear();
 		}
 	}
-	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
-	checkIfPathfindingResetIsNeeded();
+	nextStep();
 }
 
 void Unit::modifyCycle(int chancesOfAddingStep) {
@@ -111,7 +110,7 @@ void Unit::modifyCycle(int chancesOfAddingStep) {
 		for (int i = cycleLength; i > x; i--) {
 			cycle[i] = cycle[i - 1];
 		}
-		cycle[x] = (lookingForResource + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
+		cycle[x] = (resourceSearchStatus + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
 		cycleLength++;
 		if (x <= cycleCurrentStep) {
 			cycleCurrentStep++;
@@ -208,6 +207,5 @@ void Unit::newInstruction() {
 			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
 		}
 	}
-	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
-	checkIfPathfindingResetIsNeeded();
+	nextStep();
 }

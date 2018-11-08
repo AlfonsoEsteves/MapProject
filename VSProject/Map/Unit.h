@@ -5,7 +5,7 @@
 #define INSTRUCTION_DUPLICATE RESOURCE_TYPES 
 #define INSTRUCTION_NEW_INSTRUCTION (RESOURCE_TYPES + 1)
 #define INSTRUCTION_GIVE_RESOURCE (RESOURCE_TYPES + 2)
-#define INSTRUCTIONS (RESOURCE_TYPES + 2)
+#define INSTRUCTIONS (RESOURCE_TYPES + 3)
 
 #define LIFE 220
 
@@ -64,7 +64,9 @@ public:
 	char cycleLength;
 	char cycleCurrentStep;
 
-	char lookingForResource;
+	//If this var is less than RESOURCE_TYPES, then it measn the unit is looking for that resource
+	//If it is grater, then it means the unit is trying to give that resource
+	char resourceSearchStatus;
 
 	std::vector<char> bag;
 
@@ -95,7 +97,8 @@ public:
 	~Unit();
 	void execute();
 	void modifyCycle(int chancesOfDecreasing);
-	void checkIfPathfindingResetIsNeeded();
+	void resetPathPoronga();
+	void nextStep();
 	unsigned char type();
 	void adjustResourceType();
 	bool hasDuplicate();
