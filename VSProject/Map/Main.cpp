@@ -154,5 +154,5 @@ void readInput() {
 void execute_game_frame() {
 	readInput();
 	execute_frame();
-	graphics_draw();
+	//graphics_draw();
 }

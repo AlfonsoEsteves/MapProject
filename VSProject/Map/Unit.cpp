@@ -60,7 +60,7 @@ void Unit::execute() {
 		}
 		adjustResourceType();
 	}
-	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
+	if (cycle[cycleCurrentStep] < RESOURCE_TYPES || cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
 		pursueResource();
 	}
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_DUPLICATE) {

@@ -15,6 +15,13 @@ Area::Area() {//This is for the area of the dest tile in the pathfinder
 	superArea = NULL;
 	lvl = 0;
 	lastCheckedByUnit = NULL;
+
+	creo que esto no precisa ser safe
+#	ifdef SAFE
+	for (int i = 0; i < RESOURCE_TYPES * 2; i++) {
+		resources[i] = 0;
+	}
+#	endif
 }
 
 Area::Area(Chunk * _chunk)

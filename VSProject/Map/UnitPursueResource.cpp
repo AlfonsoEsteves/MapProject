@@ -83,12 +83,12 @@ bool Unit::checkReachedResource() {
 		bool pickUpUnit = false;
 		if (current->objectType == objectUnit) {
 			Unit* currentUnit = (Unit*)current;
-			//for (int i = 0; i < currentUnit->bag.size(); i++) {
-			//	if (currentUnit->bag[i] == lookingForResource) {
-			//		currentUnit->bag.erase(currentUnit->bag.begin() + i);
-			//		foundInCurrentUnitBag = true;
-			//	}
-			//}
+			if (currentUnit->cycle[currentUnit->cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
+				if (currentUnit->bag[currentUnit->bag.size() - 1] == lookingForResource) {
+					foundInCurrentUnitBag = true;
+					current->finilizeGiveInstruction();
+				}
+			}
 			if (!foundInCurrentUnitBag) {
 				if (currentUnit->resourceType == lookingForResource) {
 					if (life > currentUnit->life) {
@@ -153,6 +153,12 @@ void Unit::checkIfPathfindingResetIsNeeded() {
 			printf("Started looking for %d\n\n", lookingForResource);
 		}
 #		endif
+	}
+	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
+		lookingForResource = RESOURCE_TYPES + bag[bag.size() - 1];
+	}
+	else {
+		lookingForResource = -1;
 	}
 }
 

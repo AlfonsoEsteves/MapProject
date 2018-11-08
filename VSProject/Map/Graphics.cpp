@@ -390,6 +390,8 @@ string stepName(int step) {
 		return "DUPLICATE";
 	case INSTRUCTION_NEW_INSTRUCTION:
 		return "NEW INSTRUCTION";
+	case INSTRUCTION_GIVE_RESOURCE:
+		return "GIVE";
 	}
 	return NULL;
 }
