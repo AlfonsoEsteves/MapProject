@@ -51,13 +51,10 @@ void Unit::execute() {
 #	endif
 	life--;
 	if (life == 0) {
-		if (resourceSearchStatus != -1) {
-			aca deberia desmarcar lo que se busca o lo que se ofrece
-		}
+		removeResourcesFromArea();
 		modifyCycle(CHANCES_OF_ADDING_A_STEP);
 		if (cycleLength == 0) {
 			removeFromTile();
-			areasMap[x][y][z]->decreaseResource(resourceType);
 			alive = false;
 			return;
 		}
@@ -82,6 +79,30 @@ void Unit::execute() {
 	}
 }
 
+void Unit::removeResourcesFromArea() {
+	areasMap[x][y][z]->decreaseResource(resourceType);
+	if (resourceSearchStatus != -1) {
+		if (resourceSearchStatus < RESOURCE_TYPES) {
+			areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
+		}
+		else {
+			areasMap[x][y][z]->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
+		}
+	}
+}
+
+void Unit::addResourcesToArea() {
+	areasMap[x][y][z]->increaseResource(resourceType);
+	if (resourceSearchStatus != -1) {
+		if (resourceSearchStatus < RESOURCE_TYPES) {
+			areasMap[x][y][z]->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
+		}
+		else {
+			areasMap[x][y][z]->increaseResource(resourceSearchStatus - RESOURCE_TYPES);
+		}
+	}
+}
+
 void Unit::createUnit() {
 	if (bag.size() > 0) {
 
@@ -103,7 +124,7 @@ void Unit::createUnit() {
 			bag.clear();
 		}
 	}
-	nextStep();
+	nextStep(true);
 }
 
 void Unit::modifyCycle(int chancesOfAddingStep) {
@@ -154,9 +175,9 @@ void Unit::adjustResourceType() {
 		}
 	}
 	hash = hash % availableResources;
-	char newResourceType = 0;
+	resourceType = 0;
 	while (true) {
-		if (availableResource[newResourceType]) {
+		if (availableResource[resourceType]) {
 			if (hash == 0) {
 				break;
 			}
@@ -164,15 +185,9 @@ void Unit::adjustResourceType() {
 				hash--;
 			}
 		}
-		newResourceType++;
+		resourceType++;
 	}
-	if (newResourceType != resourceType) {
-		if (resourceType != -1) {
-			areasMap[x][y][z]->decreaseResource(resourceType);
-		}
-		areasMap[x][y][z]->increaseResource(newResourceType);
-		resourceType = newResourceType;
-	}
+	addResourcesToArea();
 	nextStep(false);
 }
 
@@ -210,5 +225,5 @@ void Unit::newInstruction() {
 			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
 		}
 	}
-	nextStep();
+	nextStep(true);
 }

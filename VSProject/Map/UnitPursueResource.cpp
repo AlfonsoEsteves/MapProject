@@ -82,19 +82,6 @@ void Unit::pursueResource() {
 			oldArea->decreaseResource(resourceType);
 			newArea->increaseResource(resourceType);
 			if (resourceSearchStatus != -1) {
-
-
-
-
-
-
-				
-
-
-
-
-
-
 				if (resourceSearchStatus < RESOURCE_TYPES) {
 					oldArea->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
 					newArea->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
@@ -128,7 +115,7 @@ bool Unit::checkReachedResource() {
 
 bool Unit::checkReachedResourceGive() {
 	if (bag.empty()) {
-		nextStep();
+		nextStep(true);
 		return true;
 	}
 	Object* current = unitsMap[x][y][z];
@@ -217,7 +204,7 @@ void Unit::aquireResource() {
 	//There is 1 resource less available
 	areasMap[x][y][z]->decreaseResource(resourceSearchStatus);
 
-	//There is 2 resource less being looked for
+	//There is 1 resource less being looked for
 	areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
 
 	life += calculateWorth();
@@ -225,7 +212,7 @@ void Unit::aquireResource() {
 		bag.erase(bag.begin());
 	}
 	bag.push_back(resourceSearchStatus);
-	nextStep();
+	nextStep(true);
 }
 
 void Unit::resetPathPoronga() {
@@ -238,23 +225,19 @@ void Unit::resetPathPoronga() {
 	lowestDestinationAreaReached = NULL;
 	reachedDestinationBaseArea = false;
 	baseDestinationArea = NULL;
-	resourceSearchStatus = -1;
 }
 
-void Unit::nextStep() {
-	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+void Unit::nextStep(bool moveToTheNextStep) {
+	if (moveToTheNextStep) {
+		cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+	}
 	resetPathPoronga();
+	resourceSearchStatus = -1;
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		resourceSearchStatus = cycle[cycleCurrentStep];
 
 		//There is 1 resource more being looked for
 		areasMap[x][y][z]->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
-
-#		ifdef LOG_PF
-		if (unitId == DEBUG_UNIT) {
-			printf("Started looking for %d\n\n", lookingForResource);
-		}
-#		endif
 	}
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
 		if (!bag.empty()) {
@@ -270,7 +253,7 @@ void Unit::nextStep() {
 void Unit::giveResource(Unit* taker) {
 	taker->aquireResource();
 	bag.erase(bag.end() - 1);
-	nextStep();
+	nextStep(true);
 }
 
 #ifdef DEBUG

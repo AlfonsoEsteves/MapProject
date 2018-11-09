@@ -98,7 +98,7 @@ public:
 	void execute();
 	void modifyCycle(int chancesOfDecreasing);
 	void resetPathPoronga();
-	void nextStep();
+	void nextStep(bool moveToTheNextStep);
 	unsigned char type();
 	void adjustResourceType();
 	bool hasDuplicate();
@@ -106,4 +106,6 @@ public:
 	void newInstruction();
 	void giveResource(Unit* taker);
 	void aquireResource();
+	void removeResourcesFromArea();
+	void addResourcesToArea();
 };
