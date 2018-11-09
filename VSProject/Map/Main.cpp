@@ -15,6 +15,12 @@ int main(int argc, char* args[])
 	graphics_init();
 	map_init();
 
+#	ifdef FAST_FOWARD
+	while (time < FAST_FOWARD) {
+		execute_frame();
+	}
+#	endif
+
 	unsigned int oldTime = SDL_GetTicks();
 	unsigned int newTime;
 
