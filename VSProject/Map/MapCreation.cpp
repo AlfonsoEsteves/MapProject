@@ -76,6 +76,21 @@ void map_init()
 		}
 		unit->cycleCurrentStep = 0;
 		unit->adjustResourceType();
+
+
+
+
+		if (unit->id == DEBUG_OBJECT) {
+			int asd = 0;
+			asd++;
+		}
+
+
+
+
+
+
+		unit->addToTile();
 	}
 
 	for (int i = 0; i < GENERATORS_COUNT; i++) {
@@ -85,7 +100,8 @@ void map_init()
 			y = rand() % MAP_WIDTH;
 			z = rand() % MAP_HEIGHT;
 		} while (!tileIsSteppable(x, y, z));
-		new Generator(x, y, z - 1);
+		Generator* generator = new Generator(x, y, z - 1);
+		generator->addToTile();
 		tilesMap[x][y][z - 1] = tileGenerator;
 	}
 }

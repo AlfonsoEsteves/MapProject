@@ -11,4 +11,5 @@ public:
 	~Generator();
 	void execute();
 	unsigned char type();
+	bool providesResource(char _resourceType);
 };

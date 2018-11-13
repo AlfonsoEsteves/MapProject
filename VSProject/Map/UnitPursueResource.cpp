@@ -1,30 +1,8 @@
 #include "Common.h"
 
 void Unit::pursueResource() {
-
-
-
-
-
-
-
-
-	if (id == DEBUG_OBJECT) {
-		Area* asd = areasMap[x][y][z];
-		if (asd->resources[11] > 1) {
-			printf("");
-		}
-		printf("%d\n", asd->resources[11]);
-	}
-
-
-
-
-
-
-
-
-	if (!checkReachedResource()) {//Remember that a resource can be created at any moment, so this is the first thing I should check
+	//Remember that a resource can be created at any moment, so this is the first thing I should check
+	if (!checkReachedResource()) {
 		int attemptedMovement = -1;
 		if (hasToResetPath) {
 			hasToResetPath = false;
@@ -68,30 +46,12 @@ void Unit::pursueResource() {
 				return;
 			}
 		}
-		Area* oldArea = areasMap[x][y][z];
-		removeFromTile();
+
 		int nextX = x + getX(attemptedMovement);
 		int nextY = y + getY(attemptedMovement);
 		z = steppableTileHeight(x, y, z, nextX, nextY);
 		x = nextX;
 		y = nextY;
-		addToTile();
-		Area* newArea = areasMap[x][y][z];
-
-		if (oldArea != newArea) {
-			oldArea->decreaseResource(resourceType);
-			newArea->increaseResource(resourceType);
-			if (resourceSearchStatus != -1) {
-				if (resourceSearchStatus < RESOURCE_TYPES) {
-					oldArea->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
-					newArea->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
-				}
-				else {
-					oldArea->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
-					newArea->increaseResource(resourceSearchStatus - RESOURCE_TYPES);
-				}
-			}
-		}
 
 		checkReachedResource();		
 
@@ -120,7 +80,6 @@ bool Unit::checkReachedResourceGive() {
 	}
 	Object* current = unitsMap[x][y][z];
 	while (current != NULL) {
-		bool pickUpUnit = false;
 		if (current->objectType == objectUnit) {
 			Unit* currentUnit = (Unit*)current;
 			if (currentUnit->cycle[currentUnit->cycleCurrentStep] == resourceSearchStatus - RESOURCE_TYPES) {
@@ -174,26 +133,13 @@ bool Unit::checkReachedResourceSearch() {
 				}
 			}
 		}
-		else {
-			if (current->resourceType == resourceSearchStatus) {
+		else if (current->type() == objectResource) {
+			Resource* currentResource = (Resource*)current;
+			if (currentResource->resourceType == resourceSearchStatus) {
 				pickUpUnit = true;
 			}
 		}
 		if (pickUpUnit) {
-
-
-
-
-
-			if (current->id == DEBUG_OBJECT) {
-				int asd = 0;
-				asd++;
-			}
-
-
-
-
-
 			current->removeFromTile();
 			current->alive = false;
 			aquireResource();
@@ -208,24 +154,6 @@ bool Unit::checkReachedResourceSearch() {
 }
 
 void Unit::aquireResource() {
-
-
-
-
-
-	if (id == DEBUG_OBJECT) {
-		printf("");
-	}
-	Area* asd = areasMap[x][y][z];
-
-
-
-
-
-
-	//There is 1 resource less available
-	areasMap[x][y][z]->decreaseResource(resourceSearchStatus);
-
 	//There is 1 resource less being looked for
 	areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
 
@@ -257,25 +185,20 @@ void Unit::nextStep(bool moveToTheNextStep) {
 	resourceSearchStatus = -1;
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		resourceSearchStatus = cycle[cycleCurrentStep];
-
-		//There is 1 resource more being looked for
-		areasMap[x][y][z]->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
 	}
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
 		if (!bag.empty()) {
 			char lastResourceInBag = bag[bag.size() - 1];
 			resourceSearchStatus = RESOURCE_TYPES + lastResourceInBag;
-
-			//There is 1 resource more available
-			areasMap[x][y][z]->increaseResource(lastResourceInBag);
 		}
 	}
 }
 
 void Unit::giveResource(Unit* taker) {
-	taker->aquireResource();
+	areasMap[x][y][z]->decreaseResource(bag[bag.size() - 1]);
 	bag.erase(bag.end() - 1);
 	nextStep(true);
+	taker->aquireResource();
 }
 
 #ifdef DEBUG

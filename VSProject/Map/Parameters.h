@@ -35,9 +35,9 @@
 //#define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME 419
+#define DEBUG_TIME 35
 //#define DEBUG_OBJECT 66
-#define DEBUG_OBJECT 91
+#define DEBUG_OBJECT 95
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

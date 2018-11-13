@@ -258,7 +258,7 @@ int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 
 		Object* current = unitsMap[tileX][tileY][tileZ];
 		while (current != NULL) {
-			if (current->resourceType == resourceSearchStatus) {
+			if (current->providesResource(resourceSearchStatus)) {
 				tilesToBeTraveled = distance;
 				return direction;
 			}

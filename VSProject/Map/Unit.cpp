@@ -36,6 +36,34 @@ Unit::~Unit(){
 }
 #endif
 
+void Unit::addToTileExtra() {
+	Area* area = areasMap[x][y][z];
+	area->increaseResource(resourceType);
+	if (resourceSearchStatus != -1) {
+		if (resourceSearchStatus < RESOURCE_TYPES) {
+			area->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
+		}
+		else {
+			area->increaseResource(resourceSearchStatus - RESOURCE_TYPES);
+		}
+	}
+}
+
+void Unit::removeFromTileExtra() {
+	Area* area = areasMap[x][y][z];
+	area->decreaseResource(resourceType);
+	if (resourceSearchStatus != -1) {
+		if (resourceSearchStatus < RESOURCE_TYPES) {
+			//The unit was looking for a resource
+			area->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
+		}
+		else {
+			//The unit was trying to give a resource
+			area->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
+		}
+	}
+}
+
 unsigned char Unit::type() {
 	return objectUnit;
 }
@@ -50,32 +78,17 @@ void Unit::execute() {
 	}
 #	endif
 
-
-
-
-	if (id == DEBUG_OBJECT) {
-		if (areasMap[x][y][z] == areasMap[172][228][13]) {
-			int asd = 0;
-			asd++;
-		}
-	}
-
-
-
-
-
-
+	removeFromTile();
 
 	life--;
 	if (life == 0) {
-		removeResourcesFromArea();
 		modifyCycle(CHANCES_OF_ADDING_A_STEP);
-		if (cycleLength == 0) {
-			removeFromTile();
-			alive = false;
+		if (alive) {
+			adjustResourceType();
+		}
+		else {
 			return;
 		}
-		adjustResourceType();
 	}
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES || cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
 		pursueResource();
@@ -91,32 +104,10 @@ void Unit::execute() {
  		error("Wrong instruction");
 	}
 #	endif
+
 	if (alive) {
+		addToTile();
 		objects[(time + slowness) % BUCKETS].push_back(this);
-	}
-}
-
-void Unit::removeResourcesFromArea() {
-	areasMap[x][y][z]->decreaseResource(resourceType);
-	if (resourceSearchStatus != -1) {
-		if (resourceSearchStatus < RESOURCE_TYPES) {
-			areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
-		}
-		else {
-			areasMap[x][y][z]->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
-		}
-	}
-}
-
-void Unit::addResourcesToArea() {
-	areasMap[x][y][z]->increaseResource(resourceType);
-	if (resourceSearchStatus != -1) {
-		if (resourceSearchStatus < RESOURCE_TYPES) {
-			areasMap[x][y][z]->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
-		}
-		else {
-			areasMap[x][y][z]->increaseResource(resourceSearchStatus - RESOURCE_TYPES);
-		}
 	}
 }
 
@@ -172,6 +163,9 @@ void Unit::modifyCycle(int chancesOfAddingStep) {
 				cycleCurrentStep = cycleCurrentStep % cycleLength;
 			}
 		}
+		else {
+			alive = false;
+		}
 	}
 }
 
@@ -204,7 +198,6 @@ void Unit::adjustResourceType() {
 		}
 		resourceType++;
 	}
-	addResourcesToArea();
 	nextStep(false);
 }
 
@@ -243,4 +236,16 @@ void Unit::newInstruction() {
 		}
 	}
 	nextStep(true);
+}
+
+bool Unit::providesResource(char _resourceType) {
+	if (_resourceType == resourceType) {
+		return true;
+	}
+	else if (resourceSearchStatus - RESOURCE_TYPES == _resourceType) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

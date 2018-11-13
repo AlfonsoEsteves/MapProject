@@ -56,6 +56,8 @@ private:
 #	endif
 
 public:
+	char resourceType;
+
 	int life;
 
 	int slowness;//The amount of turns the unit has to wait after moving
@@ -106,6 +108,7 @@ public:
 	void newInstruction();
 	void giveResource(Unit* taker);
 	void aquireResource();
-	void removeResourcesFromArea();
-	void addResourcesToArea();
+	void addToTileExtra();
+	void removeFromTileExtra();
+	bool providesResource(char _resourceType);
 };

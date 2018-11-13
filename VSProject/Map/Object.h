@@ -14,7 +14,6 @@ class Object
 public:
 	int x, y, z;
 	Object* sharesTileWithObject;
-	char resourceType;
 	unsigned char objectType;
 
 	//An object can delete itself, but it can not delete another object.
@@ -27,10 +26,13 @@ public:
 
 	Object(unsigned char _objectType, int _x, int _y, int _z);
 	virtual ~Object();
-	virtual void execute()=0;
-	virtual unsigned char type()=0;
-	void removeFromTile();
+	virtual void execute() = 0;
+	virtual unsigned char type() = 0;
 	void addToTile();
+	void virtual addToTileExtra() {}
+	void removeFromTile();
+	void virtual removeFromTileExtra() {}
+	bool virtual providesResource(char _resourceType) = 0;
 
 #	ifdef DEBUG
 	void checkTileIsOccupiedByAliveObjects();

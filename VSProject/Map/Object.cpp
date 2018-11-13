@@ -20,7 +20,6 @@ Object::Object(unsigned char _objectType, int _x, int _y, int _z)
 	y = _y;
 	z = _z;
 	alive = true;
-	addToTile();
 }
 
 Object::~Object(){
@@ -35,6 +34,7 @@ Object::~Object(){
 void Object::addToTile() {
 	sharesTileWithObject = unitsMap[x][y][z];
 	unitsMap[x][y][z] = this;
+	addToTileExtra();
 }
 
 void Object::removeFromTile() {
@@ -51,6 +51,7 @@ void Object::removeFromTile() {
 #	ifdef SAFE
 	sharesTileWithObject = NULL;
 #	endif
+	removeFromTileExtra();
 }
 
 #ifdef DEBUG
