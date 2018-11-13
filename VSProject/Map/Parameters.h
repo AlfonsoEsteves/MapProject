@@ -32,10 +32,10 @@
 //#define CALCULATE_HASH_AT_TIME 400
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
-#define LOG_TIME true
+//#define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME -1
+#define DEBUG_TIME 402
 #define DEBUG_OBJECT 91
 
 #ifdef DEBUG

@@ -49,6 +49,23 @@ void Unit::execute() {
 		error("A unit can not have an empty cycle");
 	}
 #	endif
+
+
+
+
+	if (id == DEBUG_OBJECT) {
+		if (areasMap[x][y][z] == areasMap[172][228][13]) {
+			int asd = 0;
+			asd++;
+		}
+	}
+
+
+
+
+
+
+
 	life--;
 	if (life == 0) {
 		removeResourcesFromArea();

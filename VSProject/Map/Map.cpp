@@ -2,6 +2,19 @@
 
 void execute_frame()
 {
+	Area* asd = areasMap[172][228][13];
+	for (int i = 0; i < RESOURCE_TYPES * 2; i++) {
+		printf("%d", asd->resources[i]);
+	}
+	printf("\n");
+
+
+
+
+
+
+
+
 	for (std::list<Object*>::iterator it = objects[time % BUCKETS].begin(); it != objects[time % BUCKETS].end(); it++) {
 		Object* object = *it;
 #		ifdef DEBUG
