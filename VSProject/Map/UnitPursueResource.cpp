@@ -159,6 +159,14 @@ bool Unit::checkReachedResourceSearch() {
 					pickUpUnit = true;
 				}
 				else {
+					if (resourceSearchStatus < RESOURCE_TYPES * 2) {
+						if (resourceSearchStatus < RESOURCE_TYPES) {//The unit was looking for a resource
+							areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
+						}
+						else {//The unit was trying to give a resource
+							areasMap[x][y][z]->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
+						}
+					}
 					areasMap[x][y][z]->decreaseResource(resourceType);
 					removeFromTile();
 					alive = false;
@@ -172,6 +180,20 @@ bool Unit::checkReachedResourceSearch() {
 			}
 		}
 		if (pickUpUnit) {
+
+
+
+
+
+			if (current->id == DEBUG_OBJECT) {
+				int asd = 0;
+				asd++;
+			}
+
+
+
+
+
 			current->removeFromTile();
 			current->alive = false;
 			aquireResource();

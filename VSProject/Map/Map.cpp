@@ -2,11 +2,17 @@
 
 void execute_frame()
 {
+	int asdasd = 0;
 	Area* asd = areasMap[172][228][13];
 	for (int i = 0; i < RESOURCE_TYPES * 2; i++) {
 		printf("%d", asd->resources[i]);
+		asdasd += asd->resources[i];
 	}
 	printf("\n");
+	if (asdasd % 2 == 1) {
+		int ewruwieruwyer = 0;
+		ewruwieruwyer++;
+	}
 
 
 
