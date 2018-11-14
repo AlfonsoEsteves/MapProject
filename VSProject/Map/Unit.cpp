@@ -99,7 +99,7 @@ void Unit::execute() {
 		}
 		else {
 			//The unit didn't have a last resource, or it was not givable
-			nextStep(true);
+			nextStep();
 		}
 	}
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_DUPLICATE) {
@@ -142,7 +142,7 @@ void Unit::createUnit() {
 			bag.clear();
 		}
 	}
-	nextStep(true);
+	nextStep();
 }
 
 void Unit::modifyCycle(int chancesOfAddingStep) {
@@ -208,7 +208,7 @@ void Unit::adjustResourceType() {
 		}
 		resourceType++;
 	}
-	nextStep(false);
+	initializeStep();
 }
 
 int Unit::calculateWorth() {
@@ -245,7 +245,7 @@ void Unit::newInstruction() {
 			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
 		}
 	}
-	nextStep(true);
+	nextStep();
 }
 
 bool Unit::providesResource(char _resourceType) {

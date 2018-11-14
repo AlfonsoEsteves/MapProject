@@ -100,7 +100,8 @@ public:
 	void execute();
 	void modifyCycle(int chancesOfDecreasing);
 	void resetPathPoronga();
-	void nextStep(bool moveToTheNextStep);
+	void initializeStep();
+	void nextStep();
 	unsigned char type();
 	void adjustResourceType();
 	bool hasDuplicate();

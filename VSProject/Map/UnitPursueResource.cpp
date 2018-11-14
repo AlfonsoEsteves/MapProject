@@ -75,7 +75,7 @@ bool Unit::checkReachedResource() {
 
 bool Unit::checkReachedResourceGive() {
 	if (bag.empty()) {
-		nextStep(true);
+		nextStep();
 		return true;
 	}
 	Object* current = unitsMap[x][y][z];
@@ -153,7 +153,7 @@ void Unit::aquireResource() {
 		bag.erase(bag.begin());
 	}
 	bag.push_back(resourceSearchStatus);
-	nextStep(true);
+	nextStep();
 }
 
 void Unit::resetPathPoronga() {
@@ -168,10 +168,12 @@ void Unit::resetPathPoronga() {
 	baseDestinationArea = NULL;
 }
 
-void Unit::nextStep(bool moveToTheNextStep) {
-	if (moveToTheNextStep) {
-		cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
-	}
+void Unit::nextStep() {
+	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+	initializeStep();
+}
+
+void Unit::initializeStep() {
 	resetPathPoronga();
 	resourceSearchStatus = -1;
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
@@ -189,7 +191,7 @@ void Unit::nextStep(bool moveToTheNextStep) {
 
 void Unit::giveResource(Unit* taker) {
 	bag.erase(bag.end() - 1);
-	nextStep(true);
+	nextStep();
 	taker->aquireResource();
 }
 
