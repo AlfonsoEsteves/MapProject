@@ -180,7 +180,9 @@ void Unit::nextStep(bool moveToTheNextStep) {
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
 		if (!bag.empty()) {
 			char lastResourceInBag = bag[bag.size() - 1];
-			resourceSearchStatus = RESOURCE_TYPES + lastResourceInBag;
+			if (lastResourceInBag < RESOURCE_TYPES) {
+				resourceSearchStatus = RESOURCE_TYPES + lastResourceInBag;
+			}
 		}
 	}
 }

@@ -90,8 +90,17 @@ void Unit::execute() {
 			return;
 		}
 	}
-	if (cycle[cycleCurrentStep] < RESOURCE_TYPES || cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
+	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		pursueResource();
+	}
+	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
+		if (resourceSearchStatus != -1) {
+			pursueResource();
+		}
+		else {
+			//The unit didn't have a last resource, or it was not givable
+			nextStep(true);
+		}
 	}
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_DUPLICATE) {
 		createUnit();
