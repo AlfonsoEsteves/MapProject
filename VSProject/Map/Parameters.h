@@ -2,7 +2,6 @@
 
 #define SEED 49
 
-//200
 #define UNIT_COUNT 100
 
 #define MAP_WIDTH 384 //6*4*4*4
@@ -36,8 +35,8 @@
 //#define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME 151
-#define DEBUG_OBJECT 53
+#define DEBUG_TIME -1
+#define DEBUG_OBJECT -1
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

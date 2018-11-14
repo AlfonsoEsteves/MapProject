@@ -12,7 +12,9 @@ int lastExecutedObject = -999999;
 #endif
 
 void error(string msg) {
+#	ifdef DEBUG
 	cout << msg << "   time: " << time << "   objectId: " << lastExecutedObject;
+#	endif
 	programExecutionQuit = true;
 	pause();
 }

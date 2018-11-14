@@ -30,11 +30,11 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 #	endif
 }
 
-#ifdef DEBUG
 Unit::~Unit(){
+#	ifdef DEBUG
 	debug_unitCount--;
+#	endif
 }
-#endif
 
 void Unit::addToTileExtra() {
 	Area* area = areasMap[x][y][z];

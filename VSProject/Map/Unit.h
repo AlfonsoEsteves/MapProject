@@ -99,7 +99,6 @@ public:
 	~Unit();
 	void execute();
 	void modifyCycle(int chancesOfDecreasing);
-	void resetPathPoronga();
 	void initializeStep();
 	void nextStep();
 	unsigned char type();

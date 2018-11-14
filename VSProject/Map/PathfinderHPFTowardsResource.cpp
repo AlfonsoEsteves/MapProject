@@ -12,7 +12,6 @@ int Unit::resetPathTowardsResource() {
 		chunksToBeTraveled[i] = -1;
 		oriAreas[i] = NULL;
 	}
-	//baseDestinationArea = NULL;
 	tilesToBeTraveled = -1;
 #   endif
 

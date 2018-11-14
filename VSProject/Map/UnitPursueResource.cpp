@@ -35,7 +35,7 @@ void Unit::pursueResource() {
 			//If the path adjustment is outdated, the unit will calculate its path again in the next iteration
 			//It is important not to do it in the next iteration because the checked areas and tiles
 			//already have their lastCheckedAtTime variables set to the current time
-			resetPathPoronga();
+			hasToResetPath = true;
 			return;
 		}
 		else if (attemptedMovement == PATH_NOT_FOUND) {
@@ -156,22 +156,13 @@ void Unit::aquireResource() {
 	nextStep();
 }
 
-void Unit::resetPathPoronga() {
-#	ifdef DEBUG
-	if (cycle[cycleCurrentStep] == resourceType) {
-		error("A unit can not be the kind of resource it looks for");
-	}
-#	endif
-	hasToResetPath = true;
-}
-
 void Unit::nextStep() {
 	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
 	initializeStep();
 }
 
 void Unit::initializeStep() {
-	resetPathPoronga();
+	hasToResetPath = true;
 	resourceSearchStatus = -1;
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		resourceSearchStatus = cycle[cycleCurrentStep];

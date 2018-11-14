@@ -76,20 +76,6 @@ void map_init()
 		}
 		unit->cycleCurrentStep = 0;
 		unit->adjustResourceType();
-
-
-
-
-		if (unit->id == DEBUG_OBJECT) {
-			int asd = 0;
-			asd++;
-		}
-
-
-
-
-
-
 		unit->addToTile();
 	}
 
