@@ -82,7 +82,7 @@ bool Unit::checkReachedResourceGive() {
 	while (current != NULL) {
 		if (current->objectType == objectUnit) {
 			Unit* currentUnit = (Unit*)current;
-			if (currentUnit->cycle[currentUnit->cycleCurrentStep] == resourceSearchStatus - RESOURCE_TYPES) {
+			if (currentUnit->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
 				giveResource(currentUnit);
 				return true;
 			}
@@ -118,16 +118,6 @@ bool Unit::checkReachedResourceSearch() {
 					pickUpUnit = true;
 				}
 				else {
-					if (resourceSearchStatus < RESOURCE_TYPES * 2) {
-						if (resourceSearchStatus < RESOURCE_TYPES) {//The unit was looking for a resource
-							areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
-						}
-						else {//The unit was trying to give a resource
-							areasMap[x][y][z]->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
-						}
-					}
-					areasMap[x][y][z]->decreaseResource(resourceType);
-					removeFromTile();
 					alive = false;
 					currentUnit->life -= life;
 				}
@@ -154,9 +144,6 @@ bool Unit::checkReachedResourceSearch() {
 }
 
 void Unit::aquireResource() {
-	//There is 1 resource less being looked for
-	areasMap[x][y][z]->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
-
 	life += calculateWorth();
 	if (bag.size() == MAX_CYCLE_LENGTH) {
 		bag.erase(bag.begin());
@@ -195,7 +182,6 @@ void Unit::nextStep(bool moveToTheNextStep) {
 }
 
 void Unit::giveResource(Unit* taker) {
-	areasMap[x][y][z]->decreaseResource(bag[bag.size() - 1]);
 	bag.erase(bag.end() - 1);
 	nextStep(true);
 	taker->aquireResource();

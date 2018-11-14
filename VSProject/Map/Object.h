@@ -16,8 +16,8 @@ public:
 	Object* sharesTileWithObject;
 	unsigned char objectType;
 
-	//An object can delete itself, but it can not delete another object.
-	//If A wants to delete B, A has to set B's active to false, and B will eventually be deleted
+	//Note that objects can not delete themselves or other objects
+	//They just set their alive to false, and they will eventually be deleted by the map
 	bool alive;
 
 #   ifdef DEBUG

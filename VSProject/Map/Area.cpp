@@ -44,10 +44,9 @@ void Area::increaseResource(int resource) {
 	
 
 
-	if (chunk->x == 168 && chunk->y == 228 && chunk->z == 12) {
-		printf("");
+	if (chunk->x == 18 && chunk->y == 300 && chunk->z == 0) {
+		printf("+%d\n", resource);
 	}
-
 
 
 
@@ -62,8 +61,8 @@ void Area::decreaseResource(int resource) {
 
 
 
-	if (chunk->x == 168 && chunk->y == 228 && chunk->z == 12) {
-		printf("");
+	if (chunk->x == 18 && chunk->y == 300 && chunk->z == 0) {
+		printf("-%d\n", resource);
 	}
 
 

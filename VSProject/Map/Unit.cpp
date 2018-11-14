@@ -129,6 +129,7 @@ void Unit::createUnit() {
 			}
 			unit->cycleLength = (char)bag.size();
 			unit->adjustResourceType();
+			unit->addToTile();
 			bag.clear();
 		}
 	}
@@ -242,10 +243,19 @@ bool Unit::providesResource(char _resourceType) {
 	if (_resourceType == resourceType) {
 		return true;
 	}
-	else if (resourceSearchStatus - RESOURCE_TYPES == _resourceType) {
-		return true;
+	else{
+		if (resourceSearchStatus != -1) {
+			if (resourceSearchStatus < RESOURCE_TYPES) {
+				if (RESOURCE_TYPES + resourceSearchStatus == _resourceType) {
+					return true;
+				}
+			}
+			else {
+				if (resourceSearchStatus - RESOURCE_TYPES == _resourceType) {
+					return true;
+				}
+			}
+		}
 	}
-	else {
-		return false;
-	}
+	return false;
 }

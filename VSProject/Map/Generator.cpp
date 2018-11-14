@@ -16,7 +16,6 @@ unsigned char Generator::type() {
 }
 
 void Generator::execute() {
-	areasMap[x][y][z + 1]->increaseResource(resourceGeneration);
 	Resource* resource = new Resource(x, y, z + 1, resourceGeneration);
 	resource->addToTile();
 	objects[(time + duration) % BUCKETS].push_back(this);

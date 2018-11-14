@@ -14,10 +14,17 @@ unsigned char Resource::type() {
 
 void Resource::execute() {
 	removeFromTile();
-	int beginning = rand() % 4;
-	int increment = (rand() % 2) * 2 + 1;//Either 1 or 3
+	
+	//It adds the branches' beginnings to the queue
+	int dir;
+	bool foward = (rand() % 2 == 0);//It randomizes the iteration order to solve the "always right issue"
 	for (int i = 0; i < 4; i++) {
-		int dir = (beginning + i * increment) % 4;
+		if (foward) {
+			dir = i;
+		}
+		else {
+			dir = 3 - i;
+		}
 		int nextX = x + getX(dir);
 		int nextY = y + getY(dir);
 		int nextZ = steppableTileHeight(x, y, z, nextX, nextY);
@@ -35,7 +42,6 @@ void Resource::execute() {
 						unit->adjustResourceType();
 						unit->addToTile();
 						current->removeFromTile();
-						delete current;
 						alive = false;
 #						ifdef DEBUG
 						if (unit->resourceType != resourceType) {
