@@ -2,13 +2,17 @@
 
 //This method should be used only to start the pathfinding and to reset it after a new obstacle obstructs the current path
 int Unit::resetPathTowardsResource() {
+	lowestDestinationAreaReached = NULL;
+	reachedDestinationBaseArea = false;
+	baseDestinationArea = NULL;
+
 #	ifdef SAFE
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
 		chunksToBeTraveled[i] = -1;
 		oriAreas[i] = NULL;
 	}
-	baseDestinationArea = NULL;
+	//baseDestinationArea = NULL;
 	tilesToBeTraveled = -1;
 #   endif
 

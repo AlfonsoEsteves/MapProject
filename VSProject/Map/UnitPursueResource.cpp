@@ -163,9 +163,6 @@ void Unit::resetPathPoronga() {
 	}
 #	endif
 	hasToResetPath = true;
-	lowestDestinationAreaReached = NULL;
-	reachedDestinationBaseArea = false;
-	baseDestinationArea = NULL;
 }
 
 void Unit::nextStep() {
