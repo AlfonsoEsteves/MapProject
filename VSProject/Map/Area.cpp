@@ -41,16 +41,6 @@ Area::~Area()
 }
 
 void Area::increaseResource(int resource) {
-	
-
-
-	if (chunk->x == 18 && chunk->y == 300 && chunk->z == 0) {
-		printf("+%d\n", resource);
-	}
-
-
-
-
 	resources[resource]++;
 	if (superArea != NULL) {
 		superArea->increaseResource(resource);
@@ -58,15 +48,6 @@ void Area::increaseResource(int resource) {
 }
 
 void Area::decreaseResource(int resource) {
-
-
-
-	if (chunk->x == 18 && chunk->y == 300 && chunk->z == 0) {
-		printf("-%d\n", resource);
-	}
-
-
-
 	resources[resource]--;
 #	ifdef DEBUG
 	if (resources[resource] < 0) {

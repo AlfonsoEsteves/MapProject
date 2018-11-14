@@ -29,6 +29,9 @@ void Resource::execute() {
 		int nextY = y + getY(dir);
 		int nextZ = steppableTileHeight(x, y, z, nextX, nextY);
 		if (nextZ != -1) {
+			x = nextX;
+			y = nextY;
+			z = nextZ;
 			Object* current = unitsMap[x][y][z];
 			while (current != NULL) {
 				if (current->type() == objectResource) {
@@ -42,6 +45,7 @@ void Resource::execute() {
 						unit->adjustResourceType();
 						unit->addToTile();
 						current->removeFromTile();
+						current->alive = false;
 						alive = false;
 #						ifdef DEBUG
 						if (unit->resourceType != resourceType) {
@@ -53,6 +57,7 @@ void Resource::execute() {
 				}
 				current = current->sharesTileWithObject;
 			}
+			break;
 		}
 	}
 	addToTile();

@@ -83,7 +83,9 @@ bool Unit::checkReachedResourceGive() {
 		if (current->objectType == objectUnit) {
 			Unit* currentUnit = (Unit*)current;
 			if (currentUnit->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
+				currentUnit->removeFromTile();
 				giveResource(currentUnit);
+				currentUnit->addToTile();
 				return true;
 			}
 		}
@@ -108,7 +110,9 @@ bool Unit::checkReachedResourceSearch() {
 			Unit* currentUnit = (Unit*)current;
 			if (currentUnit->cycle[currentUnit->cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
 				if (currentUnit->resourceSearchStatus - RESOURCE_TYPES == resourceSearchStatus) {
+					currentUnit->removeFromTile();
 					currentUnit->giveResource(this);
+					currentUnit->addToTile();
 					return true;
 				}
 			}
