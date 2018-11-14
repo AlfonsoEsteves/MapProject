@@ -179,6 +179,8 @@ void graphics_draw_text() {
 
 void graphics_draw_map() {
 	SDL_Rect position;
+	
+	//This draws the floor, which is only tops instead of full blocks
 	if (viewZ > 0) {
 		for (int i = 0; i < VIEW_WIDTH; i++) {
 			int x = viewX + i;
@@ -208,6 +210,8 @@ void graphics_draw_map() {
 			}
 		}
 	}
+
+	//This draws the most of the visible content
 	for (int i = 0; i < VIEW_WIDTH; i++) {
 		int x = viewX + i;
 		for (int j = 0; j < VIEW_WIDTH; j++) {
@@ -263,6 +267,8 @@ void graphics_draw_map() {
 			}
 		}
 	}
+
+	//This draws the blacked out sides
 	SDL_Rect positionLeft;
 	SDL_Rect positionRight;
 	SDL_Rect positionRightPlus;
@@ -280,39 +286,27 @@ void graphics_draw_map() {
 				positionLeft.y = screenY[i][VIEW_WIDTH - 1][k] + 5;
 				positionRight.y = screenY[VIEW_WIDTH - 1][i][k] + 5;
 				positionRightPlus.y = positionRight.y;
-				if (leftSideX >= 0 && leftSideY >= 0 && leftSideX < MAP_WIDTH && leftSideY < MAP_WIDTH) {
-					if (z < 0) {
+				if (safeTilesMap(leftSideX, leftSideY, z) != tileEmpty) {
+					if (i + 1 < VIEW_WIDTH && safeTilesMap(leftSideX + 1, leftSideY, z) != tileEmpty) {
 						SDL_BlitSurface(blackLeftPlusImage, NULL, screenSurface, &positionLeft);
 					}
 					else {
-						if (tilesMap[leftSideX][leftSideY][z] != tileEmpty) {
-							if (leftSideX + 1 < MAP_WIDTH && tilesMap[leftSideX + 1][leftSideY][z] != tileEmpty) {
-								SDL_BlitSurface(blackLeftPlusImage, NULL, screenSurface, &positionLeft);
-							}
-							else {
-								SDL_BlitSurface(blackLeftImage, NULL, screenSurface, &positionLeft);
-							}
-						}
+						SDL_BlitSurface(blackLeftImage, NULL, screenSurface, &positionLeft);
 					}
 				}
-				if (rightSideX >= 0 && rightSideY >= 0 && rightSideX < MAP_WIDTH && rightSideY < MAP_WIDTH) {
-					if (z < 0) {
+				if (safeTilesMap(rightSideX, rightSideY, z) != tileEmpty) {
+					if (i + 1 < VIEW_WIDTH && safeTilesMap(rightSideX, rightSideY + 1, z) != tileEmpty) {
 						SDL_BlitSurface(blackRightPlusImage, NULL, screenSurface, &positionRightPlus);
 					}
 					else {
-						if (tilesMap[rightSideX][rightSideY][z] != tileEmpty) {
-							if (rightSideY + 1 < MAP_WIDTH && tilesMap[rightSideX][rightSideY + 1][z] != tileEmpty) {
-								SDL_BlitSurface(blackRightPlusImage, NULL, screenSurface, &positionRightPlus);
-							}
-							else {
-								SDL_BlitSurface(blackRightImage, NULL, screenSurface, &positionRight);
-							}
-						}
+						SDL_BlitSurface(blackRightImage, NULL, screenSurface, &positionRight);
 					}
 				}
 			}
 		}
 	}
+
+	//This draws the blacked out tops
 	if (viewZ + VIEW_HEIGHT < MAP_HEIGHT) {
 		for (int i = 0; i < VIEW_WIDTH; i++) {
 			int x = viewX + i;
@@ -394,4 +388,22 @@ string stepName(int step) {
 		return "GIVE";
 	}
 	return NULL;
+}
+
+unsigned char safeTilesMap(int x, int y, int z) {
+	if (x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_WIDTH) {
+		if (z <= 0) {
+			return tileWater;
+		}
+		else {
+			return tileEmpty;
+		}
+	}
+	if (z < 0) {
+		return tileGround;
+	}
+	if (z >= MAP_HEIGHT) {
+		return tileEmpty;
+	}
+	return tilesMap[x][y][z];
 }
