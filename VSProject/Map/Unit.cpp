@@ -68,7 +68,19 @@ unsigned char Unit::type() {
 	return objectUnit;
 }
 
+void popopopo(int x, int y, int z, int popo) {
+	Resource* resource = new Resource(x, y, z, popo);
+	resource->addToTile();
+}
+
 void Unit::execute() {
+
+
+
+	popopopo(x, y, z, popo);
+
+
+
 #	ifdef DEBUG
 	if (!tileIsSteppable(x, y, z)) {
 		error("A unit can only occupy steppable tiles");
@@ -179,6 +191,35 @@ void Unit::modifyCycle(int chancesOfAddingStep) {
 	}
 }
 
+void popoAjustar(Unit* unit) {
+	bool availableResource[RESOURCE_TYPES];
+	int availableResources = RESOURCE_TYPES;
+	for (int i = 0; i < 6; i++) {
+		availableResource[i] = true;
+	}
+	for (int i = 0; i < unit->cycleLength; i++) {
+		if (unit->cycle[i] < RESOURCE_TYPES) {
+			if (availableResource[unit->cycle[i]]) {
+				availableResource[unit->cycle[i]] = false;
+				availableResources--;
+			}
+		}
+	}
+	int hash = rand() % availableResources;
+	unit->popo = 0;
+	while (true) {
+		if (availableResource[unit->popo]) {
+			if (hash == 0) {
+				break;
+			}
+			else {
+				hash--;
+			}
+		}
+		unit->popo++;
+	}
+}
+
 void Unit::adjustResourceType() {
 	bool availableResource[RESOURCE_TYPES];
 	int availableResources = RESOURCE_TYPES;
@@ -209,6 +250,9 @@ void Unit::adjustResourceType() {
 		resourceType++;
 	}
 	initializeStep();
+
+
+	popoAjustar(this);
 }
 
 int Unit::calculateWorth() {

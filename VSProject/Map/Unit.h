@@ -56,6 +56,8 @@ private:
 #	endif
 
 public:
+	char popo;
+
 	char resourceType;
 
 	int life;
