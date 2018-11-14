@@ -1,3 +1,0 @@
-renombrar le metodo resetPathPoronga
-
-separar en 2 metodos el nextStep
