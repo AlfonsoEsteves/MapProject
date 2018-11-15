@@ -89,6 +89,9 @@ void Unit::execute() {
 	if (cycleLength==0) {
 		error("A unit can not have an empty cycle");
 	}
+	if (life < 0) {
+		error("A unit can not have less than 0 life");
+	}
 #	endif
 
 	removeFromTile();
@@ -259,21 +262,28 @@ void Unit::adjustResourceType() {
 	popoAjustar(this);
 }
 
-int Unit::calculateWorth() {
-	int w = (LIFE * cycleLength) / 6 - LIFE / 10;
-	if (hasComplexInstruction()) {
-		w += (LIFE * cycleLength * cycleLength) / 4;
-	}
-	return w;
-}
+#define RESOURCE_WORTH 30
+#define INSTRUCTION_WORTH 80
+#define WORTH_DIVISOR 30
 
-bool Unit::hasComplexInstruction() {
+int Unit::calculateWorth() {
+	int worth = 0;
+	bool instructions[INSTRUCTIONS];
+	for (int i = 0; i < INSTRUCTIONS; i++) {
+		instructions[i] = false;
+	}
 	for (int i = 0; i < cycleLength; i++) {
-		if (cycle[i] >= RESOURCE_TYPES) {
-			return true;
+		if (!instructions[cycle[i]]) {
+			instructions[cycle[i]] = true;
+			if (cycle[i] < RESOURCE_TYPES) {
+				worth += RESOURCE_WORTH;
+			}
+			else {
+				worth += INSTRUCTION_WORTH;
+			}
 		}
 	}
-	return false;
+	return (worth * worth + worth) / WORTH_DIVISOR;
 }
 
 void Unit::newInstruction() {
@@ -286,11 +296,15 @@ void Unit::newInstruction() {
 
 
 		int resource = bag[bag.size() - 1];
-		if (resource % 2 == 0) {
+		int x = resource % 3;
+		if (x == 0) {
 			bag[bag.size() - 1] = INSTRUCTION_DUPLICATE;
 		}
-		else {
+		else if (x == 1) {
 			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
+		}
+		else if (x == 2) {
+			bag[bag.size() - 1] = INSTRUCTION_GIVE_RESOURCE;
 		}
 	}
 	nextStep();

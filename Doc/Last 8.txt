@@ -1,3 +1,17 @@
 le baje la vida a los simples,
   pero me doy cuenta que mueren facil
   el problema es que son creados con mucha vida por los complejos
+
+
+
+
+voy a hacer que las unidades se crean con menos vida,
+  talvez que dependa de la complejidad de la unidad
+
+podria hacer que las unidades de entrada se creen siendo mas complejas
+
+podria hacer que las unidades tengan x chances de crecer y=x de achivarce y z de morir
+
+podria evitar que se generan secuencias malas
+
+como instrucciones concecutivas sin un search entre medio
