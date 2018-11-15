@@ -99,6 +99,14 @@ void Unit::execute() {
 	life--;
 	if (life == 0) {
 		modifyCycle(CHANCES_OF_ADDING_A_STEP);
+
+
+
+		alive = false;
+
+
+
+
 		if (alive) {
 			adjustResourceType();
 		}
