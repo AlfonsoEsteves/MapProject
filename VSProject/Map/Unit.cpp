@@ -75,9 +75,10 @@ void popopopo(int x, int y, int z, int popo) {
 
 void Unit::execute() {
 
-
-
-	popopopo(x, y, z, popo);
+	unsigned char uc = (unsigned char)this;
+	if ((time / slowness + uc) % (80 + uc % 81) == 0) {
+		popopopo(x, y, z, popo);
+	}
 
 
 
@@ -197,7 +198,10 @@ void popoAjustar(Unit* unit) {
 	for (int i = 0; i < 6; i++) {
 		availableResource[i] = true;
 	}
+
+	int hash = 0;
 	for (int i = 0; i < unit->cycleLength; i++) {
+		hash += unit->cycle[i] * unit->cycle[i];
 		if (unit->cycle[i] < RESOURCE_TYPES) {
 			if (availableResource[unit->cycle[i]]) {
 				availableResource[unit->cycle[i]] = false;
@@ -205,7 +209,7 @@ void popoAjustar(Unit* unit) {
 			}
 		}
 	}
-	int hash = rand() % availableResources;
+	hash = hash % availableResources;
 	unit->popo = 0;
 	while (true) {
 		if (availableResource[unit->popo]) {
@@ -256,16 +260,16 @@ void Unit::adjustResourceType() {
 }
 
 int Unit::calculateWorth() {
-	int w = (LIFE * cycleLength) / 6;
-	if (hasDuplicate()) {
+	int w = (LIFE * cycleLength) / 6 - LIFE / 10;
+	if (hasComplexInstruction()) {
 		w += (LIFE * cycleLength * cycleLength) / 4;
 	}
 	return w;
 }
 
-bool Unit::hasDuplicate() {
+bool Unit::hasComplexInstruction() {
 	for (int i = 0; i < cycleLength; i++) {
-		if (cycle[i] == INSTRUCTION_DUPLICATE) {
+		if (cycle[i] >= RESOURCE_TYPES) {
 			return true;
 		}
 	}

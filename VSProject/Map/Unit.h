@@ -105,7 +105,7 @@ public:
 	void nextStep();
 	unsigned char type();
 	void adjustResourceType();
-	bool hasDuplicate();
+	bool hasComplexInstruction();
 	int calculateWorth();
 	void newInstruction();
 	void giveResource(Unit* taker);

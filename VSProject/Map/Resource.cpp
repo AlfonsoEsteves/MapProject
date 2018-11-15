@@ -16,50 +16,41 @@ void Resource::execute() {
 	removeFromTile();
 	
 	//It adds the branches' beginnings to the queue
-	int dir;
-	bool foward = (rand() % 2 == 0);//It randomizes the iteration order to solve the "always right issue"
-	for (int i = 0; i < 4; i++) {
-		if (foward) {
-			dir = i;
-		}
-		else {
-			dir = 3 - i;
-		}
-		int nextX = x + getX(dir);
-		int nextY = y + getY(dir);
-		int nextZ = steppableTileHeight(x, y, z, nextX, nextY);
-		if (nextZ != -1) {
-			x = nextX;
-			y = nextY;
-			z = nextZ;
-			Object* current = unitsMap[x][y][z];
-			while (current != NULL) {
-				if (current->type() == objectResource) {
-					Resource* currentResource = (Resource*)current;
-					if (currentResource->resourceType == resourceType) {
-						Unit* unit = new Unit(x, y, z, LIFE);
-						//This line will depend on the implementation of the resourceType assignment of units
-						unit->cycle[0] = (resourceType - 1 + RESOURCE_TYPES) % RESOURCE_TYPES;
-						unit->cycleLength = 1;
-						unit->cycleCurrentStep = 0;
-						unit->adjustResourceType();
-						unit->addToTile();
-						current->removeFromTile();
-						current->alive = false;
-						alive = false;
-#						ifdef DEBUG
-						if (unit->resourceType != resourceType) {
-							error("When 2 resources of the same type collide they should create a unit of the same type");
-						}
-#						endif
-						return;
+	int dir = rand() % 4;
+	int nextX = x + getX(dir);
+	int nextY = y + getY(dir);
+	int nextZ = steppableTileHeight(x, y, z, nextX, nextY);
+	if (nextZ != -1) {
+		x = nextX;
+		y = nextY;
+		z = nextZ;
+		Object* current = unitsMap[x][y][z];
+		while (current != NULL) {
+			if (current->type() == objectResource) {
+				Resource* currentResource = (Resource*)current;
+				if (currentResource->resourceType == resourceType) {
+					Unit* unit = new Unit(x, y, z, LIFE);
+					//This line will depend on the implementation of the resourceType assignment of units
+					unit->cycle[0] = (resourceType - 1 + RESOURCE_TYPES) % RESOURCE_TYPES;
+					unit->cycleLength = 1;
+					unit->cycleCurrentStep = 0;
+					unit->adjustResourceType();
+					unit->addToTile();
+					current->removeFromTile();
+					current->alive = false;
+					alive = false;
+#					ifdef DEBUG
+					if (unit->resourceType != resourceType) {
+						error("When 2 resources of the same type collide they should create a unit of the same type");
 					}
+#					endif
+					return;
 				}
-				current = current->sharesTileWithObject;
 			}
-			break;
+			current = current->sharesTileWithObject;
 		}
 	}
+
 	addToTile();
 	objects[(time +  RESOURCE_SLOWNESS) % BUCKETS].push_back(this);
 }

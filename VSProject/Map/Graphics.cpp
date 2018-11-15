@@ -97,6 +97,7 @@ bool graphics_init()
 	unitImage[5] = loadSurface(RESOURCES_PATH + "Images/unitPurple.bmp");
 	unitImage[6] = loadSurface(RESOURCES_PATH + "Images/unitBlack.bmp");
 	unitImage[7] = loadSurface(RESOURCES_PATH + "Images/unitWhite.bmp");
+	unitImage[8] = loadSurface(RESOURCES_PATH + "Images/unitOrange.bmp");
 	resourceImages[0] = loadSurface(RESOURCES_PATH + "Images/resourceRed.bmp");
 	resourceImages[1] = loadSurface(RESOURCES_PATH + "Images/resourceYellow.bmp");
 	resourceImages[2] = loadSurface(RESOURCES_PATH + "Images/resourceGreen.bmp");
@@ -105,6 +106,7 @@ bool graphics_init()
 	resourceImages[5] = loadSurface(RESOURCES_PATH + "Images/resourcePurple.bmp");
 	resourceImages[6] = loadSurface(RESOURCES_PATH + "Images/resourceBlack.bmp");
 	resourceImages[7] = loadSurface(RESOURCES_PATH + "Images/resourceWhite.bmp");
+	resourceImages[8] = loadSurface(RESOURCES_PATH + "Images/resourceOrange.bmp");
 	
 	font = TTF_OpenFont((RESOURCES_PATH + "OpenSans-Regular.ttf").c_str(), 14);
 	
@@ -229,7 +231,7 @@ void graphics_draw_map() {
 									Unit* unit = (Unit*)current;
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-									if (unit->hasDuplicate()) {
+									if (unit->hasComplexInstruction()) {
 										position.y = screenY[i][j][k] + 1;
 										SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									}

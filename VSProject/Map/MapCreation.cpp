@@ -29,11 +29,11 @@ void map_init()
 	}
 
 	createTerrainWithMidPointDisplacement();
-	
+	/*
 	int dir = rand() % 400;
 	tunnel(MAP_WIDTH / 2, MAP_WIDTH / 2, MAP_HEIGHT / 2, dir, 100, 550);
 	tunnel(MAP_WIDTH / 2, MAP_WIDTH / 2, MAP_HEIGHT / 2, (dir + 200) % 400, 100, 550);
-	tilesMap[MAP_WIDTH / 2][MAP_WIDTH / 2][MAP_HEIGHT / 2] = tileGround;
+	tilesMap[MAP_WIDTH / 2][MAP_WIDTH / 2][MAP_HEIGHT / 2] = tileGround;*/
 
 	for (int i = 0; i < MAP_WIDTH; i++) {
 		for (int j = 0; j < MAP_WIDTH; j++) {
