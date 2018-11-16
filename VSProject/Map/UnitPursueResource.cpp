@@ -70,6 +70,7 @@ bool Unit::checkReachedResource() {
 	}
 	else {
 		error("Wrong cycle instruction");
+		return false;
 	}
 }
 
