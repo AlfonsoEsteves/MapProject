@@ -171,7 +171,9 @@ void Unit::initializeStep() {
 		if (!bag.empty()) {
 			char lastResourceInBag = bag[bag.size() - 1];
 			if (lastResourceInBag < RESOURCE_TYPES) {
-				resourceSearchStatus = RESOURCE_TYPES + lastResourceInBag;
+				char shiftedResource = (lastResourceInBag + 1) % RESOURCE_TYPES;
+				bag[bag.size() - 1] = shiftedResource;
+				resourceSearchStatus = RESOURCE_TYPES + shiftedResource;
 			}
 		}
 	}

@@ -15,11 +15,13 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 
 	objects[(time + (rand() % slowness)) % BUCKETS].push_back(this);
 
+	//This is needed because the method addStepToCycle needs the resourceType preset
+	resourceType = rand() % RESOURCE_TYPES;
+
 #	ifdef DEBUG
 	cycleCurrentStep = 0;
 	baseDestinationArea = NULL;
 	hasToResetPath = true;
-	resourceType = -1;
 #	endif
 
 #	ifdef DEBUG
@@ -175,7 +177,7 @@ void Unit::addStepToCycle() {
 	for (int i = cycleLength; i > x; i--) {
 		cycle[i] = cycle[i - 1];
 	}
-	cycle[x] = (resourceSearchStatus + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
+	cycle[x] = (resourceType + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
 	cycleLength++;
 	if (x <= cycleCurrentStep) {
 		cycleCurrentStep++;

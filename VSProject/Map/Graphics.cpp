@@ -389,7 +389,7 @@ string stepName(int step) {
 	case INSTRUCTION_NEW_INSTRUCTION:
 		return "NEW INSTRUCTION";
 	case INSTRUCTION_GIVE_RESOURCE:
-		return "GIVE";
+		return "SHIFT AND GIVE";
 	}
 	return NULL;
 }
