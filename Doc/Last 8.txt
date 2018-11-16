@@ -11,7 +11,7 @@ voy a hacer que las unidades se crean con menos vida,
 podria hacer que las unidades de entrada se creen siendo mas complejas
 
 podria hacer que las unidades tengan x chances de crecer y=x de achivarce y z de morir
+  o de hecho que nunca se achique
 
 podria evitar que se generan secuencias malas
-
 como instrucciones concecutivas sin un search entre medio

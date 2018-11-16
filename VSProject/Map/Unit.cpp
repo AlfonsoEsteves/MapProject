@@ -75,10 +75,10 @@ void popopopo(int x, int y, int z, int popo) {
 
 void Unit::execute() {
 
-	unsigned char uc = (unsigned char)this;
+	/*unsigned char uc = (unsigned char)this;
 	if ((time / slowness + uc) % (80 + uc % 81) == 0) {
 		popopopo(x, y, z, popo);
-	}
+	}*/
 
 
 
@@ -203,7 +203,7 @@ void Unit::modifyCycle(int chancesOfAddingStep) {
 	}
 }
 
-void popoAjustar(Unit* unit) {
+/*void popoAjustar(Unit* unit) {
 	bool availableResource[RESOURCE_TYPES];
 	int availableResources = RESOURCE_TYPES;
 	for (int i = 0; i < 6; i++) {
@@ -233,7 +233,7 @@ void popoAjustar(Unit* unit) {
 		}
 		unit->popo++;
 	}
-}
+}*/
 
 void Unit::adjustResourceType() {
 	bool availableResource[RESOURCE_TYPES];
@@ -267,7 +267,7 @@ void Unit::adjustResourceType() {
 	initializeStep();
 
 
-	popoAjustar(this);
+	//popoAjustar(this);
 }
 
 #define RESOURCE_WORTH 30

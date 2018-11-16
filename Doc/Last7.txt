@@ -1,3 +1,0 @@
-(this is much easier to implement thant last6)
-
-each unit will give away a fixed resource every X frames

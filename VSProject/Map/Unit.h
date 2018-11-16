@@ -56,7 +56,7 @@ private:
 #	endif
 
 public:
-	char popo;
+	//char popo;
 
 	char resourceType;
 
