@@ -9,8 +9,6 @@
 
 #define LIFE 220
 
-#define CHANCES_OF_ADDING_A_STEP 6
-
 #define MAX_CYCLE_LENGTH 15
 
 #define PATH_NOT_FOUND -1
@@ -100,10 +98,11 @@ public:
 	Unit(int _x, int _y, int _z, int _life);
 	~Unit();
 	void execute();
-	void modifyCycle(int chancesOfDecreasing);
+	void addStepToCycle();
 	void initializeStep();
 	void nextStep();
 	unsigned char type();
+	void initializeUnit();
 	void adjustResourceType();
 	int calculateWorth();
 	void newInstruction();

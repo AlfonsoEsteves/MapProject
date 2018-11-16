@@ -33,9 +33,7 @@ void Resource::execute() {
 					//This line will depend on the implementation of the resourceType assignment of units
 					unit->cycle[0] = (resourceType - 1 + RESOURCE_TYPES) % RESOURCE_TYPES;
 					unit->cycleLength = 1;
-					unit->cycleCurrentStep = 0;
-					unit->adjustResourceType();
-					unit->addToTile();
+					unit->initializeUnit();
 					current->removeFromTile();
 					current->alive = false;
 					alive = false;

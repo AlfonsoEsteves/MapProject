@@ -28,10 +28,10 @@
 
 #define RESOURCE_TYPES 9
 
-#define FAST_FOWARD 1600
-//#define CALCULATE_HASH_AT_TIME 700
-#define DEBUG true
-#define SAFE true //Unneeded assignment of variables to maintain consistency
+#define FAST_FOWARD 3000
+//#define CALCULATE_HASH_AT_TIME 3001
+//#define DEBUG true
+//#define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
 //#define LOG_PF true
 

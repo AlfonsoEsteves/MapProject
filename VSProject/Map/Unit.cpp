@@ -11,15 +11,16 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
 	}
-	baseDestinationArea = NULL;
-	hasToResetPath = true;
 	slowness = 2 + rand() % 4;
 
-	cycleCurrentStep = 0;
-
-	resourceType = -1;//This default value, avoid decreasing areas' resources when adjustResourceType is called
-
 	objects[(time + (rand() % slowness)) % BUCKETS].push_back(this);
+
+#	ifdef DEBUG
+	cycleCurrentStep = 0;
+	baseDestinationArea = NULL;
+	hasToResetPath = true;
+	resourceType = -1;
+#	endif
 
 #	ifdef DEBUG
 	debug_unitCount++;
@@ -28,6 +29,13 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 		error("A unit can only occupy steppable tiles");
 	}
 #	endif
+}
+
+void Unit::initializeUnit() {
+	cycleCurrentStep = 0;
+	adjustResourceType();
+	initializeStep();
+	addToTile();
 }
 
 Unit::~Unit(){
@@ -67,11 +75,11 @@ void Unit::removeFromTileExtra() {
 unsigned char Unit::type() {
 	return objectUnit;
 }
-
+/*
 void popopopo(int x, int y, int z, int popo) {
 	Resource* resource = new Resource(x, y, z, popo);
 	resource->addToTile();
-}
+}*/
 
 void Unit::execute() {
 
@@ -98,19 +106,12 @@ void Unit::execute() {
 
 	life--;
 	if (life == 0) {
-		modifyCycle(CHANCES_OF_ADDING_A_STEP);
-
-
-
-		alive = false;
-
-
-
-
-		if (alive) {
+		if (rand() % 2 == 0 && cycleLength < MAX_CYCLE_LENGTH) {
+			addStepToCycle();
 			adjustResourceType();
 		}
 		else {
+			alive = false;
 			return;
 		}
 	}
@@ -161,45 +162,23 @@ void Unit::createUnit() {
 				unit->cycle[i] = bag[i];
 			}
 			unit->cycleLength = (char)bag.size();
-			unit->adjustResourceType();
-			unit->addToTile();
+			unit->initializeUnit();
 			bag.clear();
 		}
 	}
 	nextStep();
 }
 
-void Unit::modifyCycle(int chancesOfAddingStep) {
-	if (rand() % chancesOfAddingStep == 0 && cycleLength < MAX_CYCLE_LENGTH) {//Add a step or a block
-		life = LIFE;
-		int x = rand() % (cycleLength + 1);
-		for (int i = cycleLength; i > x; i--) {
-			cycle[i] = cycle[i - 1];
-		}
-		cycle[x] = (resourceSearchStatus + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
-		cycleLength++;
-		if (x <= cycleCurrentStep) {
-			cycleCurrentStep++;
-		}
+void Unit::addStepToCycle() {
+	life = LIFE;
+	int x = rand() % (cycleLength + 1);
+	for (int i = cycleLength; i > x; i--) {
+		cycle[i] = cycle[i - 1];
 	}
-	else {//Remove a step or a block
-		cycleLength--;
-		if (cycleLength > 0) {
-			life = LIFE;
-			int x = rand() % (cycleLength + 1);
-			for (int i = x; i < cycleLength; i++) {
-				cycle[i] = cycle[i + 1];
-			}
-			if (x < cycleCurrentStep) {
-				cycleCurrentStep--;
-			}
-			else {
-				cycleCurrentStep = cycleCurrentStep % cycleLength;
-			}
-		}
-		else {
-			alive = false;
-		}
+	cycle[x] = (resourceSearchStatus + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
+	cycleLength++;
+	if (x <= cycleCurrentStep) {
+		cycleCurrentStep++;
 	}
 }
 
@@ -264,15 +243,15 @@ void Unit::adjustResourceType() {
 		}
 		resourceType++;
 	}
-	initializeStep();
 
+	hasToResetPath = true;
 
 	//popoAjustar(this);
 }
 
 #define RESOURCE_WORTH 30
 #define INSTRUCTION_WORTH 80
-#define WORTH_DIVISOR 30
+#define WORTH_DIVISOR 60
 
 int Unit::calculateWorth() {
 	int worth = 0;
@@ -291,7 +270,7 @@ int Unit::calculateWorth() {
 			}
 		}
 	}
-	return (worth * worth + worth) / WORTH_DIVISOR;
+	return (worth * worth + worth * 3) / WORTH_DIVISOR;
 }
 
 void Unit::newInstruction() {
