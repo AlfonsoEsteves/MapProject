@@ -171,13 +171,36 @@ void Unit::createUnit() {
 }
 
 void Unit::addRandomStepToCycle() {
-	int x = rand() % (cycleLength + 1);
-	for (int i = cycleLength; i > x; i--) {
+	int position = rand() % (cycleLength + 1);
+	for (int i = cycleLength; i > position; i--) {
 		cycle[i] = cycle[i - 1];
 	}
-	cycle[x] = (resourceType + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
+	int instruction;
+	bool correct = false;
+	while(!correct){
+		instruction = (resourceType + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
+		if (instruction < RESOURCE_TYPES) {
+			correct = true;
+		}
+		if (instruction == INSTRUCTION_NEW_INSTRUCTION || instruction == INSTRUCTION_GIVE_RESOURCE || instruction == INSTRUCTION_DUPLICATE) {
+			if (position > 0) {
+				if (cycle[position - 1] < RESOURCE_TYPES) {
+					correct = true;
+				}
+			}
+		}
+		if (instruction == INSTRUCTION_DUPLICATE) {
+			if (position > 0) {
+				if (cycle[position - 1] == INSTRUCTION_NEW_INSTRUCTION) {
+					correct = true;
+				}
+			}
+		}
+	}
+	cycle[position] = instruction;
+
 	cycleLength++;
-	if (x <= cycleCurrentStep) {
+	if (position <= cycleCurrentStep) {
 		cycleCurrentStep++;
 	}
 }

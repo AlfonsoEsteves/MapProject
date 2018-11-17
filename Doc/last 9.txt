@@ -1,0 +1,13 @@
+podria quitar las instruccion duplicate
+  y hacer que cada ves que la unidad completa el ciclo cree lo que tiene en la bag
+
+notar que si la unidad no tienen instrucciones complejas (solo searches) entonces la unidad se replica a si misma
+
+
+
+
+
+
+tambien se me ocurrio manejarme por bloques
+
+osea, no dar chances de que halla un salto de linea en cada lina
