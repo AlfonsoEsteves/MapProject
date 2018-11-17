@@ -109,7 +109,8 @@ void Unit::execute() {
 	life--;
 	if (life == 0) {
 		if (rand() % 2 == 0 && cycleLength < MAX_CYCLE_LENGTH) {
-			addStepToCycle();
+			life = LIFE;
+			addRandomStepToCycle();
 			adjustResourceType();
 		}
 		else {
@@ -169,8 +170,7 @@ void Unit::createUnit() {
 	nextStep();
 }
 
-void Unit::addStepToCycle() {
-	life = LIFE;
+void Unit::addRandomStepToCycle() {
 	int x = rand() % (cycleLength + 1);
 	for (int i = cycleLength; i > x; i--) {
 		cycle[i] = cycle[i - 1];

@@ -72,7 +72,7 @@ void map_init()
 
 		Unit * unit = new Unit(x, y, z, rand() % LIFE + 10);
 		for (int i = rand() % 3; i >= 0; i--) {
-			unit->addStepToCycle();
+			unit->addRandomStepToCycle();
 		}
 		unit->initializeUnit();
 	}

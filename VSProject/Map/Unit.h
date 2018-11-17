@@ -98,7 +98,7 @@ public:
 	Unit(int _x, int _y, int _z, int _life);
 	~Unit();
 	void execute();
-	void addStepToCycle();
+	void addRandomStepToCycle();
 	void initializeStep();
 	void nextStep();
 	unsigned char type();
