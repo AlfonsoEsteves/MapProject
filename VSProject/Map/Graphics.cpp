@@ -27,6 +27,8 @@ SDL_Surface* generatorTopImage = NULL;
 SDL_Surface* unitImage[RESOURCE_TYPES];
 SDL_Surface* resourceImages[RESOURCE_TYPES];
 
+vector<SDL_Surface*> images;
+
 int screenX[VIEW_WIDTH][VIEW_WIDTH];
 int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_WIDTH];
 int screenYfloor[VIEW_WIDTH][VIEW_WIDTH];
@@ -35,32 +37,27 @@ SDL_Surface* message = NULL;
 TTF_Font* font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
 
-SDL_Surface* loadSurface(std::string path)
-{
+SDL_Surface* loadSurface(std::string path) {
 	SDL_Surface* optimizedSurface = NULL;
 	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
-	if (loadedSurface == NULL)
-	{
+	if (loadedSurface == NULL) {
 		error("Unable to load image");
 	}
-	else 
-	{
+	else {
 		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
-		if (optimizedSurface == NULL)
-		{
+		if (optimizedSurface == NULL) {
 			error("Unable to optimize image");
 		}
-		else
-		{
+		else {
 			SDL_SetColorKey(optimizedSurface, SDL_TRUE, SDL_MapRGB(optimizedSurface->format, 0xFF, 0, 0xFF));
 		}
 		SDL_FreeSurface(loadedSurface);
+		images.push_back(optimizedSurface);
 	}
 	return optimizedSurface;
 }
 
-bool graphics_init()
-{
+bool graphics_init() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		error("SDL could not initialize");
 		return false;
@@ -173,7 +170,13 @@ void graphics_draw_text() {
 #	ifdef DEBUG
 	format("Units: %d", debug_unitCount);
 	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { 20, 670, 0, 0 };
+	SDL_Rect position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
+
+	format("Time: %d", time);
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	position = { SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50, 0, 0 };
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
 #	endif
@@ -345,20 +348,8 @@ void graphics_draw() {
 
 void graphics_close()
 {
-	SDL_FreeSurface(blackTopImage);
-	SDL_FreeSurface(blackLeftImage);
-	SDL_FreeSurface(blackLeftPlusImage);
-	SDL_FreeSurface(blackRightImage);
-	SDL_FreeSurface(blackRightPlusImage);
-	SDL_FreeSurface(groundImage);
-	SDL_FreeSurface(groundTopImage);
-	SDL_FreeSurface(grassImage);
-	SDL_FreeSurface(grassTopImage);
-	SDL_FreeSurface(waterTopImage);
-	SDL_FreeSurface(generatorImage);
-	SDL_FreeSurface(generatorTopImage);
-	for (int i = 0; i < RESOURCE_TYPES; i++) {
-		SDL_FreeSurface(resourceImages[i]);
+	for (int i = 0; i < images.size(); i++) {
+		SDL_FreeSurface(images[i]);
 	}
 	SDL_DestroyWindow(window);
 	SDL_Quit();

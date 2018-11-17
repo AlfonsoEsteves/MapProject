@@ -154,10 +154,8 @@ void Unit::createUnit() {
 		//TEMPORARY
 		life += LIFE;
 
-
-
-
-		int newLife = (life * 9) / 10;
+		int alpha = 6;
+		int newLife = sqrt(life * alpha * alpha) + 1 - alpha;
 		if (newLife > 0) {
 			Unit * unit = new Unit(x, y, z, newLife);
 			for (int i = 0; i < bag.size(); i++) {
