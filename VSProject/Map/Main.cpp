@@ -15,14 +15,18 @@ int main(int argc, char* args[])
 	graphics_init();
 	map_init();
 
+
+	unsigned int oldTime = SDL_GetTicks();
+	unsigned int newTime;
+
 #	ifdef FAST_FOWARD
 	while (time < FAST_FOWARD) {
 		execute_frame();
 	}
+	newTime = SDL_GetTicks();
+	printf("fastfoward time: %d.%d\n", (newTime-oldTime) / 1000, (newTime - oldTime) % 1000);
+	oldTime = newTime;
 #	endif
-
-	unsigned int oldTime = SDL_GetTicks();
-	unsigned int newTime;
 
 #   ifdef LOG_TIME
 	unsigned int accumulated = 0;
