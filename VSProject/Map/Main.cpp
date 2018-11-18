@@ -99,7 +99,25 @@ void readInput() {
 		}
 	}
 
-	int jump = 3;
+	const int border = 70;
+	if (my < border) {
+		viewX -= (border - my) * 3 / border + 1;
+		viewY -= (border - my) * 3 / border + 1;
+	}
+	if (my > SCREEN_HEIGHT - border) {
+		viewX += (my + border - SCREEN_HEIGHT) * 3 / border + 1;
+		viewY += (my + border - SCREEN_HEIGHT) * 3 / border + 1;
+	}
+	if (mx < border) {
+		viewX--;
+		viewY++;
+	}
+	if (mx > SCREEN_WIDTH - border) {
+		viewX++;
+		viewY--;
+	}
+
+	//int jump = 3;
 	while (SDL_PollEvent(&e) != 0)
 	{
 		if (e.type == SDL_QUIT) {
@@ -108,25 +126,6 @@ void readInput() {
 		else if (e.type == SDL_KEYDOWN) {
 			switch (e.key.keysym.sym)
 			{
-			case SDLK_KP_0:
-				jump = 7 - jump;
-				break;
-
-			case SDLK_KP_2:
-				viewX += jump;
-				break;
-
-			case SDLK_KP_1:
-				viewY += jump;
-				break;
-
-			case SDLK_KP_4:
-				viewX -= jump;
-				break;
-
-			case SDLK_KP_5:
-				viewY -= jump;
-				break;
 
 			case SDLK_KP_6:
 				viewZ++;
