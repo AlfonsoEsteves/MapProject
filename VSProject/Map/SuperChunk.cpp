@@ -34,7 +34,7 @@ void SuperChunk::setAreas() {
 
 void SuperChunk::spreadArea(Area* subArea, Area* area) {
 	subArea->superArea = area;
-	for (std::list<Area*>::iterator it = subArea->adjacentAreas.begin(); it != subArea->adjacentAreas.end(); it++)
+	for (std::vector<Area*>::iterator it = subArea->adjacentAreas.begin(); it != subArea->adjacentAreas.end(); it++)
 	{
 		Area* adjacentArea = *it;
 		if (adjacentArea->superArea == NULL && adjacentArea->chunk->superChunk==area->chunk) {
@@ -55,7 +55,7 @@ void SuperChunk::joinWithAdjacentChunks() {
 				for (std::list<Area*>::iterator it = subChunk->areas.begin(); it != subChunk->areas.end(); it++)
 				{
 					Area* subArea = *it;
-					for (std::list<Area*>::iterator it2 = subArea->adjacentAreas.begin(); it2 != subArea->adjacentAreas.end(); it2++) {
+					for (std::vector<Area*>::iterator it2 = subArea->adjacentAreas.begin(); it2 != subArea->adjacentAreas.end(); it2++) {
 						Area* adjacentSubArea = *it2;
 						//If both sub areas belong to the same super area, they are both within this chunk
 						if (subArea->superArea != adjacentSubArea->superArea) {

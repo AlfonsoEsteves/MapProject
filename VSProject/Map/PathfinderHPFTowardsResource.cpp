@@ -111,9 +111,9 @@ Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destAr
 	circularArrayEnd = 0;
 
 	//It adds the branches' beginnings to the queue
-	std::list<Area*>::iterator it;
-	std::list<Area*>::iterator listBeginning = oriArea->adjacentAreas.begin();
-	std::list<Area*>::iterator listEnd = oriArea->adjacentAreas.end();
+	std::vector<Area*>::iterator it;
+	std::vector<Area*>::iterator listBeginning = oriArea->adjacentAreas.begin();
+	std::vector<Area*>::iterator listEnd = oriArea->adjacentAreas.end();
 	bool foward = (rand() % 2 == 0);//It randomizes the iteration order to solve the "always right issue"
 	if (foward) {
 		it = oriArea->adjacentAreas.begin();
@@ -181,7 +181,7 @@ Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destAr
 		//Regarding the "always right issue", remember that it is irrelevant the order the adjacent areas are iterated here
 		//Even if the area that ends up reaching the goal could differ, the branch won't differ, and it is the branch what
 		//determines where the unit will go
-		for (std::list<Area*>::iterator it = currentArea->adjacentAreas.begin(); it != currentArea->adjacentAreas.end(); it++) {
+		for (std::vector<Area*>::iterator it = currentArea->adjacentAreas.begin(); it != currentArea->adjacentAreas.end(); it++) {
 			Area * followingArea = *it;
 			if (followingArea->lastCheckedByUnit != this || followingArea->lastCheckedAtTime != time) {
 				followingArea->pathFindingBranch = currentArea->pathFindingBranch;

@@ -13,7 +13,7 @@ public:
 	int lvl;
 	Chunk * chunk;
 	Area * superArea;
-	std::list<Area*> adjacentAreas;
+	vector<Area*> adjacentAreas;
 	int resources[RESOURCE_TYPES * 2];
 
 	//These variable is only used by the pathfinding algorithm

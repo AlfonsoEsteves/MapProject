@@ -128,7 +128,7 @@ Area * Unit::findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bo
 	circularArrayEnd = 0;
 
 	//I add the branches' beginnings to the queue
-	for (std::list<Area*>::iterator it = oriArea->adjacentAreas.begin(); it != oriArea->adjacentAreas.end(); it++) {
+	for (std::vector<Area*>::iterator it = oriArea->adjacentAreas.begin(); it != oriArea->adjacentAreas.end(); it++) {
 		Area* branch = *it;
 		branch->pathFindingBranch = branch;
 		branch->lastCheckedByUnit = this;
@@ -177,7 +177,7 @@ Area * Unit::findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bo
 				return area->pathFindingBranch;
 			}
 		}
-		for (std::list<Area*>::iterator it = area->adjacentAreas.begin(); it != area->adjacentAreas.end(); it++)
+		for (std::vector<Area*>::iterator it = area->adjacentAreas.begin(); it != area->adjacentAreas.end(); it++)
 		{
 			Area * followingArea = *it;
 			if (followingArea->lastCheckedByUnit != this || followingArea->lastCheckedAtTime != time) {
