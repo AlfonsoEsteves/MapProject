@@ -290,7 +290,7 @@ void Unit::newInstruction() {
 
 
 		int resource = bag[bag.size() - 1];
-		int x = resource % 3;
+		int x = resource % 2;
 		if (x == 0) {
 			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
 		}

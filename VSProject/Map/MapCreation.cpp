@@ -143,7 +143,7 @@ void createTerrainWithMidPointDisplacement() {
 	}
 	height[size / 2][size / 2] = MAP_HEIGHT - 1;
 	int sectionLength = size / 4;
-	int maxVariationTimes100 = 100 * MAP_HEIGHT * 3 / 4;
+	int maxVariationTimes100 = 100 * MAP_HEIGHT * 1;
 	while (sectionLength > 0) {
 		for (int repetition = 0; repetition < 2; repetition++) {
 			for (int i = 0; i < size; i += sectionLength) {
