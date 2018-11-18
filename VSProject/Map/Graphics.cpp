@@ -375,8 +375,6 @@ string stepName(int step) {
 		return "white";
 	case 8:
 		return "orange";
-	case INSTRUCTION_DUPLICATE:
-		return "DUPLICATE";
 	case INSTRUCTION_NEW_INSTRUCTION:
 		return "NEW INSTRUCTION";
 	case INSTRUCTION_GIVE_RESOURCE:

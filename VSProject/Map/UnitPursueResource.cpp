@@ -149,7 +149,6 @@ bool Unit::checkReachedResourceSearch() {
 }
 
 void Unit::aquireResource() {
-	life += calculateWorth();
 	if (bag.size() == MAX_CYCLE_LENGTH) {
 		bag.erase(bag.begin());
 	}
@@ -158,7 +157,16 @@ void Unit::aquireResource() {
 }
 
 void Unit::nextStep() {
+	if (resourceSearchStatus != -1) {
+		//The unit won't gain life it executed:
+		// - A new instruction instruction
+		// - A give instruction when it didn't have anything to give
+		life += calculateWorth();
+	}
 	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
+	if (cycleCurrentStep == 0 && bag.size() > 0) {
+		createUnit();
+	}
 	initializeStep();
 }
 
@@ -181,7 +189,7 @@ void Unit::initializeStep() {
 }
 
 void Unit::giveResource(Unit* taker) {
-	bag.erase(bag.end() - 1);
+ 	bag.erase(bag.end() - 1);
 	nextStep();
 	taker->aquireResource();
 }

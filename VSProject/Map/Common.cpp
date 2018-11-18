@@ -9,6 +9,12 @@ char formated[256];
 
 #ifdef DEBUG
 int lastExecutedObject = -999999;
+
+void bp(int id) {
+	if (id == DEBUG_OBJECT && time >= FAST_FOWARD) {
+		printf("");
+	}
+}
 #endif
 
 void error(string msg) {

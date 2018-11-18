@@ -31,6 +31,8 @@ extern unsigned int frameDuration;
 
 #ifdef DEBUG
 extern int lastExecutedObject;
+
+void bp(int id);
 #endif
 
 void format(const char *fmt, ...);

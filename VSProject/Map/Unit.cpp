@@ -130,9 +130,6 @@ void Unit::execute() {
 			nextStep();
 		}
 	}
-	else if (cycle[cycleCurrentStep] == INSTRUCTION_DUPLICATE) {
-		createUnit();
-	}
 	else if (cycle[cycleCurrentStep] == INSTRUCTION_NEW_INSTRUCTION) {
 		newInstruction();
 	}
@@ -150,11 +147,6 @@ void Unit::execute() {
 
 void Unit::createUnit() {
 	if (bag.size() > 0) {
-
-
-		//TEMPORARY
-		life += LIFE;
-
 		int alpha = 6;
 		int newLife = sqrt(life * alpha * alpha) + 1 - alpha;
 		if (newLife > 0) {
@@ -167,7 +159,6 @@ void Unit::createUnit() {
 			bag.clear();
 		}
 	}
-	nextStep();
 }
 
 void Unit::addRandomStepToCycle() {
@@ -182,16 +173,9 @@ void Unit::addRandomStepToCycle() {
 		if (instruction < RESOURCE_TYPES) {
 			correct = true;
 		}
-		if (instruction == INSTRUCTION_NEW_INSTRUCTION || instruction == INSTRUCTION_GIVE_RESOURCE || instruction == INSTRUCTION_DUPLICATE) {
+		if (instruction == INSTRUCTION_NEW_INSTRUCTION || instruction == INSTRUCTION_GIVE_RESOURCE) {
 			if (position > 0) {
 				if (cycle[position - 1] < RESOURCE_TYPES) {
-					correct = true;
-				}
-			}
-		}
-		if (instruction == INSTRUCTION_DUPLICATE) {
-			if (position > 0) {
-				if (cycle[position - 1] == INSTRUCTION_NEW_INSTRUCTION) {
 					correct = true;
 				}
 			}
@@ -274,7 +258,7 @@ void Unit::adjustResourceType() {
 
 #define RESOURCE_WORTH 30
 #define INSTRUCTION_WORTH 80
-#define WORTH_DIVISOR 60
+#define WORTH_DIVISOR 65
 
 int Unit::calculateWorth() {
 	int worth = 0;
@@ -308,12 +292,9 @@ void Unit::newInstruction() {
 		int resource = bag[bag.size() - 1];
 		int x = resource % 3;
 		if (x == 0) {
-			bag[bag.size() - 1] = INSTRUCTION_DUPLICATE;
-		}
-		else if (x == 1) {
 			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
 		}
-		else if (x == 2) {
+		else if (x == 1) {
 			bag[bag.size() - 1] = INSTRUCTION_GIVE_RESOURCE;
 		}
 	}

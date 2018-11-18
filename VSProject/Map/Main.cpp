@@ -160,5 +160,11 @@ void readInput() {
 void execute_game_frame() {
 	readInput();
 	execute_frame();
+#	ifdef DRAW_GRAPHICS_EVERY_X_FRAMES
+	if (time % DRAW_GRAPHICS_EVERY_X_FRAMES == 0) {
+		graphics_draw();
+	}
+#	else
 	graphics_draw();
+#	endif
 }
