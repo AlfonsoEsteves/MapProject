@@ -9,7 +9,7 @@
 #define VIEW_WIDTH 70
 #define VIEW_HEIGHT 70
 
-#define DRAW_GRAPHICS_EVERY_X_FRAMES 5
+//#define DRAW_GRAPHICS_EVERY_X_FRAMES 5
 
 bool graphics_init();
 

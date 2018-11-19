@@ -4,6 +4,8 @@ SDL_Event e;
 
 unsigned int frameDuration = 50;
 
+bool scrolling = false;
+
 void execute_game_frame();
 
 int main(int argc, char* args[])
@@ -14,7 +16,6 @@ int main(int argc, char* args[])
 
 	graphics_init();
 	map_init();
-
 
 	unsigned int oldTime = SDL_GetTicks();
 	unsigned int newTime;
@@ -99,7 +100,15 @@ void readInput() {
 		}
 	}
 
-	const int border = 70;
+	const int pixelsPerTileSpeed = 120;
+	if (scrolling) {
+		int downRight = my - SCREEN_HEIGHT / 2 + mx - SCREEN_WIDTH / 2;
+		int downLeft = my - SCREEN_HEIGHT / 2 - mx + SCREEN_WIDTH / 2;
+		viewX += downRight / pixelsPerTileSpeed;
+		viewY += downLeft / pixelsPerTileSpeed;
+	}
+
+	/*const int border = 70;
 	if (my < border) {
 		viewX -= (border - my) * 3 / border + 1;
 		viewY -= (border - my) * 3 / border + 1;
@@ -115,7 +124,7 @@ void readInput() {
 	if (mx > SCREEN_WIDTH - border) {
 		viewX++;
 		viewY--;
-	}
+	}*/
 
 	//int jump = 3;
 	while (SDL_PollEvent(&e) != 0)
@@ -156,6 +165,10 @@ void readInput() {
 		}
 		else if (e.type == SDL_MOUSEBUTTONDOWN) {
 			selected = mouseOverObject;
+			scrolling = true;
+		}
+		else if (e.type == SDL_MOUSEBUTTONUP) {
+			scrolling = false;
 		}
 	}
 }
