@@ -100,7 +100,7 @@ void readInput() {
 		}
 	}
 
-	const int pixelsPerTileSpeed = 120;
+	const int pixelsPerTileSpeed = 100;
 	if (scrolling) {
 		int downRight = my - SCREEN_HEIGHT / 2 + mx - SCREEN_WIDTH / 2;
 		int downLeft = my - SCREEN_HEIGHT / 2 - mx + SCREEN_WIDTH / 2;
@@ -108,25 +108,6 @@ void readInput() {
 		viewY += downLeft / pixelsPerTileSpeed;
 	}
 
-	/*const int border = 70;
-	if (my < border) {
-		viewX -= (border - my) * 3 / border + 1;
-		viewY -= (border - my) * 3 / border + 1;
-	}
-	if (my > SCREEN_HEIGHT - border) {
-		viewX += (my + border - SCREEN_HEIGHT) * 3 / border + 1;
-		viewY += (my + border - SCREEN_HEIGHT) * 3 / border + 1;
-	}
-	if (mx < border) {
-		viewX--;
-		viewY++;
-	}
-	if (mx > SCREEN_WIDTH - border) {
-		viewX++;
-		viewY--;
-	}*/
-
-	//int jump = 3;
 	while (SDL_PollEvent(&e) != 0)
 	{
 		if (e.type == SDL_QUIT) {

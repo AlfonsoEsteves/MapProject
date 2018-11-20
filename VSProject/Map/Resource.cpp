@@ -30,10 +30,17 @@ void Resource::execute() {
 				Resource* currentResource = (Resource*)current;
 				if (currentResource->resourceType == resourceType) {
 					Unit* unit = new Unit(x, y, z, LIFE);
+
 					//This line will depend on the implementation of the resourceType assignment of units
 					unit->cycle[0] = (resourceType - 1 + RESOURCE_TYPES) % RESOURCE_TYPES;
 					unit->cycleLength = 1;
 					unit->initializeUnit();
+#					ifdef DEBUG
+					if (unit->resourceType != resourceType) {
+						error("When 2 resources merge they should create a unit of the same type as the resources");
+					}
+#					endif
+
 					current->removeFromTile();
 					current->alive = false;
 					alive = false;

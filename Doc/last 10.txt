@@ -1,0 +1,22 @@
+tengo que decidir:
+  las unidades pueden searchear su propio tipo de recutso?
+notar que las unidades que las unidades que tienen instrucciones complejas pueden comerse a sus hijos
+y si permito que la unidad serchie su propio tipo, eso pasaria tambien con las que no tienen inst complejas
+
+
+podria hacer que el shifteo dependa de un hash en ves de que siempre sea +1
+
+voy a agregar un recurso mas para que sean par
+  y voy a hacer que la mitad se transformen en give (give1, give2... give5)
+     y la otra mitad en shift and give (sag1 sag2 ... sag5)
+
+
+AGREGAR GERARQUIAS:
+talvez que la instruccion shift-and-give
+  primero priorise darle recurso al lider
+  si el lider no precisa o ya fue satisfecha se lo da a cualquiera
+
+
+
+
+

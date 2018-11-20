@@ -95,6 +95,7 @@ bool graphics_init() {
 	unitImage[6] = loadSurface(RESOURCES_PATH + "Images/unitBlack.bmp");
 	unitImage[7] = loadSurface(RESOURCES_PATH + "Images/unitWhite.bmp");
 	unitImage[8] = loadSurface(RESOURCES_PATH + "Images/unitOrange.bmp");
+	unitImage[9] = loadSurface(RESOURCES_PATH + "Images/unitDirt.bmp");
 	resourceImages[0] = loadSurface(RESOURCES_PATH + "Images/resourceRed.bmp");
 	resourceImages[1] = loadSurface(RESOURCES_PATH + "Images/resourceYellow.bmp");
 	resourceImages[2] = loadSurface(RESOURCES_PATH + "Images/resourceGreen.bmp");
@@ -104,6 +105,7 @@ bool graphics_init() {
 	resourceImages[6] = loadSurface(RESOURCES_PATH + "Images/resourceBlack.bmp");
 	resourceImages[7] = loadSurface(RESOURCES_PATH + "Images/resourceWhite.bmp");
 	resourceImages[8] = loadSurface(RESOURCES_PATH + "Images/resourceOrange.bmp");
+	resourceImages[9] = loadSurface(RESOURCES_PATH + "Images/resourceDirt.bmp");
 	
 	font = TTF_OpenFont((RESOURCES_PATH + "OpenSans-Regular.ttf").c_str(), 14);
 	
@@ -167,16 +169,15 @@ void graphics_draw_text() {
 			}
 		}
 	}
+	format("Time: %d", time);
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	SDL_Rect position = { SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
 #	ifdef DEBUG
 	format("Units: %d", debug_unitCount);
 	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
-
-	format("Time: %d", time);
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	position = { SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50, 0, 0 };
+	position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
 #	endif
@@ -234,7 +235,7 @@ void graphics_draw_map() {
 									Unit* unit = (Unit*)current;
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-									if (unit->calculateWorth() > 50) {
+									if (unit->calculateWorth() > 80) {
 										position.y = screenY[i][j][k] + 1;
 										SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									}
@@ -375,6 +376,8 @@ string stepName(int step) {
 		return "white";
 	case 8:
 		return "orange";
+	case 9:
+		return "dirt";
 	case INSTRUCTION_NEW_INSTRUCTION:
 		return "NEW INSTRUCTION";
 	case INSTRUCTION_GIVE_RESOURCE:
