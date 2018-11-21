@@ -65,12 +65,11 @@ bool Unit::checkReachedResource() {
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		return checkReachedResourceSearch();
 	}
-	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
-		return checkReachedResourceGive();
-	}
 	else {
-		error("Wrong cycle instruction");
-		return false;
+		if (cycle[cycleCurrentStep]  % 2 != INSTRUCTION_GIVE_RESOURCE_) {
+			error("Wrong cycle instruction");
+		}
+		return checkReachedResourceGive();
 	}
 }
 
@@ -109,13 +108,11 @@ bool Unit::checkReachedResourceSearch() {
 		bool pickUpUnit = false;
 		if (current->objectType == objectUnit) {
 			Unit* currentUnit = (Unit*)current;
-			if (currentUnit->cycle[currentUnit->cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
-				if (currentUnit->resourceSearchStatus - RESOURCE_TYPES == resourceSearchStatus) {
-					currentUnit->removeFromTile();
-					currentUnit->giveResource(this);
-					currentUnit->addToTile();
-					return true;
-				}
+			if (currentUnit->resourceSearchStatus - RESOURCE_TYPES == resourceSearchStatus) {
+				currentUnit->removeFromTile();
+				currentUnit->giveResource(this);
+				currentUnit->addToTile();
+				return true;
 			}
 			if (currentUnit->resourceType == resourceSearchStatus) {
 				if (life >= currentUnit->life) {
@@ -176,7 +173,7 @@ void Unit::initializeStep() {
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		resourceSearchStatus = cycle[cycleCurrentStep];
 	}
-	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
+	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE_) {
 		if (!bag.empty()) {
 			char lastResourceInBag = bag[bag.size() - 1];
 			if (lastResourceInBag < RESOURCE_TYPES) {

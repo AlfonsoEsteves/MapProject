@@ -378,9 +378,11 @@ string stepName(int step) {
 		return "orange";
 	case 9:
 		return "dirt";
-	case INSTRUCTION_NEW_INSTRUCTION:
+	}
+	switch (step % 2) {
+	case INSTRUCTION_NEW_INSTRUCTION_:
 		return "NEW INSTRUCTION";
-	case INSTRUCTION_GIVE_RESOURCE:
+	case INSTRUCTION_GIVE_RESOURCE_:
 		return "SHIFT AND GIVE";
 	}
 	return NULL;

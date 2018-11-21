@@ -121,7 +121,7 @@ void Unit::execute() {
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		pursueResource();
 	}
-	else if (cycle[cycleCurrentStep] == INSTRUCTION_GIVE_RESOURCE) {
+	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE_) {
 		if (resourceSearchStatus != -1) {
 			pursueResource();
 		}
@@ -130,7 +130,7 @@ void Unit::execute() {
 			nextStep();
 		}
 	}
-	else if (cycle[cycleCurrentStep] == INSTRUCTION_NEW_INSTRUCTION) {
+	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_NEW_INSTRUCTION_) {
 		newInstruction();
 	}
 #	ifdef DEBUG
@@ -173,7 +173,7 @@ void Unit::addRandomStepToCycle() {
 		if (instruction < RESOURCE_TYPES) {
 			correct = true;
 		}
-		if (instruction == INSTRUCTION_NEW_INSTRUCTION || instruction == INSTRUCTION_GIVE_RESOURCE) {
+		if (instruction >= RESOURCE_TYPES) {
 			if (position > 0) {
 				if (cycle[position - 1] < RESOURCE_TYPES) {
 					correct = true;
@@ -290,13 +290,7 @@ void Unit::newInstruction() {
 
 
 		int resource = bag[bag.size() - 1];
-		int x = resource % 2;
-		if (x == 0) {
-			bag[bag.size() - 1] = INSTRUCTION_NEW_INSTRUCTION;
-		}
-		else if (x == 1) {
-			bag[bag.size() - 1] = INSTRUCTION_GIVE_RESOURCE;
-		}
+		bag[bag.size() - 1] = resource % RESOURCE_TYPES + RESOURCE_TYPES;
 	}
 	nextStep();
 }
