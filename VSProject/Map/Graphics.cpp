@@ -380,9 +380,9 @@ string stepName(int step) {
 		return "dirt";
 	}
 	switch (step % 2) {
-	case INSTRUCTION_NEW_INSTRUCTION_:
+	case INSTRUCTION_NEW_INSTRUCTION:
 		return "NEW INSTRUCTION";
-	case INSTRUCTION_GIVE_RESOURCE_:
+	case INSTRUCTION_GIVE_RESOURCE:
 		return "SHIFT AND GIVE";
 	}
 	return NULL;

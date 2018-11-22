@@ -66,7 +66,7 @@ bool Unit::checkReachedResource() {
 		return checkReachedResourceSearch();
 	}
 	else {
-		if (cycle[cycleCurrentStep]  % 2 != INSTRUCTION_GIVE_RESOURCE_) {
+		if (cycle[cycleCurrentStep]  % 2 != INSTRUCTION_GIVE_RESOURCE) {
 			error("Wrong cycle instruction");
 		}
 		return checkReachedResourceGive();
@@ -173,7 +173,7 @@ void Unit::initializeStep() {
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		resourceSearchStatus = cycle[cycleCurrentStep];
 	}
-	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE_) {
+	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE) {
 		if (!bag.empty()) {
 			char lastResourceInBag = bag[bag.size() - 1];
 			if (lastResourceInBag < RESOURCE_TYPES) {

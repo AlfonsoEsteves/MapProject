@@ -121,7 +121,7 @@ void Unit::execute() {
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		pursueResource();
 	}
-	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE_) {
+	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE) {
 		if (resourceSearchStatus != -1) {
 			pursueResource();
 		}
@@ -130,7 +130,7 @@ void Unit::execute() {
 			nextStep();
 		}
 	}
-	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_NEW_INSTRUCTION_) {
+	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_NEW_INSTRUCTION) {
 		newInstruction();
 	}
 #	ifdef DEBUG
@@ -189,71 +189,41 @@ void Unit::addRandomStepToCycle() {
 	}
 }
 
-/*void popoAjustar(Unit* unit) {
-	bool availableResource[RESOURCE_TYPES];
-	int availableResources = RESOURCE_TYPES;
-	for (int i = 0; i < 6; i++) {
-		availableResource[i] = true;
-	}
-
-	int hash = 0;
-	for (int i = 0; i < unit->cycleLength; i++) {
-		hash += unit->cycle[i] * unit->cycle[i];
-		if (unit->cycle[i] < RESOURCE_TYPES) {
-			if (availableResource[unit->cycle[i]]) {
-				availableResource[unit->cycle[i]] = false;
-				availableResources--;
-			}
-		}
-	}
-	hash = hash % availableResources;
-	unit->popo = 0;
-	while (true) {
-		if (availableResource[unit->popo]) {
-			if (hash == 0) {
-				break;
-			}
-			else {
-				hash--;
-			}
-		}
-		unit->popo++;
-	}
-}*/
-
 void Unit::adjustResourceType() {
-	bool availableResource[RESOURCE_TYPES];
-	int availableResources = RESOURCE_TYPES;
-	for (int i = 0; i < 6; i++) {
-		availableResource[i] = true;
+	if (cycleLength == 1) {
+		resourceType = (cycle[0] + 1) % RESOURCE_TYPES;
 	}
-	int hash = 0;
-	for (int i = 0; i < cycleLength; i++) {
-		hash += cycle[i];
-		if (cycle[i] < RESOURCE_TYPES) {
-			if (availableResource[cycle[i]]) {
-				availableResource[cycle[i]] = false;
-				availableResources--;
+	else{
+		bool availableResource[RESOURCE_TYPES];
+		int availableResources = RESOURCE_TYPES;
+		for (int i = 0; i < RESOURCE_TYPES; i++) {
+			availableResource[i] = true;
+		}
+		int hash = 0;
+		for (int i = 0; i < cycleLength; i++) {
+			hash += cycle[i];
+			if (cycle[i] < RESOURCE_TYPES) {
+				if (availableResource[cycle[i]]) {
+					availableResource[cycle[i]] = false;
+					availableResources--;
+				}
 			}
 		}
-	}
-	hash = hash % availableResources;
-	resourceType = 0;
-	while (true) {
-		if (availableResource[resourceType]) {
-			if (hash == 0) {
-				break;
+		hash = hash % availableResources;
+		resourceType = 0;
+		while (true) {
+			if (availableResource[resourceType]) {
+				if (hash == 0) {
+					break;
+				}
+				else {
+					hash--;
+				}
 			}
-			else {
-				hash--;
-			}
+			resourceType++;
 		}
-		resourceType++;
 	}
-
 	hasToResetPath = true;
-
-	//popoAjustar(this);
 }
 
 #define RESOURCE_WORTH 30
