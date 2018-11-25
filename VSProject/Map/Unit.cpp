@@ -213,11 +213,11 @@ void Unit::adjustResourceType() {
 	hasToResetPath = true;
 }
 
-#define INITIAL_WORTH 50
+#define INITIAL_WORTH 80
 #define RESOURCE_WORTH 30
-#define INSTRUCTION_WORTH 60
-#define WORTH_DIVISOR 200
-#define LINEAR_FACTOR 20
+#define INSTRUCTION_WORTH 50
+#define LINEAR_FACTOR 30
+#define WORTH_DIVISOR 450
 
 int Unit::calculateWorth() {
 	int worth = INITIAL_WORTH;

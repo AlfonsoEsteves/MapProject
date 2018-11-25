@@ -1,8 +1,14 @@
 #pragma once
 
-#define SEED 92
+#define SEED 96
 
 #define UNIT_COUNT 100
+
+/*#define MAP_WIDTH 750 //6*5*5*5
+#define MAP_HEIGHT 30 //6*5
+
+#define BASE_CHUNK_SIZE 6
+#define SUPER_CHUNK_SIZE 5*/
 
 #define MAP_WIDTH 448 //7*4*4*4
 #define MAP_HEIGHT 28 //7*4
@@ -34,7 +40,7 @@
 
 #define RESOURCE_TYPES 10
 
-#define FAST_FOWARD 6000
+#define FAST_FOWARD 0
 //#define CALCULATE_HASH_AT_TIME 2001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency

@@ -8,6 +8,8 @@ bool graphics_init();
 
 void graphics_close();
 
+void graphics_draw_minimap();
+
 SDL_Window* window = NULL;
 
 SDL_Surface* screenSurface = NULL;
@@ -113,9 +115,9 @@ bool graphics_init() {
 		for (int j = 0; j < VIEW_WIDTH; j++) {
 			screenX[i][j] = i * 6 - j * 6 + SCREEN_WIDTH / 2 - 5;
 			for (int k = 0; k < VIEW_WIDTH; k++) {
-				screenY[i][j][k] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (k - VIEW_WIDTH / 2) + SCREEN_HEIGHT / 2 - 5;
+				screenY[i][j][k] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (k - VIEW_HEIGHT / 2) + SCREEN_HEIGHT / 2 - 5;
 			}
-			screenYfloor[i][j] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (0 - 1 - VIEW_WIDTH / 2) + SCREEN_HEIGHT / 2 - 5;
+			screenYfloor[i][j] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (0 - 1 - VIEW_HEIGHT / 2) + SCREEN_HEIGHT / 2 - 5;
 		}
 	}
 
@@ -235,7 +237,7 @@ void graphics_draw_map() {
 									Unit* unit = (Unit*)current;
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-									if (unit->calculateWorth() > 200) {
+									if (unit->calculateWorth() > 100) {
 										position.y = screenY[i][j][k] + 1;
 										SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									}
@@ -344,7 +346,15 @@ void graphics_draw() {
 	}
 	graphics_draw_map();
 	graphics_draw_text();
+	graphics_draw_minimap();
 	SDL_UpdateWindowSurface(window);
+}
+
+void graphics_draw_minimap() {
+	SDL_Rect rect = { SCREEN_WIDTH - MAP_WIDTH / 3, 0, MAP_WIDTH / 3, MAP_WIDTH / 3 };
+	SDL_FillRect(screenSurface, &rect, 255);
+	SDL_Rect rect2 = { SCREEN_WIDTH - (MAP_WIDTH - viewX) / 3, viewY / 3, VIEW_WIDTH / 3, VIEW_WIDTH / 3 };
+	SDL_FillRect(screenSurface, &rect2, 10000);
 }
 
 void graphics_close()
