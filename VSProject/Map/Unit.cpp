@@ -77,21 +77,8 @@ void Unit::removeFromTileExtra() {
 unsigned char Unit::type() {
 	return objectUnit;
 }
-/*
-void popopopo(int x, int y, int z, int popo) {
-	Resource* resource = new Resource(x, y, z, popo);
-	resource->addToTile();
-}*/
 
 void Unit::execute() {
-
-	/*unsigned char uc = (unsigned char)this;
-	if ((time / slowness + uc) % (80 + uc % 81) == 0) {
-		popopopo(x, y, z, popo);
-	}*/
-
-
-
 #	ifdef DEBUG
 	if (!tileIsSteppable(x, y, z)) {
 		error("A unit can only occupy steppable tiles");
@@ -226,12 +213,14 @@ void Unit::adjustResourceType() {
 	hasToResetPath = true;
 }
 
+#define INITIAL_WORTH 50
 #define RESOURCE_WORTH 30
-#define INSTRUCTION_WORTH 80
-#define WORTH_DIVISOR 65
+#define INSTRUCTION_WORTH 60
+#define WORTH_DIVISOR 200
+#define LINEAR_FACTOR 20
 
 int Unit::calculateWorth() {
-	int worth = 0;
+	int worth = INITIAL_WORTH;
 	bool instructions[INSTRUCTIONS];
 	for (int i = 0; i < INSTRUCTIONS; i++) {
 		instructions[i] = false;
@@ -247,18 +236,12 @@ int Unit::calculateWorth() {
 			}
 		}
 	}
-	return (worth * worth + worth * 3) / WORTH_DIVISOR;
+	worth = (worth * worth + worth * LINEAR_FACTOR) / WORTH_DIVISOR;
+	return worth;
 }
 
 void Unit::newInstruction() {
 	if (bag.size() > 0) {
-
-
-		//TEMPORARY
-		life += LIFE;
-
-
-
 		int resource = bag[bag.size() - 1];
 		bag[bag.size() - 1] = resource % RESOURCE_TYPES + RESOURCE_TYPES;
 	}

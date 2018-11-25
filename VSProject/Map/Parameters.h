@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 88
+#define SEED 92
 
 #define UNIT_COUNT 100
 
@@ -42,7 +42,7 @@
 //#define LOG_PF true
 
 #define DEBUG_TIME -1
-#define DEBUG_OBJECT 353
+#define DEBUG_OBJECT 6153
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

@@ -155,7 +155,7 @@ void Unit::aquireResource() {
 
 void Unit::nextStep() {
 	if (resourceSearchStatus != -1) {
-		//The unit won't gain life it executed:
+		//The unit won't gain life if it executed:
 		// - A new instruction instruction
 		// - A give instruction when it didn't have anything to give
 		life += calculateWorth();

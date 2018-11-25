@@ -235,7 +235,7 @@ void graphics_draw_map() {
 									Unit* unit = (Unit*)current;
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-									if (unit->calculateWorth() > 80) {
+									if (unit->calculateWorth() > 200) {
 										position.y = screenY[i][j][k] + 1;
 										SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									}
