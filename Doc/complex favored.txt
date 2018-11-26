@@ -1,0 +1,3 @@
+complex instraction should be rewarded more
+  a 100% basic instruction unit will reproduce
+  a complex one will not

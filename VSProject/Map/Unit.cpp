@@ -215,7 +215,7 @@ void Unit::adjustResourceType() {
 
 #define INITIAL_WORTH 80
 #define RESOURCE_WORTH 30
-#define INSTRUCTION_WORTH 50
+#define INSTRUCTION_WORTH 60
 #define LINEAR_FACTOR 30
 #define WORTH_DIVISOR 450
 
