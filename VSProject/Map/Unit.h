@@ -53,13 +53,19 @@ private:
 #	endif
 
 public:
-	//char popo;
-
 	char resourceType;
 
 	int life;
 
 	int slowness;//The amount of turns the unit has to wait after moving
+
+	Unit* parent;
+	int childs;
+	
+	//Whether the unit is is a bucket or not
+	//If the last child of a dead unit dies, the unit can be deleted only if it is not in a bucket
+	//If it is in a bucket, the main loop will take care of deleting it
+	bool inBucket;
 	
 	char cycle[MAX_CYCLE_LENGTH];
 	char cycleLength;
@@ -94,7 +100,7 @@ public:
 
 	//bool dummyMovementSeemsFine;
 
-	Unit(int _x, int _y, int _z, int _life);
+	Unit(int _x, int _y, int _z, int _life, Unit* _parent);
 	~Unit();
 	void execute();
 	void addRandomStepToCycle();

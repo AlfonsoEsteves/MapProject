@@ -4,9 +4,12 @@
 int debug_unitCount = 0;
 #endif
 
-Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
+Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit, _x, _y, _z)
 {
 	life = _life;
+	parent = _parent;
+	childs = 0;
+	inBucket = true;
 
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
@@ -42,8 +45,18 @@ void Unit::initializeUnit() {
 
 Unit::~Unit(){
 #	ifdef DEBUG
+	if (childs > 0) {
+		error("Do not delete a unit if it still has childs");
+	}
+
 	debug_unitCount--;
 #	endif
+	if (parent != NULL) {
+		parent->childs--;
+		if (parent->childs == 0 && !parent->inBucket) {
+			delete parent;
+		}
+	}
 }
 
 void Unit::addToTileExtra() {
@@ -137,7 +150,8 @@ void Unit::createUnit() {
 		int alpha = 6;
 		int newLife = sqrt(life * alpha * alpha) + 1 - alpha;
 		if (newLife > 0) {
-			Unit * unit = new Unit(x, y, z, newLife);
+			childs++;
+			Unit * unit = new Unit(x, y, z, newLife, this);
 			for (int i = 0; i < bag.size(); i++) {
 				unit->cycle[i] = bag[i];
 			}

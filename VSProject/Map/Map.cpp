@@ -27,7 +27,18 @@ void execute_frame()
 		}
 		//The execution may have set alive to false
 		if (!object->alive) {
-			delete object;
+			if (object->objectType == objectUnit) {
+				Unit* unit = (Unit*)object;
+				if (unit->childs == 0) {
+					delete unit;
+				}
+				else {
+					unit->inBucket = false;
+				}
+			}
+			else {
+				delete object;
+			}
 		}
 	}
 	objects[time % BUCKETS].clear();
@@ -37,7 +48,15 @@ void execute_frame()
 void map_close() {
 	for (int i = 0; i < BUCKETS; i++) {
 		for (std::list<Object*>::iterator it = objects[i].begin(); it != objects[i].end(); it++) {
-			(*it)->~Object();
+			Object* object = (*it);
+			if (object->objectType == objectUnit) {
+				Unit* unit = (Unit*)object;
+				unit->childs = 0;
+				unit->~Unit();
+			}
+			else {
+				object->~Object();
+			}
 		}
 	}
 	pathfinderClose();
