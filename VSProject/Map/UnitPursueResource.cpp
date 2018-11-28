@@ -6,7 +6,12 @@ void Unit::pursueResource() {
 		int attemptedMovement = -1;
 		if (hasToResetPath) {
 			hasToResetPath = false;
-			attemptedMovement = resetPathTowardsResource();
+			if (destinationObject != NULL) {
+				attemptedMovement = resetPathTowardsObject();
+			}
+			else {
+				attemptedMovement = resetPathTowardsResource();
+			}
 #			ifdef DEBUG
 			checkDestinationAreas();
 #			endif
@@ -17,7 +22,12 @@ void Unit::pursueResource() {
 		else {
 			if (reachedDestinationBaseArea) {
 				reachedDestinationBaseArea = false;
-				attemptedMovement = adjustPathTowardsResource();
+				if (destinationObject != NULL) {
+					attemptedMovement = adjustPathTowardsObject();
+				}
+				else {
+					attemptedMovement = adjustPathTowardsResource();
+				}
 #				ifdef DEBUG
 				checkDestinationAreas();
 #				endif
@@ -28,7 +38,12 @@ void Unit::pursueResource() {
 #				endif
 			}
 			else {
-				attemptedMovement = dijkstraTowardsResourceOrArea(true);
+				if (destinationObject != NULL) {
+					attemptedMovement = dijkstraTowardsObjectOrArea(true);
+				}
+				else {
+					attemptedMovement = dijkstraTowardsResourceOrArea(true);
+				}
 			}
 		}
 		if (attemptedMovement == PATH_OUTDATED) {
@@ -78,6 +93,13 @@ bool Unit::checkReachedResourceGive() {
 		nextStep();
 		return true;
 	}
+
+
+
+
+
+
+
 	Object* current = unitsMap[x][y][z];
 	while (current != NULL) {
 		if (current->objectType == objectUnit) {

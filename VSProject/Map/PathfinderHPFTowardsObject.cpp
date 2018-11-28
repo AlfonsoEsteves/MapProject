@@ -1,12 +1,10 @@
 #include "Common.h"
 
-//THESE FUNCTIONS ARE CURRENTLY NOT BEEN USER
-
 int Unit::resetPathGoingFromAreasToSuperAreas(int startingLevel) {
 	while (startingLevel > 0) {
 		Area* nextArea = findNextAreaAux(oriAreas[startingLevel], destinationSuperAreas[startingLevel], false, true);
 		if (nextArea == NULL) {
-			return -1;
+			return PATH_OUTDATED;
 		}
 		destinationSuperAreas[startingLevel - 1] = nextArea;
 		startingLevel--;
@@ -32,7 +30,7 @@ int Unit::resetPathTo(Area* oriArea, Area* destArea) {
 }
 
 //This method should be used only to start the pathfinding and to reset after a new obstacle obstructed the path
-int Unit::resetPathTowardsPoint(int destX, int destY, int destZ) {
+int Unit::resetPathTowardsObject() {
 #	ifdef SAFE
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
@@ -44,11 +42,11 @@ int Unit::resetPathTowardsPoint(int destX, int destY, int destZ) {
 #   endif
 
 	Area * oriArea = areasMap[x][y][z];
-	Area * destArea = areasMap[destX][destY][destZ];
+	Area * destArea = areasMap[destinationObject->x][destinationObject->y][destinationObject->z];
 
 	if (oriArea == destArea) {
 		lowestDestinationAreaReached = destArea;
-		return dijkstraTowardsPoint(destX, destY, destZ, false);
+		return dijkstraTowardsObject(false);
 	}
 
 	Area * oriSuperArea = oriArea->superArea;
@@ -62,8 +60,8 @@ int Unit::resetPathTowardsPoint(int destX, int destY, int destZ) {
 	}
 
 	if (oriSuperArea == NULL) {
-		//If the destination area and the origin are not connected I return -1
-		return -1;
+		//If the destination area and the origin are not connected I return PATH_NOT_FOUND
+		return PATH_NOT_FOUND;
 	}
 
 	lowestDestinationAreaReached = oriSuperArea;
@@ -71,13 +69,13 @@ int Unit::resetPathTowardsPoint(int destX, int destY, int destZ) {
 	return resetPathTo(oriArea, destArea);
 }
 
-int Unit::adjustPathTowardsPoint(int destX, int destY, int destZ) {
+int Unit::adjustPathTowardsObject() {
 	Area * oriArea = areasMap[x][y][z];
-	Area * destArea = areasMap[destX][destY][destZ];
+	Area * destArea = areasMap[destinationObject->x][destinationObject->y][destinationObject->z];
 
 	if (oriArea == destArea) {
 		lowestDestinationAreaReached = destArea;
-		return dijkstraTowardsPoint(destX, destY, destZ, false);
+		return dijkstraTowardsObject(false);
 	}
 
 	while (true) {
@@ -154,9 +152,6 @@ Area * Unit::findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bo
 			//Bear in mind that the chunksToBeTraveled will normally be one less than compared to when
 			//the distance was set, because this method gets excuted after the unit advances one chunk
 			if (adjusting && distance >= chunksToBeTraveled[oriArea->lvl]) {
-#               ifdef DEBUG
-				error("This can only happen if there is a topology change, and I have not implemented that yet.");
-#               endif
 				return NULL;
 			}
 			firstAreaOfTheNextDistance = circularArrayEnd;
@@ -191,15 +186,25 @@ Area * Unit::findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bo
 	}
 }
 
-int Unit::dijkstraTowardsPoint(int destX, int destY, int destZ, bool adjusting) {
+int Unit::dijkstraTowardsObjectOrArea(bool adjusting) {
+	Area* oriArea = areasMap[x][y][z];
+	if (oriArea == baseDestinationArea) {
+		return dijkstraTowardsObject(adjusting);
+	}
+	else {
+		return dijkstraTowardsArea(baseDestinationArea, adjusting);
+	}
+}
+
+int Unit::dijkstraTowardsObject(bool adjusting) {
 	//Swap the tile's area with the destination area
-	Area* temporary = areasMap[destX][destY][destZ];
-	areasMap[destX][destY][destZ] = &destTileAuxArea;
+	Area* temporary = areasMap[destinationObject->x][destinationObject->y][destinationObject->z];
+	areasMap[destinationObject->x][destinationObject->y][destinationObject->z] = &destTileAuxArea;
 
 	int direction = dijkstraTowardsArea(&destTileAuxArea, adjusting);
 
 	//undo the swapping
-	areasMap[destX][destY][destZ] = temporary;
+	areasMap[destinationObject->x][destinationObject->y][destinationObject->z] = temporary;
 
 	return direction;
 }
@@ -236,10 +241,7 @@ int Unit::dijkstraTowardsArea(Area * dest, bool adjusting) {
 		if (circularArrayStart == firstTileOfTheNextDistance) {
 			distance++;
 			if (adjusting && distance >= tilesToBeTraveled) {
-#               ifdef DEBUG
-				error("This can only happen if there is a topology change, and I have not implemented that yet.");
-#               endif
-				return -1;
+				return PATH_OUTDATED;
 			}
 			firstTileOfTheNextDistance = circularArrayEnd;
 		}

@@ -28,13 +28,14 @@ private:
 	void createUnit();
 
 	//Pathfinding towards point
-	int resetPathTowardsPoint(int destX, int destY, int destZ);
-	int adjustPathTowardsPoint(int destX, int destY, int destZ);
+	int resetPathTowardsObject();
+	int adjustPathTowardsObject();
+	int dijkstraTowardsObjectOrArea(bool adjusting);
+	int dijkstraTowardsObject(bool adjusting);
+	int dijkstraTowardsArea(Area * dest, bool adjusting);
 	int resetPathTo(Area * oriArea, Area * destArea);
 	int resetPathGoingFromAreasToSuperAreas(int startingLevel);
 	Area* findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bool subArea);
-	int dijkstraTowardsPoint(int destX, int destY, int destZ, bool adjusting);
-	int dijkstraTowardsArea(Area * dest, bool adjusting);
 
 	//Pathfinding towards resource
 	int resetPathTowardsResource();
@@ -61,6 +62,7 @@ public:
 
 	Unit* parent;
 	int childs;
+	Object* destinationObject;//The unit can be moving towards its parent
 	
 	//Whether the unit is is a bucket or not
 	//If the last child of a dead unit dies, the unit can be deleted only if it is not in a bucket

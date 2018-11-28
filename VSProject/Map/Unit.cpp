@@ -10,6 +10,7 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit
 	parent = _parent;
 	childs = 0;
 	inBucket = true;
+	destinationObject = NULL;
 
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
@@ -123,10 +124,23 @@ void Unit::execute() {
 	}
 	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE) {
 		if (resourceSearchStatus != -1) {
+			destinationObject = NULL;
+			if (parent != NULL) {
+				if (parent->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
+					destinationObject = parent;
+				}
+			}
 			pursueResource();
 		}
 		else {
 			//The unit didn't have a last resource, or it was not givable
+
+
+
+			                                    //WHat does it mean "or it was not givable"
+
+
+
 			nextStep();
 		}
 	}
