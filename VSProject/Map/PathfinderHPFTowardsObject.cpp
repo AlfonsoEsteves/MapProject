@@ -1,43 +1,17 @@
 #include "Common.h"
 
-int Unit::resetPathGoingFromAreasToSuperAreas(int startingLevel) {
-	while (startingLevel > 0) {
-		Area* nextArea = findNextAreaAux(oriAreas[startingLevel], destinationSuperAreas[startingLevel], false, true);
-		if (nextArea == NULL) {
-			return PATH_OUTDATED;
-		}
-		destinationSuperAreas[startingLevel - 1] = nextArea;
-		startingLevel--;
-	}
-	baseDestinationArea = findNextAreaAux(oriAreas[0], destinationSuperAreas[0], false, true);
-	return dijkstraTowardsArea(baseDestinationArea, false);
-}
-
-int Unit::resetPathTo(Area* oriArea, Area* destArea) {
-#	ifdef DEBUG
-	if (lowestDestinationAreaReached->lvl != destArea->lvl + 1) {
-		error("When executing same level dijkstra, the origin and destination areas should be one level below the lowest destination area reached.");
-	}
-#	endif
-	if (oriArea->lvl > 0) {
-		destinationSuperAreas[oriArea->lvl - 1] = findNextAreaAux(oriArea, destArea, false, false);
-		return resetPathGoingFromAreasToSuperAreas(oriArea->lvl - 1);
-	}
-	else {
-		baseDestinationArea = findNextAreaAux(oriArea, destArea, false, false);
-		return dijkstraTowardsArea(baseDestinationArea, false);
-	}
-}
-
 //This method should be used only to start the pathfinding and to reset after a new obstacle obstructed the path
 int Unit::resetPathTowardsObject() {
+	lowestDestinationAreaReached = NULL;
+	reachedDestinationBaseArea = false;
+	baseDestinationArea = NULL;
+
 #	ifdef SAFE
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
 		chunksToBeTraveled[i] = -1;
 		oriAreas[i] = NULL;
 	}
-	baseDestinationArea = NULL;
 	tilesToBeTraveled = -1;
 #   endif
 
@@ -66,9 +40,13 @@ int Unit::resetPathTowardsObject() {
 
 	lowestDestinationAreaReached = oriSuperArea;
 
-	return resetPathTo(oriArea, destArea);
+	return resetPathGoingFromAreaToArea(oriArea, destArea);
 }
 
+//This method adjusts the path of the unit as the unit moves.
+//Remember that this method is executed only if the unit reaches at least one of its destination areas.
+//If in an iteration the path isn't as good as before, the unit marks that a path reset is needed.
+//To keep a path, the unit has to be at least 1 tile closer in each iteration.
 int Unit::adjustPathTowardsObject() {
 	Area * oriArea = areasMap[x][y][z];
 	Area * destArea = areasMap[destinationObject->x][destinationObject->y][destinationObject->z];
@@ -81,13 +59,13 @@ int Unit::adjustPathTowardsObject() {
 	while (true) {
 		oriAreas[oriArea->lvl] = oriArea;
 
-		//Checks if the unit reached a smaller destination area than lowestDestinationAreaReached
+		//If the unit reached a level previous to its lowestDestinationAreaReached, it reset all of its path.
 		if (oriArea->superArea == destArea->superArea) {
 			lowestDestinationAreaReached = oriArea->superArea;
-			return resetPathTo(oriArea, destArea);
+			return resetPathGoingFromAreaToArea(oriArea, destArea);
 		}
 
-		//Check if it should apply same level dijkstra
+		//If the unit reached the level previous to its lowestDestinationAreaReached, it reset the whole path applying same-level-dijkstra.
 		if (oriArea->lvl == lowestDestinationAreaReached->lvl - 1) {
 			Area* nextArea = findNextAreaAux(oriArea, destArea, true, false);
 			if (nextArea == NULL) {
@@ -98,20 +76,58 @@ int Unit::adjustPathTowardsObject() {
 				return dijkstraTowardsArea(nextArea, false);
 			}
 			else {
-
+				destinationSuperAreas[oriArea->lvl - 1] = nextArea;
+				return resetPathGoingFromAreasToSuperAreas(oriArea->lvl - 1);
 			}
-			destinationSuperAreas[oriArea->lvl - 1] = nextArea;
-			return resetPathGoingFromAreasToSuperAreas(oriArea->lvl - 1);
 		}
 
-		//Check if the current super area destination has not been reached yet
-		if(oriArea->superArea != destinationSuperAreas[oriArea->lvl]) {
+		//The algorithim keeps on iterating until it reaches a super area destination that has not been reached yet
+		if (oriArea->superArea != destinationSuperAreas[oriArea->lvl]) {
+
+
+			tengo que chequear que la super area siga siendo correcta, analogo a el otro
+
+
 			return resetPathGoingFromAreasToSuperAreas(oriArea->lvl);
 		}
 
 		oriArea = oriArea->superArea;
 		destArea = destArea->superArea;
 	}
+}
+
+//Thid method basically calls resetPathGoingFromAreasToSuperAreas
+//But I needed because at the first level (the highest level) the search is a same-level-search
+//  All the following searches in the lower levels are from-area-to-super-area searches
+int Unit::resetPathGoingFromAreaToArea(Area* oriArea, Area* destArea) {
+#	ifdef DEBUG
+	if (lowestDestinationAreaReached->lvl != destArea->lvl + 1) {
+		error("When executing same level dijkstra, the origin and destination areas should be one level below the lowest destination area reached.");
+	}
+#	endif
+	if (oriArea->lvl > 0) {
+		destinationSuperAreas[oriArea->lvl - 1] = findNextAreaAux(oriArea, destArea, false, false);
+		return resetPathGoingFromAreasToSuperAreas(oriArea->lvl - 1);
+	}
+	else {
+		baseDestinationArea = findNextAreaAux(oriArea, destArea, false, false);
+		return dijkstraTowardsArea(baseDestinationArea, false);
+	}
+}
+
+//This method decides the destination area in multiple levels
+//It iterates starting from the highest levels going to the lowest levels
+int Unit::resetPathGoingFromAreasToSuperAreas(int startingLevel) {
+	while (startingLevel > 0) {
+		Area* nextArea = findNextAreaAux(oriAreas[startingLevel], destinationSuperAreas[startingLevel], false, true);
+		if (nextArea == NULL) {
+			return PATH_OUTDATED;
+		}
+		destinationSuperAreas[startingLevel - 1] = nextArea;
+		startingLevel--;
+	}
+	baseDestinationArea = findNextAreaAux(oriAreas[0], destinationSuperAreas[0], false, true);
+	return dijkstraTowardsArea(baseDestinationArea, false);
 }
 
 //The last parameter indicates weather the ori is one lvl bellow dest or not

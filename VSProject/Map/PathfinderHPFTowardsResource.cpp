@@ -1,6 +1,10 @@
 #include "Common.h"
 
-//This method should be used only to start the pathfinding and to reset it after a new obstacle obstructs the current path
+//This method sets the destination areas the unit will pursue to try to reach its goal
+//This method should be used only to
+// - Start the PF
+// - Reset the PF after a new obstacle obstructs the current path
+// - Reset the PF after the destination got farther away from the unit
 int Unit::resetPathTowardsResource() {
 	lowestDestinationAreaReached = NULL;
 	reachedDestinationBaseArea = false;
@@ -17,12 +21,12 @@ int Unit::resetPathTowardsResource() {
 
 	Area * area = areasMap[x][y][z];
 
-	if (area->resources[resourceSearchStatus]>0) {
+	if (area->resources[resourceSearchStatus] > 0) {
 		lowestDestinationAreaReached = area;
 		return dijkstraTowardsResourceOrArea(false);
 	}
 
-	while (area->resources[resourceSearchStatus]==0) {
+	while (area->resources[resourceSearchStatus] == 0) {
 		oriAreas[area->lvl] = area;
 		area = area->superArea;
 		if (area == NULL) {
@@ -35,29 +39,34 @@ int Unit::resetPathTowardsResource() {
 	return resetPathTowardsResource(area->lvl - 1);
 }
 
+//This method adjusts the path of the unit as the unit moves.
+//Remember that this method is executed only if the unit reaches at least one of its destination areas.
+//If in an iteration the path isn't as good as before, the unit marks that a path reset is needed.
+//To keep a path, the unit has to be at least 1 tile closer in each iteration.
 int Unit::adjustPathTowardsResource() {
 	Area * reachedArea = areasMap[x][y][z];
 
-	if (reachedArea->resources[resourceSearchStatus]>0) {
+	//The unit checks in case its current base area already has the desired resource
+	if (reachedArea->resources[resourceSearchStatus] > 0) {
 		lowestDestinationAreaReached = reachedArea;
 		baseDestinationArea = NULL;
 		return dijkstraTowardsResourceOrArea(false);
 	}
 
-	//Here the unit decides how much of its path it should reset
-	//  If it reached a level previous to its lowestDestinationAreaReached, it will reset all of it
+	//The unit decides how much of its path it should reset
+	//  If it reached a level previous to its lowestDestinationAreaReached, it will reset all of it.
 	//  Otherwise it will reset the areas it already reached
 	while (true) {
 		oriAreas[reachedArea->lvl] = reachedArea;
 
 		//Even if the unit didn't reach its lowestDestinationAreaReached, a resource may 
 		//have popped up nearby, so the lowestDestinationAreaReached should be updated.
-		if (reachedArea->superArea->resources[resourceSearchStatus]>0) {
+		if (reachedArea->superArea->resources[resourceSearchStatus] > 0) {
 			lowestDestinationAreaReached = reachedArea->superArea;
 			return resetPathTowardsResource(reachedArea->lvl);
 		}
 
-		//If the unit reached a level previous to its lowestDestinationAreaReached, it reset all of its path
+		//If the unit reached the level previous to its lowestDestinationAreaReached, it reset the whole path.
 		if (reachedArea->lvl == lowestDestinationAreaReached->lvl - 1) {
 			//I check that the lowestDestinationAreaReached still has the resource
 			//  because it could have been removed
@@ -69,7 +78,7 @@ int Unit::adjustPathTowardsResource() {
 			}
 		}
 
-		//Check if the current super area destination has not been reached yet
+		//The algorithim keeps on iterating until it reaches a super area destination that has not been reached yet
 		if (reachedArea->superArea != destinationSuperAreas[reachedArea->lvl]) {
 			//I check that the destinationSuperArea still has the resource
 			//  because it could have been removed
@@ -85,11 +94,16 @@ int Unit::adjustPathTowardsResource() {
 	}
 }
 
+//This method basically calls resetPathTowardsResourceOrDestinationSuperArea
+//But I need it because sometimes (not always) I want to force the search at the starting macro level
+//  to look for resource and not for destination area
 int Unit::resetPathTowardsResource(int startingMacroLevel) {
 	destinationSuperAreas[startingMacroLevel] = NULL;
 	return resetPathTowardsResourceOrDestinationSuperArea(startingMacroLevel);
 }
 
+//This method decides the destination area in multiple levels
+//It iterates starting from the highest levels going to the lowest levels
 int Unit::resetPathTowardsResourceOrDestinationSuperArea(int startingMacroLevel) {
 	while (startingMacroLevel > 0) {
 		destinationSuperAreas[startingMacroLevel - 1] = findNextAreaTowardsResourceOrSuperArea(oriAreas[startingMacroLevel], destinationSuperAreas[startingMacroLevel], false);
@@ -99,7 +113,6 @@ int Unit::resetPathTowardsResourceOrDestinationSuperArea(int startingMacroLevel)
 	return dijkstraTowardsResourceOrArea(false);
 }
 
-//The last parameter indicates weather the ori is one lvl bellow dest or not
 Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destArea, bool adjusting) {
 #	ifdef DEBUG
 	if (oriArea == destArea) {

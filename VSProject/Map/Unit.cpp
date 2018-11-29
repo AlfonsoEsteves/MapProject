@@ -127,7 +127,7 @@ void Unit::execute() {
 			destinationObject = NULL;
 			if (parent != NULL) {
 				if (parent->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
-					destinationObject = parent;
+					//destinationObject = parent;
 				}
 			}
 			pursueResource();

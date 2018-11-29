@@ -11,7 +11,7 @@ The advantage of CC is that it will be more performant in most cases.
 
 The advantage of not having CC is that the algorithim could find shorter paths.
 
-I chose to NOT have CC, because with CC some paths can be a lot (quite a fucking lot) longer than they should be.
+I chose to NOT have CC, because with CC some paths can be a lot (quite a fucking lot) longer than they could be.
 */
 
 Unit* tileWasLastCheckedByUnit[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];//It indicates the last unit that checked a tile

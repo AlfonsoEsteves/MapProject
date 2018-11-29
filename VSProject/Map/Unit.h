@@ -30,20 +30,20 @@ private:
 	//Pathfinding towards point
 	int resetPathTowardsObject();
 	int adjustPathTowardsObject();
+	int resetPathGoingFromAreaToArea(Area * oriArea, Area * destArea);
+	int resetPathGoingFromAreasToSuperAreas(int startingLevel);
+	Area* findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bool subArea);
 	int dijkstraTowardsObjectOrArea(bool adjusting);
 	int dijkstraTowardsObject(bool adjusting);
 	int dijkstraTowardsArea(Area * dest, bool adjusting);
-	int resetPathTo(Area * oriArea, Area * destArea);
-	int resetPathGoingFromAreasToSuperAreas(int startingLevel);
-	Area* findNextAreaAux(Area * oriArea, Area * destArea, bool adjusting, bool subArea);
 
 	//Pathfinding towards resource
 	int resetPathTowardsResource();
 	int adjustPathTowardsResource();
-	int dijkstraTowardsResourceOrArea(bool adjusting);
-	Area* findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destArea, bool adjusting);
 	int resetPathTowardsResource(int startingMacroLevel);
+	Area* findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destArea, bool adjusting);
 	int resetPathTowardsResourceOrDestinationSuperArea(int startingMacroLevel);
+	int dijkstraTowardsResourceOrArea(bool adjusting);
 
 #	ifdef DEBUG
 	void checkDestinationAreas();

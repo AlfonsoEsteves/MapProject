@@ -40,8 +40,8 @@
 
 #define RESOURCE_TYPES 10
 
-#define FAST_FOWARD 2400
-//#define CALCULATE_HASH_AT_TIME 2001
+#define FAST_FOWARD 5000
+#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
