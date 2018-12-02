@@ -59,7 +59,7 @@ int Unit::adjustPathTowardsObject() {
 	while (true) {
 		oriAreas[oriArea->lvl] = oriArea;
 
-		//If the unit reached a level previous to its lowestDestinationAreaReached, it reset all of its path.
+		//If the unit reached a destination area with a lower level then its lowestDestinationAreaReached, it reset all of its path.
 		if (oriArea->superArea == destArea->superArea) {
 			lowestDestinationAreaReached = oriArea->superArea;
 			return resetPathGoingFromAreaToArea(oriArea, destArea);
@@ -69,7 +69,7 @@ int Unit::adjustPathTowardsObject() {
 		if (oriArea->lvl == lowestDestinationAreaReached->lvl - 1) {
 			Area* nextArea = findNextAreaAux(oriArea, destArea, true, false);
 			if (nextArea == NULL) {
-				return -1;
+				return PATH_OUTDATED;
 			}
 			if (oriArea->lvl == 0) {
 				baseDestinationArea = nextArea;
@@ -83,10 +83,13 @@ int Unit::adjustPathTowardsObject() {
 
 		//The algorithim keeps on iterating until it reaches a super area destination that has not been reached yet
 		if (oriArea->superArea != destinationSuperAreas[oriArea->lvl]) {
-
-
-			tengo que chequear que la super area siga siendo correcta, analogo a el otro
-
+			//I check that the lowestDestinationAreaReached still has the destination object
+			while (destArea->lvl < lowestDestinationAreaReached->lvl) {
+				destArea = destArea->superArea;
+			}
+			if (destArea != lowestDestinationAreaReached) {
+				return PATH_OUTDATED;
+			}
 
 			return resetPathGoingFromAreasToSuperAreas(oriArea->lvl);
 		}

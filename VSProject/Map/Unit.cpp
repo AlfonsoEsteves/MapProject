@@ -15,7 +15,7 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
 	}
-	slowness = 2 + rand() % 4;
+	slowness = 2 + rand() % 6;
 
 	objects[(time + (rand() % slowness)) % BUCKETS].push_back(this);
 
@@ -125,22 +125,15 @@ void Unit::execute() {
 	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE) {
 		if (resourceSearchStatus != -1) {
 			destinationObject = NULL;
-			if (parent != NULL) {
+			if (parent != NULL && parent->alive) {
 				if (parent->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
-					//destinationObject = parent;
+					destinationObject = parent;
 				}
 			}
 			pursueResource();
 		}
 		else {
-			//The unit didn't have a last resource, or it was not givable
-
-
-
-			                                    //WHat does it mean "or it was not givable"
-
-
-
+			//The unit didn't have a last resource
 			nextStep();
 		}
 	}

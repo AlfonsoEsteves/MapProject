@@ -11,6 +11,8 @@
 
 #define DRAW_GRAPHICS_EVERY_X_FRAMES 6
 
+#define RESOURCE_TYPES_IMAGES 10
+
 bool graphics_init();
 
 void graphics_draw();

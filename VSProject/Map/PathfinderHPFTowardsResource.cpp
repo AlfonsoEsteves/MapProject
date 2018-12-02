@@ -185,7 +185,7 @@ Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destAr
 		Area* currentArea = circularArrayOfAreas[circularArrayStart];
 		circularArrayStart = (circularArrayStart + 1) % CIRCULAR_ARRAY_OF_AREAS;
 
-		if (currentArea->superArea == destArea || currentArea->resources[resourceSearchStatus]>0) {
+		if (currentArea->superArea == destArea || currentArea->resources[resourceSearchStatus] > 0) {
 			chunksToBeTraveled[currentArea->lvl] = distance;
 			return currentArea->pathFindingBranch;
 		}

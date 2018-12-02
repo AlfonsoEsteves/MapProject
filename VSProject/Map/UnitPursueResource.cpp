@@ -134,6 +134,23 @@ bool Unit::checkReachedResourceSearch() {
 				currentUnit->removeFromTile();
 				currentUnit->giveResource(this);
 				currentUnit->addToTile();
+
+
+				if (currentUnit->parent == this) {
+					currentUnit->life += 200;
+					life += 300;
+
+
+
+
+					printf("%d\n", id);
+					selected = currentUnit;
+
+
+
+				}
+
+
 				return true;
 			}
 			if (currentUnit->resourceType == resourceSearchStatus) {
@@ -176,6 +193,18 @@ void Unit::aquireResource() {
 }
 
 void Unit::nextStep() {
+
+
+
+	if (slowness < 6 && rand() % 5 == 0) {
+		slowness++;
+	}
+	else if (slowness > 2 && rand() % 5 == 0) {
+		slowness--;
+	}
+
+
+
 	if (resourceSearchStatus != -1) {
 		//The unit won't gain life if it executed:
 		// - A new instruction instruction
@@ -192,6 +221,7 @@ void Unit::nextStep() {
 void Unit::initializeStep() {
 	hasToResetPath = true;
 	resourceSearchStatus = -1;
+	destinationObject = NULL;
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		resourceSearchStatus = cycle[cycleCurrentStep];
 	}
@@ -203,6 +233,15 @@ void Unit::initializeStep() {
 				bag[bag.size() - 1] = shiftedResource;
 				resourceSearchStatus = RESOURCE_TYPES + shiftedResource;
 			}
+
+
+
+			if (slowness > 2) {
+				slowness--;
+			}
+
+
+
 		}
 	}
 }

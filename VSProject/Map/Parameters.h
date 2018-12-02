@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 98
+#define SEED 106
 
 #define UNIT_COUNT 100
 
@@ -38,17 +38,18 @@
 #define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 900)
 #define	GENERATION_DURATION 800
 
-#define RESOURCE_TYPES 10
+#define RESOURCE_TYPES 6
 
-#define FAST_FOWARD 5000
-#define CALCULATE_HASH_AT_TIME 5001
+#define FAST_FOWARD 3000
+//#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
-#define LOG_TIME true
+//#define LOG_TIME true
 //#define LOG_PF true
 
 #define DEBUG_TIME -1
-#define DEBUG_OBJECT 1629
+//#define DEBUG_OBJECT 658
+#define DEBUG_OBJECT 1064
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

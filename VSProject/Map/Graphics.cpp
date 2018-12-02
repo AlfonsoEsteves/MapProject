@@ -26,8 +26,8 @@ SDL_Surface* grassTopImage = NULL;
 SDL_Surface* waterTopImage = NULL;
 SDL_Surface* generatorImage = NULL;
 SDL_Surface* generatorTopImage = NULL;
-SDL_Surface* unitImage[RESOURCE_TYPES];
-SDL_Surface* resourceImages[RESOURCE_TYPES];
+SDL_Surface* unitImage[RESOURCE_TYPES_IMAGES];
+SDL_Surface* resourceImages[RESOURCE_TYPES_IMAGES];
 
 vector<SDL_Surface*> images;
 
@@ -367,33 +367,37 @@ void graphics_close()
 }
 
 string stepName(int step) {
-	switch (step) {
-	case 0:
-		return "red";
-	case 1:
-		return "yellow";
-	case 2:
-		return "green";
-	case 3:
-		return "sky";
-	case 4:
-		return "blue";
-	case 5:
-		return "purple";
-	case 6:
-		return "black";
-	case 7:
-		return "white";
-	case 8:
-		return "orange";
-	case 9:
-		return "dirt";
+	if (step < RESOURCE_TYPES) {
+		switch (step) {
+		case 0:
+			return "red";
+		case 1:
+			return "yellow";
+		case 2:
+			return "green";
+		case 3:
+			return "sky";
+		case 4:
+			return "blue";
+		case 5:
+			return "purple";
+		case 6:
+			return "black";
+		case 7:
+			return "white";
+		case 8:
+			return "orange";
+		case 9:
+			return "dirt";
+		}
 	}
-	switch (step % 2) {
-	case INSTRUCTION_NEW_INSTRUCTION:
-		return "NEW INSTRUCTION";
-	case INSTRUCTION_GIVE_RESOURCE:
-		return "SHIFT AND GIVE";
+	else {
+		switch (step % 2) {
+		case INSTRUCTION_NEW_INSTRUCTION:
+			return "NEW INSTRUCTION";
+		case INSTRUCTION_GIVE_RESOURCE:
+			return "SHIFT AND GIVE";
+		}
 	}
 	return NULL;
 }
