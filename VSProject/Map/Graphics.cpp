@@ -182,6 +182,18 @@ void graphics_draw_text() {
 	position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
+
+	if (selected != NULL && selected->objectType == objectUnit) {
+		Unit* unit = (Unit*)selected;
+		if (unit->parent != NULL && unit->parent->alive) {
+			int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
+			format("Parent distance: %d", dist);
+			message = TTF_RenderText_Solid(font, formated, textColor);
+			position = { 300, 20, 0, 0 };
+			SDL_BlitSurface(message, NULL, screenSurface, &position);
+			SDL_FreeSurface(message);
+		}
+	}
 #	endif
 }
 
@@ -235,6 +247,16 @@ void graphics_draw_map() {
 							while (current != NULL) {
 								if (current->type() == objectUnit) {
 									Unit* unit = (Unit*)current;
+
+
+									if (selected != NULL && selected->objectType == objectUnit) {
+										Unit* selectedUnit = (Unit*)selected;
+										if (unit == selectedUnit->parent) {
+											SDL_Rect rect = { screenX[i][j], screenY[i][j][k], 20, 20 };
+											SDL_FillRect(screenSurface, &rect, 10000);
+										}
+									}
+
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									if (unit->calculateWorth() > 100) {
