@@ -1,8 +1,16 @@
-
-AGREGAR GERARQUIAS:
-talvez que la instruccion shift-and-give
-  primero priorise darle recurso al lider
-  si el lider no precisa o ya fue satisfecha se lo da a cualquiera
+notar que meti un rand()%3 para que no siempre comer un recurso sea exitoso
 
 
 
+
+
+tengo que:
+  hacer que toda la info de una unidad se imprima en una columna
+  imprimir varias columnas si hay varias unidades
+
+
+
+
+
+
+hacer que se dibuje una linea entre una unidad y si padre

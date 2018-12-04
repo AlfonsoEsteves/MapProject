@@ -238,7 +238,7 @@ void Unit::adjustResourceType() {
 #define RESOURCE_WORTH 30
 #define INSTRUCTION_WORTH 60
 #define LINEAR_FACTOR 30
-#define WORTH_DIVISOR 450
+#define WORTH_DIVISOR 400
 
 int Unit::calculateWorth() {
 	int worth = INITIAL_WORTH;

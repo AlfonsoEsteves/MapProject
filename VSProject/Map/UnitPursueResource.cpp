@@ -94,12 +94,6 @@ bool Unit::checkReachedResourceGive() {
 		return true;
 	}
 
-
-
-
-
-
-
 	Object* current = unitsMap[x][y][z];
 	while (current != NULL) {
 		if (current->objectType == objectUnit) {
@@ -165,9 +159,23 @@ bool Unit::checkReachedResourceSearch() {
 			}
 		}
 		else if (current->type() == objectResource) {
-			Resource* currentResource = (Resource*)current;
-			if (currentResource->resourceType == resourceSearchStatus) {
-				pickUpUnit = true;
+
+
+			if (rand() % 3 == 0) {
+
+
+				Resource* currentResource = (Resource*)current;
+				if (currentResource->resourceType == resourceSearchStatus) {
+					pickUpUnit = true;
+				}
+
+
+
+			}
+			else {
+				current->removeFromTile();
+				current->alive = false;
+				return false;
 			}
 		}
 		if (pickUpUnit) {
