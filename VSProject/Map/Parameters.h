@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 113
+#define SEED 114
 
 #define UNIT_COUNT 100
 

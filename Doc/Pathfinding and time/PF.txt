@@ -7,7 +7,7 @@ C D
 Issue 1:
 I want to move from C to A. Imagine that with CC it would be 10 superchunk movements, but without CC it would be just 3.
 So instead of going upwards, I would go right, up, and left.
-The issue is that when I move to D, the next megachunk of my path will probably be A, the one I came from.
+The issue is that when I move to D, the next megachunk of my path will probably be A (the one I came from).
   So I would have to remember not to go back to A, and that my destination chunk is A.
 
 Issue 2:

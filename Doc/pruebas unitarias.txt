@@ -1,0 +1,5 @@
+me gustaria programar esto para que sea facil:
+  correr test que prueben ecenarios especificos del PF
+  reejecutar una partida desde 0 (con registro de jugadas)
+  reanudar una partida guardada
+  talvez ejecutar un tutorial

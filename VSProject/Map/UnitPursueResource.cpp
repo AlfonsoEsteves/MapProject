@@ -232,8 +232,8 @@ void Unit::initializeStep() {
 
 
 
-				char shiftedResource = (lastResourceInBag + 1) % RESOURCE_TYPES;
-				//char shiftedResource = lastResourceInBag;
+				//char shiftedResource = (lastResourceInBag + 1) % RESOURCE_TYPES;
+				char shiftedResource = lastResourceInBag;
 				
 				
 				
