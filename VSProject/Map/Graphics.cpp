@@ -125,51 +125,62 @@ bool graphics_init() {
 }
 
 void graphics_draw_text() {
+	Object* currentObject = NULL;
 	if (selected != NULL) {
+		currentObject = unitsMap[selected->x][selected->y][selected->z];
+	}
+	int xDisplacement = 0;
+	while (currentObject != NULL) {
 #		ifdef DEBUG
-		format("Object's id: %d", selected->id);
+		format("Object's id: %d", currentObject->id);
 		message = TTF_RenderText_Solid(font, formated, textColor);
-		SDL_Rect position = { 20, 20, 0, 0 };
+		SDL_Rect position = { xDisplacement + 20, 20, 0, 0 };
 		SDL_BlitSurface(message, NULL, screenSurface, &position);
 		SDL_FreeSurface(message);
-#		endif
-		if (selected->type() == objectUnit) {
-			Unit* selectedUnit = (Unit*)selected;
-			format("Unit's life: %d", selectedUnit->life);
-			message = TTF_RenderText_Solid(font, formated, textColor);
-			SDL_Rect position = { 20, 40, 0, 0 };
-			SDL_BlitSurface(message, NULL, screenSurface, &position);
-			SDL_FreeSurface(message);
 
-			if (selected->sharesTileWithObject != NULL) {
-				format("More than 1 object in this time", selectedUnit->life);
+		if (currentObject->objectType == objectUnit) {
+			Unit* unit = (Unit*)selected;
+			if (unit->parent != NULL && unit->parent->alive) {
+				int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
+				format("Parent distance: %d", dist);
 				message = TTF_RenderText_Solid(font, formated, textColor);
-				position = { 20, 60, 0, 0 };
-				SDL_BlitSurface(message, NULL, screenSurface, &position);
-				SDL_FreeSurface(message);
-			}
-
-			for (int i = 0; i < selectedUnit->cycleLength; i++) {
-				if (i == selectedUnit->cycleCurrentStep) {
-					format("%s <<", stepName(selectedUnit->cycle[i]).c_str());
-				}
-				else {
-					format("%s", stepName(selectedUnit->cycle[i]).c_str());
-				}
-				message = TTF_RenderText_Solid(font, formated, textColor);
-				SDL_Rect position = { 20, 80 + i * 15, 0, 0 };
-				SDL_BlitSurface(message, NULL, screenSurface, &position);
-				SDL_FreeSurface(message);
-			}
-
-			for (int i = 0; i < selectedUnit->bag.size(); i++) {
-				format("%s", stepName(selectedUnit->bag[i]).c_str());
-				message = TTF_RenderText_Solid(font, formated, textColor);
-				SDL_Rect position = { 20, 400 + i * 15, 0, 0 };
+				position = { xDisplacement + 20, 60, 0, 0 };
 				SDL_BlitSurface(message, NULL, screenSurface, &position);
 				SDL_FreeSurface(message);
 			}
 		}
+#		endif
+		if (currentObject->type() == objectUnit) {
+			Unit* currentUnit = (Unit*)currentObject;
+			format("Unit's life: %d", currentUnit->life);
+			message = TTF_RenderText_Solid(font, formated, textColor);
+			SDL_Rect position = { xDisplacement + 20, 40, 0, 0 };
+			SDL_BlitSurface(message, NULL, screenSurface, &position);
+			SDL_FreeSurface(message);
+
+			for (int i = 0; i < currentUnit->cycleLength; i++) {
+				if (i == currentUnit->cycleCurrentStep) {
+					format("%s <<", stepName(currentUnit->cycle[i]).c_str());
+				}
+				else {
+					format("%s", stepName(currentUnit->cycle[i]).c_str());
+				}
+				message = TTF_RenderText_Solid(font, formated, textColor);
+				SDL_Rect position = { xDisplacement + 20, 100 + i * 15, 0, 0 };
+				SDL_BlitSurface(message, NULL, screenSurface, &position);
+				SDL_FreeSurface(message);
+			}
+
+			for (int i = 0; i < currentUnit->bag.size(); i++) {
+				format("%s", stepName(currentUnit->bag[i]).c_str());
+				message = TTF_RenderText_Solid(font, formated, textColor);
+				SDL_Rect position = { xDisplacement + 20, 400 + i * 15, 0, 0 };
+				SDL_BlitSurface(message, NULL, screenSurface, &position);
+				SDL_FreeSurface(message);
+			}
+		}
+		currentObject = currentObject->sharesTileWithObject;
+		xDisplacement += 150;
 	}
 	format("Time: %d", time);
 	message = TTF_RenderText_Solid(font, formated, textColor);
@@ -182,18 +193,6 @@ void graphics_draw_text() {
 	position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
-
-	if (selected != NULL && selected->objectType == objectUnit) {
-		Unit* unit = (Unit*)selected;
-		if (unit->parent != NULL && unit->parent->alive) {
-			int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
-			format("Parent distance: %d", dist);
-			message = TTF_RenderText_Solid(font, formated, textColor);
-			position = { 300, 20, 0, 0 };
-			SDL_BlitSurface(message, NULL, screenSurface, &position);
-			SDL_FreeSurface(message);
-		}
-	}
 #	endif
 }
 
