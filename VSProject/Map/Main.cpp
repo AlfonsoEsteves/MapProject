@@ -8,6 +8,12 @@ bool scrolling = false;
 
 void execute_game_frame();
 
+#ifdef LOG_TIME
+unsigned int workingTime = 0;
+unsigned int drawingTime = 0;
+int frameCount = 0;
+#endif
+
 int main(int argc, char* args[])
 {
 	#ifdef DEBUG
@@ -29,11 +35,6 @@ int main(int argc, char* args[])
 	oldTime = newTime;
 #	endif
 
-#   ifdef LOG_TIME
-	unsigned int accumulated = 0;
-	int frameCount = 0;
-#   endif
-
 	while (!programExecutionQuit) {
 		newTime = SDL_GetTicks();
 		if (newTime - oldTime > frameDuration) {
@@ -41,12 +42,12 @@ int main(int argc, char* args[])
 			execute_game_frame();
 
 #			ifdef LOG_TIME
-			accumulated += SDL_GetTicks() - newTime;
 			frameCount++;
 			if (frameCount == 50) {
-				printf("frame working time ms: %d   delay time ms: %d\n", accumulated / 50, newTime - oldTime);
+				printf("working time ms: %d   drawing time ms: %d   delay time ms: %d\n", workingTime / 50, drawingTime / 50, newTime - oldTime);
 				frameCount = 0;
-				accumulated = 0;
+				workingTime = 0;
+				drawingTime = 0;
 			}
 #			endif
 
@@ -155,8 +156,14 @@ void readInput() {
 }
 
 void execute_game_frame() {
+	unsigned int time1 = SDL_GetTicks();
+
 	readInput();
 	execute_frame();
+
+	unsigned int time2 = SDL_GetTicks();
+	workingTime += time2 - time1;
+
 #	ifdef DRAW_GRAPHICS_EVERY_X_FRAMES
 	if (time % DRAW_GRAPHICS_EVERY_X_FRAMES == 0) {
 		graphics_draw();
@@ -164,4 +171,6 @@ void execute_game_frame() {
 #	else
 	graphics_draw();
 #	endif
+
+	drawingTime += SDL_GetTicks() - time2;
 }

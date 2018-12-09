@@ -12,6 +12,8 @@ void graphics_draw_minimap();
 
 SDL_Window* window = NULL;
 
+SDL_Renderer* gRenderer = NULL;
+
 SDL_Surface* screenSurface = NULL;
 
 SDL_Surface* blackTopImage = NULL;
@@ -73,6 +75,8 @@ bool graphics_init() {
 		error("Window could not be created");
 		return false;
 	}
+	
+	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	screenSurface = SDL_GetWindowSurface(window);
 
@@ -194,6 +198,24 @@ void graphics_draw_text() {
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
 #	endif
+
+	/*if (selected != NULL) {
+		if (selected->objectType == objectUnit) {
+			Unit* selectedUnit = (Unit*)selected;
+			Unit* parent = selectedUnit->parent;
+			if (parent != NULL && parent->alive) {
+				if (abs(parent->x - selected->x) < SCREEN_WIDTH / 2 && 
+					abs(parent->y - selected->y) < SCREEN_WIDTH / 2 && 
+					abs(parent->z - selected->z) < SCREEN_HEIGHT / 2) {
+					
+				}
+			}
+		}
+	}
+
+
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);*/
 }
 
 void graphics_draw_map() {
@@ -246,16 +268,6 @@ void graphics_draw_map() {
 							while (current != NULL) {
 								if (current->type() == objectUnit) {
 									Unit* unit = (Unit*)current;
-
-
-									if (selected != NULL && selected->objectType == objectUnit) {
-										Unit* selectedUnit = (Unit*)selected;
-										if (unit == selectedUnit->parent) {
-											SDL_Rect rect = { screenX[i][j], screenY[i][j][k], 20, 20 };
-											SDL_FillRect(screenSurface, &rect, 10000);
-										}
-									}
-
 									position.y = screenY[i][j][k] + 4;
 									SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									if (unit->calculateWorth() > 100) {
@@ -274,6 +286,7 @@ void graphics_draw_map() {
 						else if (tilesMap[x][y][z] == tileGround) {
 							if ((x / BASE_CHUNK_SIZE + y / BASE_CHUNK_SIZE + z / BASE_CHUNK_SIZE) % 2 == 0) {
 								SDL_BlitSurface(groundImage, NULL, screenSurface, &position);
+								//SDL_RenderCopy(gRenderer, groundImage, NULL, &position);
 							}
 							else {
 								SDL_BlitSurface(grassImage, NULL, screenSurface, &position);
@@ -369,6 +382,7 @@ void graphics_draw() {
 	graphics_draw_text();
 	graphics_draw_minimap();
 	SDL_UpdateWindowSurface(window);
+	//SDL_RenderPresent(gRenderer);
 }
 
 void graphics_draw_minimap() {
