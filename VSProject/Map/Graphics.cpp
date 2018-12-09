@@ -14,7 +14,7 @@ SDL_Window* window = NULL;
 
 SDL_Renderer* gRenderer = NULL;
 
-//SDL_Surface* screenSurface = NULL;
+SDL_Surface* screenSurface = NULL;
 
 SDL_Texture* blackTopImage = NULL;
 SDL_Texture* blackLeftImage = NULL;
@@ -31,7 +31,7 @@ SDL_Texture* generatorTopImage = NULL;
 SDL_Texture* unitImage[RESOURCE_TYPES_IMAGES];
 SDL_Texture* resourceImages[RESOURCE_TYPES_IMAGES];
 
-vector<SDL_Surface*> images;
+vector<SDL_Texture*> images;
 
 int screenX[VIEW_WIDTH][VIEW_WIDTH];
 int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_WIDTH];
@@ -56,7 +56,6 @@ SDL_Surface * loadSurface(std::string path) {
 			SDL_SetColorKey(optimizedSurface, SDL_TRUE, SDL_MapRGB(optimizedSurface->format, 0xFF, 0, 0xFF));
 		}
 		SDL_FreeSurface(loadedSurface);
-		images.push_back(optimizedSurface);
 	}
 	return optimizedSurface;
 }
@@ -76,6 +75,8 @@ SDL_Texture * loadTexture(std::string path) {//The final texture
 	//Get rid of old loaded surface
 	SDL_FreeSurface(loadedSurface);
 
+	images.push_back(newTexture);
+
 	return newTexture;
 }
 
@@ -93,10 +94,15 @@ bool graphics_init() {
 		error("Window could not be created");
 		return false;
 	}
+
+	screenSurface = SDL_GetWindowSurface(window);
 	
 	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-	//screenSurface = SDL_GetWindowSurface(window);
+	if (gRenderer == NULL)
+	{
+		error("Renderer could not be created");
+		return false;
+	}
 
 	blackTopImage = loadTexture(RESOURCES_PATH + "Images/black_top.bmp");
 	blackLeftImage = loadTexture(RESOURCES_PATH + "Images/black_left.bmp");
@@ -238,6 +244,8 @@ void graphics_draw_text() {
 
 void graphics_draw_map() {
 	SDL_Rect position;
+	position.w = 100;
+	position.h = 100;
 	
 	//This draws the floor, which is only tops instead of full blocks
 	if (viewZ > 0) {
@@ -340,7 +348,6 @@ void graphics_draw_map() {
 		}
 	}
 
-	/*
 	//This draws the blacked out sides
 	SDL_Rect positionLeft;
 	SDL_Rect positionRight;
@@ -361,18 +368,22 @@ void graphics_draw_map() {
 				positionRightPlus.y = positionRight.y;
 				if (safeTilesMap(leftSideX, leftSideY, z) != tileEmpty) {
 					if (i + 1 < VIEW_WIDTH && safeTilesMap(leftSideX + 1, leftSideY, z) != tileEmpty) {
-						SDL_BlitSurface(blackLeftPlusImage, NULL, screenSurface, &positionLeft);
+						//SDL_BlitSurface(blackLeftPlusImage, NULL, screenSurface, &positionLeft);
+						SDL_RenderCopy(gRenderer, blackLeftPlusImage, NULL, &position);
 					}
 					else {
-						SDL_BlitSurface(blackLeftImage, NULL, screenSurface, &positionLeft);
+						//SDL_BlitSurface(blackLeftImage, NULL, screenSurface, &positionLeft);
+						SDL_RenderCopy(gRenderer, blackLeftImage, NULL, &position);
 					}
 				}
 				if (safeTilesMap(rightSideX, rightSideY, z) != tileEmpty) {
 					if (i + 1 < VIEW_WIDTH && safeTilesMap(rightSideX, rightSideY + 1, z) != tileEmpty) {
-						SDL_BlitSurface(blackRightPlusImage, NULL, screenSurface, &positionRightPlus);
+						//SDL_BlitSurface(blackRightPlusImage, NULL, screenSurface, &positionRightPlus);
+						SDL_RenderCopy(gRenderer, blackRightPlusImage, NULL, &position);
 					}
 					else {
-						SDL_BlitSurface(blackRightImage, NULL, screenSurface, &positionRight);
+						//SDL_BlitSurface(blackRightImage, NULL, screenSurface, &positionRight);
+						SDL_RenderCopy(gRenderer, blackRightImage, NULL, &position);
 					}
 				}
 			}
@@ -392,14 +403,15 @@ void graphics_draw_map() {
 							if (tilesMap[x][y][z] != tileEmpty) {
 								position.x = screenX[i][j];
 								position.y = screenY[i][j][VIEW_HEIGHT - 1];
-								SDL_BlitSurface(blackTopImage, NULL, screenSurface, &position);
+								//SDL_BlitSurface(blackTopImage, NULL, screenSurface, &position);
+								SDL_RenderCopy(gRenderer, blackTopImage, NULL, &position);
 							}
 						}
 					}
 				}
 			}
 		}
-	}*/
+	}
 }
 
 void graphics_draw() {
@@ -411,8 +423,8 @@ void graphics_draw() {
 		viewZ = selected->z - VIEW_HEIGHT / 2;
 	}
 	graphics_draw_map();
-	graphics_draw_text();
-	graphics_draw_minimap();
+	//graphics_draw_text();
+	//graphics_draw_minimap();
 	//SDL_UpdateWindowSurface(window);
 	SDL_RenderPresent(gRenderer);
 }
@@ -427,7 +439,7 @@ void graphics_draw_minimap() {
 void graphics_close()
 {
 	for (int i = 0; i < images.size(); i++) {
-		SDL_FreeSurface(images[i]);
+		SDL_DestroyTexture(images[i]);
 	}
 	SDL_DestroyWindow(window);
 	SDL_Quit();
