@@ -75,6 +75,9 @@ SDL_Texture * loadTexture(std::string path) {//The final texture
 	//Get rid of old loaded surface
 	SDL_FreeSurface(loadedSurface);
 
+
+	//SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
+
 	images.push_back(newTexture);
 
 	return newTexture;
@@ -244,8 +247,8 @@ void graphics_draw_text() {
 
 void graphics_draw_map() {
 	SDL_Rect position;
-	position.w = 100;
-	position.h = 100;
+	position.w = 50;
+	position.h = 50;
 	
 	//This draws the floor, which is only tops instead of full blocks
 	if (viewZ > 0) {
