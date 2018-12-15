@@ -48,14 +48,19 @@ SDL_Surface * loadSurface(std::string path) {
 		error("Unable to load image");
 	}
 	else {
-		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
+
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0, 0xFF));
+
+
+
+		/*optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
 		if (optimizedSurface == NULL) {
 			error("Unable to optimize image");
 		}
 		else {
 			SDL_SetColorKey(optimizedSurface, SDL_TRUE, SDL_MapRGB(optimizedSurface->format, 0xFF, 0, 0xFF));
 		}
-		SDL_FreeSurface(loadedSurface);
+		SDL_FreeSurface(loadedSurface);*/
 	}
 	return optimizedSurface;
 }
@@ -75,8 +80,7 @@ SDL_Texture * loadTexture(std::string path) {//The final texture
 	//Get rid of old loaded surface
 	SDL_FreeSurface(loadedSurface);
 
-
-	//SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
 
 	images.push_back(newTexture);
 
@@ -151,6 +155,8 @@ bool graphics_init() {
 			screenYfloor[i][j] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (0 - 1 - VIEW_HEIGHT / 2) + SCREEN_HEIGHT / 2 - 5;
 		}
 	}
+
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 
 	return true;
 }
