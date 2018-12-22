@@ -40,8 +40,35 @@ int screenYfloor[VIEW_WIDTH][VIEW_WIDTH];
 SDL_Surface* message = NULL;
 TTF_Font* font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
+/*
+SDL_Surface* loadSurface(std::string path)
+{
+	//The final optimized image
+	SDL_Surface* optimizedSurface = NULL;
 
-SDL_Surface * loadSurface(std::string path) {
+	//Load image at specified path
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (loadedSurface == NULL)
+	{
+		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+	}
+	else
+	{
+		//Convert surface to screen format
+		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
+		if (optimizedSurface == NULL)
+		{
+			printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+		}
+
+		//Get rid of old loaded surface
+		SDL_FreeSurface(loadedSurface);
+	}
+
+	return optimizedSurface;
+}
+
+SDL_Surface * loadSurfaceOld(std::string path) {
 	SDL_Surface* optimizedSurface = NULL;
 	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
 	if (loadedSurface == NULL) {
@@ -53,20 +80,20 @@ SDL_Surface * loadSurface(std::string path) {
 
 
 
-		/*optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
+		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
 		if (optimizedSurface == NULL) {
 			error("Unable to optimize image");
 		}
 		else {
 			SDL_SetColorKey(optimizedSurface, SDL_TRUE, SDL_MapRGB(optimizedSurface->format, 0xFF, 0, 0xFF));
 		}
-		SDL_FreeSurface(loadedSurface);*/
+		SDL_FreeSurface(loadedSurface);
 	}
 	return optimizedSurface;
-}
+}*/
 
 SDL_Texture * loadTexture(std::string path) {//The final texture
-	SDL_Texture* newTexture = NULL;
+	/*:SDL_Texture* newTexture = NULL;
 
 	//Load image at specified path
 	SDL_Surface* loadedSurface = loadSurface(path.c_str());
@@ -84,7 +111,11 @@ SDL_Texture * loadTexture(std::string path) {//The final texture
 
 	images.push_back(newTexture);
 
-	return newTexture;
+	return newTexture;*/
+
+	SDL_Texture * texture = IMG_LoadTexture(gRenderer, path.c_str());
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+	return texture;
 }
 
 bool graphics_init() {
@@ -102,6 +133,13 @@ bool graphics_init() {
 		return false;
 	}
 
+	int imgFlags = IMG_INIT_PNG;
+	if (!(IMG_Init(imgFlags) & imgFlags))
+	{
+		error("SDL_image could not initialize");
+		return false;
+	}
+
 	screenSurface = SDL_GetWindowSurface(window);
 	
 	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -111,38 +149,38 @@ bool graphics_init() {
 		return false;
 	}
 
-	blackTopImage = loadTexture(RESOURCES_PATH + "Images/black_top.bmp");
-	blackLeftImage = loadTexture(RESOURCES_PATH + "Images/black_left.bmp");
-	blackLeftPlusImage = loadTexture(RESOURCES_PATH + "Images/black_left_plus.bmp");
-	blackRightImage = loadTexture(RESOURCES_PATH + "Images/black_right.bmp");
-	blackRightPlusImage = loadTexture(RESOURCES_PATH + "Images/black_right_plus.bmp");
-	groundImage = loadTexture(RESOURCES_PATH + "Images/ground.bmp");
-	groundTopImage = loadTexture(RESOURCES_PATH + "Images/ground_top.bmp");
-	grassImage = loadTexture(RESOURCES_PATH + "Images/grass.bmp");
-	grassTopImage = loadTexture(RESOURCES_PATH + "Images/grass_top.bmp");
-	waterTopImage = loadTexture(RESOURCES_PATH + "Images/water_top.bmp");
-	generatorImage = loadTexture(RESOURCES_PATH + "Images/generator.bmp");
-	generatorTopImage = loadTexture(RESOURCES_PATH + "Images/generator_top.bmp");
-	unitImage[0] = loadTexture(RESOURCES_PATH + "Images/unitRed.bmp");
-	unitImage[1] = loadTexture(RESOURCES_PATH + "Images/unitYellow.bmp");
-	unitImage[2] = loadTexture(RESOURCES_PATH + "Images/unitGreen.bmp");
-	unitImage[3] = loadTexture(RESOURCES_PATH + "Images/unitSky.bmp");
-	unitImage[4] = loadTexture(RESOURCES_PATH + "Images/unitBlue.bmp");
-	unitImage[5] = loadTexture(RESOURCES_PATH + "Images/unitPurple.bmp");
-	unitImage[6] = loadTexture(RESOURCES_PATH + "Images/unitBlack.bmp");
-	unitImage[7] = loadTexture(RESOURCES_PATH + "Images/unitWhite.bmp");
-	unitImage[8] = loadTexture(RESOURCES_PATH + "Images/unitOrange.bmp");
-	unitImage[9] = loadTexture(RESOURCES_PATH + "Images/unitDirt.bmp");
-	resourceImages[0] = loadTexture(RESOURCES_PATH + "Images/resourceRed.bmp");
-	resourceImages[1] = loadTexture(RESOURCES_PATH + "Images/resourceYellow.bmp");
-	resourceImages[2] = loadTexture(RESOURCES_PATH + "Images/resourceGreen.bmp");
-	resourceImages[3] = loadTexture(RESOURCES_PATH + "Images/resourceSky.bmp");
-	resourceImages[4] = loadTexture(RESOURCES_PATH + "Images/resourceBlue.bmp");
-	resourceImages[5] = loadTexture(RESOURCES_PATH + "Images/resourcePurple.bmp");
-	resourceImages[6] = loadTexture(RESOURCES_PATH + "Images/resourceBlack.bmp");
-	resourceImages[7] = loadTexture(RESOURCES_PATH + "Images/resourceWhite.bmp");
-	resourceImages[8] = loadTexture(RESOURCES_PATH + "Images/resourceOrange.bmp");
-	resourceImages[9] = loadTexture(RESOURCES_PATH + "Images/resourceDirt.bmp");
+	blackTopImage = loadTexture(RESOURCES_PATH + "Images/black_top.png");
+	blackLeftImage = loadTexture(RESOURCES_PATH + "Images/black_left.png");
+	blackLeftPlusImage = loadTexture(RESOURCES_PATH + "Images/black_left_plus.png");
+	blackRightImage = loadTexture(RESOURCES_PATH + "Images/black_right.png");
+	blackRightPlusImage = loadTexture(RESOURCES_PATH + "Images/black_right_plus.png");
+	groundImage = loadTexture(RESOURCES_PATH + "Images/ground.png");
+	groundTopImage = loadTexture(RESOURCES_PATH + "Images/ground_top.png");
+	grassImage = loadTexture(RESOURCES_PATH + "Images/grass.png");
+	grassTopImage = loadTexture(RESOURCES_PATH + "Images/grass_top.png");
+	waterTopImage = loadTexture(RESOURCES_PATH + "Images/water_top.png");
+	generatorImage = loadTexture(RESOURCES_PATH + "Images/generator.png");
+	generatorTopImage = loadTexture(RESOURCES_PATH + "Images/generator_top.png");
+	unitImage[0] = loadTexture(RESOURCES_PATH + "Images/unitRed.png");
+	unitImage[1] = loadTexture(RESOURCES_PATH + "Images/unitYellow.png");
+	unitImage[2] = loadTexture(RESOURCES_PATH + "Images/unitGreen.png");
+	unitImage[3] = loadTexture(RESOURCES_PATH + "Images/unitSky.png");
+	unitImage[4] = loadTexture(RESOURCES_PATH + "Images/unitBlue.png");
+	unitImage[5] = loadTexture(RESOURCES_PATH + "Images/unitPurple.png");
+	unitImage[6] = loadTexture(RESOURCES_PATH + "Images/unitBlack.png");
+	unitImage[7] = loadTexture(RESOURCES_PATH + "Images/unitWhite.png");
+	unitImage[8] = loadTexture(RESOURCES_PATH + "Images/unitOrange.png");
+	unitImage[9] = loadTexture(RESOURCES_PATH + "Images/unitDirt.png");
+	resourceImages[0] = loadTexture(RESOURCES_PATH + "Images/resourceRed.png");
+	resourceImages[1] = loadTexture(RESOURCES_PATH + "Images/resourceYellow.png");
+	resourceImages[2] = loadTexture(RESOURCES_PATH + "Images/resourceGreen.png");
+	resourceImages[3] = loadTexture(RESOURCES_PATH + "Images/resourceSky.png");
+	resourceImages[4] = loadTexture(RESOURCES_PATH + "Images/resourceBlue.png");
+	resourceImages[5] = loadTexture(RESOURCES_PATH + "Images/resourcePurple.png");
+	resourceImages[6] = loadTexture(RESOURCES_PATH + "Images/resourceBlack.png");
+	resourceImages[7] = loadTexture(RESOURCES_PATH + "Images/resourceWhite.png");
+	resourceImages[8] = loadTexture(RESOURCES_PATH + "Images/resourceOrange.png");
+	resourceImages[9] = loadTexture(RESOURCES_PATH + "Images/resourceDirt.png");
 	
 	font = TTF_OpenFont((RESOURCES_PATH + "OpenSans-Regular.ttf").c_str(), 14);
 	
@@ -253,8 +291,8 @@ void graphics_draw_text() {
 
 void graphics_draw_map() {
 	SDL_Rect position;
-	position.w = 50;
-	position.h = 50;
+	position.w = 10;
+	position.h = 14;
 	
 	//This draws the floor, which is only tops instead of full blocks
 	if (viewZ > 0) {
