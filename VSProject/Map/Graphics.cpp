@@ -51,12 +51,12 @@ int screenX[VIEW_WIDTH][VIEW_WIDTH];
 int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_WIDTH];
 int screenYfloor[VIEW_WIDTH][VIEW_WIDTH];
 
-SDL_Surface* message = NULL;
 TTF_Font* font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
 
 Image* loadTexture(std::string path, int wCenter, int hCenter) {
 	SDL_Texture * texture = IMG_LoadTexture(gRenderer, path.c_str());
+
 	int w, h;
 	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 	if (wCenter == -99) {
@@ -90,7 +90,9 @@ bool graphics_init() {
 
 	screenSurface = SDL_GetWindowSurface(window);
 
-	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	//I am having better results with SDL_RENDERER_SOFTWARE than SDL_RENDERER_ACCELERATED
+	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
 	if (gRenderer == NULL)
 	{
 		error("Renderer could not be created");
@@ -149,76 +151,64 @@ bool graphics_init() {
 	return true;
 }
 
+void drawText(int x, int y, const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vsnprintf(formated, sizeof formated, text, args);
+	va_end(args);
+
+	SDL_Surface* messageSurface = TTF_RenderText_Solid(font, formated, textColor);
+	SDL_Texture* messageTexture = SDL_CreateTextureFromSurface(gRenderer, messageSurface);
+
+	SDL_Rect position = { x, y, messageSurface->w, messageSurface->h };
+	SDL_RenderCopy(gRenderer, messageTexture, NULL, &position);
+
+	SDL_FreeSurface(messageSurface);
+	SDL_DestroyTexture(messageTexture);
+}
+
 void graphics_draw_text() {
-	/*Object* currentObject = NULL;
+	Object* currentObject = NULL;
 	if (selected != NULL) {
-	currentObject = unitsMap[selected->x][selected->y][selected->z];
+		currentObject = unitsMap[selected->x][selected->y][selected->z];
 	}
 	int xDisplacement = 0;
 	while (currentObject != NULL) {
-	#		ifdef DEBUG
-	format("Object's id: %d", currentObject->id);
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { xDisplacement + 20, 20, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
+#		ifdef DEBUG
+		drawText(xDisplacement + 20, 20, "Object's id: %d", currentObject->id);
 
-	if (currentObject->objectType == objectUnit) {
-	Unit* unit = (Unit*)selected;
-	if (unit->parent != NULL && unit->parent->alive) {
-	int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
-	format("Parent distance: %d", dist);
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	position = { xDisplacement + 20, 60, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
-	}
-	}
-	#		endif
-	if (currentObject->type() == objectUnit) {
-	Unit* currentUnit = (Unit*)currentObject;
-	format("Unit's life: %d", currentUnit->life);
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { xDisplacement + 20, 40, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
+		if (currentObject->objectType == objectUnit) {
+			Unit* unit = (Unit*)selected;
+			if (unit->parent != NULL && unit->parent->alive) {
+				int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
+				drawText(xDisplacement + 20, 60, "Parent distance: %d", dist);
+			}
+		}
+#		endif
+		if (currentObject->type() == objectUnit) {
+			Unit* currentUnit = (Unit*)currentObject;
+			drawText(xDisplacement + 20, 40, "Unit's life: %d", currentUnit->life);
 
-	for (int i = 0; i < currentUnit->cycleLength; i++) {
-	if (i == currentUnit->cycleCurrentStep) {
-	format("%s <<", stepName(currentUnit->cycle[i]).c_str());
-	}
-	else {
-	format("%s", stepName(currentUnit->cycle[i]).c_str());
-	}
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { xDisplacement + 20, 100 + i * 15, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
-	}
+			for (int i = 0; i < currentUnit->cycleLength; i++) {
+				if (i == currentUnit->cycleCurrentStep) {
+					drawText(xDisplacement + 20, 100 + i * 15, "%s <<", stepName(currentUnit->cycle[i]).c_str());
+				}
+				else {
+					drawText(xDisplacement + 20, 100 + i * 15, "%s", stepName(currentUnit->cycle[i]).c_str());
+				}
+			}
 
-	for (int i = 0; i < currentUnit->bag.size(); i++) {
-	format("%s", stepName(currentUnit->bag[i]).c_str());
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { xDisplacement + 20, 400 + i * 15, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
+			for (int i = 0; i < currentUnit->bag.size(); i++) {
+				drawText(xDisplacement + 20, 400 + i * 15, "%s", stepName(currentUnit->bag[i]).c_str());
+			}
+		}
+		currentObject = currentObject->sharesTileWithObject;
+		xDisplacement += 150;
 	}
-	}
-	currentObject = currentObject->sharesTileWithObject;
-	xDisplacement += 150;
-	}
-	format("Time: %d", time);
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	SDL_Rect position = { SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
-	#	ifdef DEBUG
-	format("Units: %d", debug_unitCount);
-	message = TTF_RenderText_Solid(font, formated, textColor);
-	position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
-	SDL_BlitSurface(message, NULL, screenSurface, &position);
-	SDL_FreeSurface(message);
-	#	endif*/
+	drawText(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50, "Time: %d", time);
+#	ifdef DEBUG
+	drawText(20, SCREEN_HEIGHT - 50, "Units: %d", debug_unitCount);
+#	endif
 
 	/*if (selected != NULL) {
 	if (selected->objectType == objectUnit) {
@@ -402,9 +392,8 @@ void graphics_draw() {
 		viewZ = selected->z - VIEW_HEIGHT / 2;
 	}
 	graphics_draw_map();
-	//graphics_draw_text();
+	graphics_draw_text();
 	//graphics_draw_minimap();
-	//SDL_UpdateWindowSurface(window);
 	SDL_RenderPresent(gRenderer);
 }
 

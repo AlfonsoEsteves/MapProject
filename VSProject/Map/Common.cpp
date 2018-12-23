@@ -45,11 +45,11 @@ int getY(const int& dir) {
 		return -1;
 	return 0;
 }
-
+/*
 void format(const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
 	vsnprintf(formated, sizeof formated, fmt, args);
 	va_end(args);
-}
+}*/
