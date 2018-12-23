@@ -1,5 +1,19 @@
 #include "Common.h"
 
+struct Image {
+	SDL_Texture* t;
+	SDL_Rect position;
+	int wCenter;
+	int hCenter;
+
+	Image(SDL_Texture* _t, int _w, int _h, int _wCenter, int _hCenter) {
+		t = _t;
+		position = { 0, 0, _w, _h };
+		wCenter = _wCenter;
+		hCenter = _hCenter;
+	}
+};
+
 int viewX = MAP_WIDTH / 2 - VIEW_WIDTH / 2;
 int viewY = MAP_WIDTH / 2 - VIEW_WIDTH / 2;
 int viewZ = MAP_HEIGHT / 2 - VIEW_HEIGHT / 2;
@@ -16,20 +30,20 @@ SDL_Renderer* gRenderer = NULL;
 
 SDL_Surface* screenSurface = NULL;
 
-SDL_Texture* blackTopImage = NULL;
-SDL_Texture* blackLeftImage = NULL;
-SDL_Texture* blackLeftPlusImage = NULL;
-SDL_Texture* blackRightImage = NULL;
-SDL_Texture* blackRightPlusImage = NULL;
-SDL_Texture* groundImage = NULL;
-SDL_Texture* groundTopImage = NULL;
-SDL_Texture* grassImage = NULL;
-SDL_Texture* grassTopImage = NULL;
-SDL_Texture* waterTopImage = NULL;
-SDL_Texture* generatorImage = NULL;
-SDL_Texture* generatorTopImage = NULL;
-SDL_Texture* unitImage[RESOURCE_TYPES_IMAGES];
-SDL_Texture* resourceImages[RESOURCE_TYPES_IMAGES];
+Image* blackTopImage = NULL;
+Image* blackLeftImage = NULL;
+Image* blackLeftPlusImage = NULL;
+Image* blackRightImage = NULL;
+Image* blackRightPlusImage = NULL;
+Image* groundImage = NULL;
+Image* groundTopImage = NULL;
+Image* grassImage = NULL;
+Image* grassTopImage = NULL;
+Image* waterTopImage = NULL;
+Image* generatorImage = NULL;
+Image* generatorTopImage = NULL;
+Image* unitImage[RESOURCE_TYPES_IMAGES];
+Image* resourceImages[RESOURCE_TYPES_IMAGES];
 
 vector<SDL_Texture*> images;
 
@@ -40,82 +54,20 @@ int screenYfloor[VIEW_WIDTH][VIEW_WIDTH];
 SDL_Surface* message = NULL;
 TTF_Font* font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
-/*
-SDL_Surface* loadSurface(std::string path)
-{
-	//The final optimized image
-	SDL_Surface* optimizedSurface = NULL;
 
-	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (loadedSurface == NULL)
-	{
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-	}
-	else
-	{
-		//Convert surface to screen format
-		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
-		if (optimizedSurface == NULL)
-		{
-			printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-		}
-
-		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
-	}
-
-	return optimizedSurface;
-}
-
-SDL_Surface * loadSurfaceOld(std::string path) {
-	SDL_Surface* optimizedSurface = NULL;
-	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
-	if (loadedSurface == NULL) {
-		error("Unable to load image");
-	}
-	else {
-
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0, 0xFF));
-
-
-
-		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
-		if (optimizedSurface == NULL) {
-			error("Unable to optimize image");
-		}
-		else {
-			SDL_SetColorKey(optimizedSurface, SDL_TRUE, SDL_MapRGB(optimizedSurface->format, 0xFF, 0, 0xFF));
-		}
-		SDL_FreeSurface(loadedSurface);
-	}
-	return optimizedSurface;
-}*/
-
-SDL_Texture * loadTexture(std::string path) {//The final texture
-	/*:SDL_Texture* newTexture = NULL;
-
-	//Load image at specified path
-	SDL_Surface* loadedSurface = loadSurface(path.c_str());
-	//Create texture from surface pixels
-	newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
-	if (newTexture == NULL)
-	{
-		printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-	}
-
-	//Get rid of old loaded surface
-	SDL_FreeSurface(loadedSurface);
-
-	SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
-
-	images.push_back(newTexture);
-
-	return newTexture;*/
-
+Image* loadTexture(std::string path, int wCenter, int hCenter) {
 	SDL_Texture * texture = IMG_LoadTexture(gRenderer, path.c_str());
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-	return texture;
+	int w, h;
+	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	if (wCenter == -99) {
+		wCenter = w / 2;
+	}
+	if (hCenter == -99) {
+		hCenter = h / 2;
+	}
+	Image* image = new Image(texture, w, h, wCenter, hCenter);
+	return image;
 }
 
 bool graphics_init() {
@@ -149,44 +101,44 @@ bool graphics_init() {
 		return false;
 	}
 
-	blackTopImage = loadTexture(RESOURCES_PATH + "Images/black_top.png");
-	blackLeftImage = loadTexture(RESOURCES_PATH + "Images/black_left.png");
-	blackLeftPlusImage = loadTexture(RESOURCES_PATH + "Images/black_left_plus.png");
-	blackRightImage = loadTexture(RESOURCES_PATH + "Images/black_right.png");
-	blackRightPlusImage = loadTexture(RESOURCES_PATH + "Images/black_right_plus.png");
-	groundImage = loadTexture(RESOURCES_PATH + "Images/ground.png");
-	groundTopImage = loadTexture(RESOURCES_PATH + "Images/ground_top.png");
-	grassImage = loadTexture(RESOURCES_PATH + "Images/grass.png");
-	grassTopImage = loadTexture(RESOURCES_PATH + "Images/grass_top.png");
-	waterTopImage = loadTexture(RESOURCES_PATH + "Images/water_top.png");
-	generatorImage = loadTexture(RESOURCES_PATH + "Images/generator.png");
-	generatorTopImage = loadTexture(RESOURCES_PATH + "Images/generator_top.png");
-	unitImage[0] = loadTexture(RESOURCES_PATH + "Images/unitRed.png");
-	unitImage[1] = loadTexture(RESOURCES_PATH + "Images/unitYellow.png");
-	unitImage[2] = loadTexture(RESOURCES_PATH + "Images/unitGreen.png");
-	unitImage[3] = loadTexture(RESOURCES_PATH + "Images/unitSky.png");
-	unitImage[4] = loadTexture(RESOURCES_PATH + "Images/unitBlue.png");
-	unitImage[5] = loadTexture(RESOURCES_PATH + "Images/unitPurple.png");
-	unitImage[6] = loadTexture(RESOURCES_PATH + "Images/unitBlack.png");
-	unitImage[7] = loadTexture(RESOURCES_PATH + "Images/unitWhite.png");
-	unitImage[8] = loadTexture(RESOURCES_PATH + "Images/unitOrange.png");
-	unitImage[9] = loadTexture(RESOURCES_PATH + "Images/unitDirt.png");
-	resourceImages[0] = loadTexture(RESOURCES_PATH + "Images/resourceRed.png");
-	resourceImages[1] = loadTexture(RESOURCES_PATH + "Images/resourceYellow.png");
-	resourceImages[2] = loadTexture(RESOURCES_PATH + "Images/resourceGreen.png");
-	resourceImages[3] = loadTexture(RESOURCES_PATH + "Images/resourceSky.png");
-	resourceImages[4] = loadTexture(RESOURCES_PATH + "Images/resourceBlue.png");
-	resourceImages[5] = loadTexture(RESOURCES_PATH + "Images/resourcePurple.png");
-	resourceImages[6] = loadTexture(RESOURCES_PATH + "Images/resourceBlack.png");
-	resourceImages[7] = loadTexture(RESOURCES_PATH + "Images/resourceWhite.png");
-	resourceImages[8] = loadTexture(RESOURCES_PATH + "Images/resourceOrange.png");
-	resourceImages[9] = loadTexture(RESOURCES_PATH + "Images/resourceDirt.png");
+	blackTopImage = loadTexture(RESOURCES_PATH + "Images/black_top.png", -99, -99);
+	blackLeftImage = loadTexture(RESOURCES_PATH + "Images/black_left.png", 5, -1);
+	blackLeftPlusImage = loadTexture(RESOURCES_PATH + "Images/black_left_plus.png", 5, -1);
+	blackRightImage = loadTexture(RESOURCES_PATH + "Images/black_right.png", 0, -1);
+	blackRightPlusImage = loadTexture(RESOURCES_PATH + "Images/black_right_plus.png", 1, -1);
+	groundImage = loadTexture(RESOURCES_PATH + "Images/ground.png", -99, 4);
+	groundTopImage = loadTexture(RESOURCES_PATH + "Images/ground_top.png", -99, -99);
+	grassImage = loadTexture(RESOURCES_PATH + "Images/grass.png", -99, 4);
+	grassTopImage = loadTexture(RESOURCES_PATH + "Images/grass_top.png", -99, -99);
+	waterTopImage = loadTexture(RESOURCES_PATH + "Images/water_top.png", -99, -99);
+	generatorImage = loadTexture(RESOURCES_PATH + "Images/generator.png", -99, 10);
+	generatorTopImage = loadTexture(RESOURCES_PATH + "Images/generator_top.png", -99, -99);
+	unitImage[0] = loadTexture(RESOURCES_PATH + "Images/unitRed.png", -99, -99);
+	unitImage[1] = loadTexture(RESOURCES_PATH + "Images/unitYellow.png", -99, -99);
+	unitImage[2] = loadTexture(RESOURCES_PATH + "Images/unitGreen.png", -99, -99);
+	unitImage[3] = loadTexture(RESOURCES_PATH + "Images/unitSky.png", -99, -99);
+	unitImage[4] = loadTexture(RESOURCES_PATH + "Images/unitBlue.png", -99, -99);
+	unitImage[5] = loadTexture(RESOURCES_PATH + "Images/unitPurple.png", -99, -99);
+	unitImage[6] = loadTexture(RESOURCES_PATH + "Images/unitBlack.png", -99, -99);
+	unitImage[7] = loadTexture(RESOURCES_PATH + "Images/unitWhite.png", -99, -99);
+	unitImage[8] = loadTexture(RESOURCES_PATH + "Images/unitOrange.png", -99, -99);
+	unitImage[9] = loadTexture(RESOURCES_PATH + "Images/unitDirt.png", -99, -99);
+	resourceImages[0] = loadTexture(RESOURCES_PATH + "Images/resourceRed.png", -99, -99);
+	resourceImages[1] = loadTexture(RESOURCES_PATH + "Images/resourceYellow.png", -99, -99);
+	resourceImages[2] = loadTexture(RESOURCES_PATH + "Images/resourceGreen.png", -99, -99);
+	resourceImages[3] = loadTexture(RESOURCES_PATH + "Images/resourceSky.png", -99, -99);
+	resourceImages[4] = loadTexture(RESOURCES_PATH + "Images/resourceBlue.png", -99, -99);
+	resourceImages[5] = loadTexture(RESOURCES_PATH + "Images/resourcePurple.png", -99, -99);
+	resourceImages[6] = loadTexture(RESOURCES_PATH + "Images/resourceBlack.png", -99, -99);
+	resourceImages[7] = loadTexture(RESOURCES_PATH + "Images/resourceWhite.png", -99, -99);
+	resourceImages[8] = loadTexture(RESOURCES_PATH + "Images/resourceOrange.png", -99, -99);
+	resourceImages[9] = loadTexture(RESOURCES_PATH + "Images/resourceDirt.png", -99, -99);
 	
 	font = TTF_OpenFont((RESOURCES_PATH + "OpenSans-Regular.ttf").c_str(), 14);
 	
 	for (int i = 0; i < VIEW_WIDTH; i++) {
 		for (int j = 0; j < VIEW_WIDTH; j++) {
-			screenX[i][j] = i * 6 - j * 6 + SCREEN_WIDTH / 2 - 5;
+			screenX[i][j] = i * 6 - j * 6 + SCREEN_WIDTH / 2;
 			for (int k = 0; k < VIEW_WIDTH; k++) {
 				screenY[i][j][k] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (k - VIEW_HEIGHT / 2) + SCREEN_HEIGHT / 2 - 5;
 			}
@@ -289,42 +241,51 @@ void graphics_draw_text() {
 	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);*/
 }
 
-void graphics_draw_map() {
-	SDL_Rect position;
-	position.w = 10;
-	position.h = 14;
-	
+void drawImage(Image* image, int x, int y) {
+	image->position.x = x - image->wCenter;
+	image->position.y = y - image->hCenter;
+	SDL_RenderCopy(gRenderer, image->t, NULL, &(image->position));
+}
+
+void graphics_draw_map() {	
+	int sX, sY;
+
 	//This draws the floor, which is only tops instead of full blocks
 	if (viewZ > 0) {
 		for (int i = 0; i < VIEW_WIDTH; i++) {
 			int x = viewX + i;
 			for (int j = 0; j < VIEW_WIDTH; j++) {
-				position.x = screenX[i][j];
-				position.y = screenYfloor[i][j];
+				sX = screenX[i][j];
+				sY = screenYfloor[i][j];
 				int y = viewY + j;
 				if (x >= 0 && y >= 0 && x < MAP_WIDTH && y < MAP_WIDTH) {
 					if (tilesMap[x][y][viewZ - 1] == tileGround) {
 						if ((x / BASE_CHUNK_SIZE + y / BASE_CHUNK_SIZE + (viewZ - 1) / BASE_CHUNK_SIZE) % 2 == 0) {
 							//SDL_BlitSurface(groundTopImage, NULL, screenSurface, &position);
-							SDL_RenderCopy(gRenderer, groundTopImage, NULL, &position);
+							drawImage(groundTopImage, sX, sY);
+							//SDL_RenderCopy(gRenderer, groundTopImage, NULL, &position);
 						}
 						else {
 							//SDL_BlitSurface(grassTopImage, NULL, screenSurface, &position);
-							SDL_RenderCopy(gRenderer, grassTopImage, NULL, &position);
+							drawImage(grassTopImage, sX, sY);
+							//SDL_RenderCopy(gRenderer, grassTopImage, NULL, &position);
 						}
 					}
 					else if (tilesMap[x][y][viewZ - 1] == tileGenerator) {
 						//SDL_BlitSurface(generatorTopImage, NULL, screenSurface, &position);
-						SDL_RenderCopy(gRenderer, generatorTopImage, NULL, &position);
+						drawImage(generatorTopImage, sX, sY);
+						//SDL_RenderCopy(gRenderer, generatorTopImage, NULL, &position);
 					}
 					else if (tilesMap[x][y][viewZ - 1] == tileWater) {
 						//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
-						SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
+						drawImage(waterTopImage, sX, sY);
+						//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 					}
 				}
 				else {
 					//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
-					SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
+					drawImage(waterTopImage, sX, sY);
+					//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 				}
 			}
 		}
@@ -335,31 +296,34 @@ void graphics_draw_map() {
 		int x = viewX + i;
 		for (int j = 0; j < VIEW_WIDTH; j++) {
 			int y = viewY + j;
-			position.x = screenX[i][j];
+			sX = screenX[i][j];
 			if (x >= 0 && y >= 0 && x < MAP_WIDTH && y < MAP_WIDTH) {
 				for (int k = 0; k < VIEW_HEIGHT; k++) {
 					int z = viewZ + k;
 					if (z >= 0 && z < MAP_HEIGHT) {
-						position.y = screenY[i][j][k];
+						sY = screenY[i][j][k];
 						if (tilesMap[x][y][z] == tileEmpty) {
 							Object* current = unitsMap[x][y][z];
 							while (current != NULL) {
 								if (current->type() == objectUnit) {
 									Unit* unit = (Unit*)current;
-									position.y = screenY[i][j][k] + 4;
+									sY = screenY[i][j][k] + 4;
 									//SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-									SDL_RenderCopy(gRenderer, unitImage[unit->resourceType], NULL, &position);
+									drawImage(unitImage[unit->resourceType], sX, sY);
+									//SDL_RenderCopy(gRenderer, unitImage[unit->resourceType], NULL, &position);
 									if (unit->calculateWorth() > 100) {
-										position.y = screenY[i][j][k] + 1;
+										sY = screenY[i][j][k] + 1;
 										//SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
-										SDL_RenderCopy(gRenderer, unitImage[unit->resourceType], NULL, &position);
+										drawImage(unitImage[unit->resourceType], sX, sY);
+										//SDL_RenderCopy(gRenderer, unitImage[unit->resourceType], NULL, &position);
 									}
-									position.y = screenY[i][j][k];
+									sY = screenY[i][j][k];
 								}
 								else if (current->type() == objectResource) {
 									Resource* resource = (Resource*)current;
 									//SDL_BlitSurface(resourceImages[resource->resourceType], NULL, screenSurface, &position);
-									SDL_RenderCopy(gRenderer, resourceImages[resource->resourceType], NULL, &position);
+									drawImage(resourceImages[resource->resourceType], sX, sY);
+									//SDL_RenderCopy(gRenderer, resourceImages[resource->resourceType], NULL, &position);
 								}
 								current = current->sharesTileWithObject;
 							}
@@ -367,70 +331,75 @@ void graphics_draw_map() {
 						else if (tilesMap[x][y][z] == tileGround) {
 							if ((x / BASE_CHUNK_SIZE + y / BASE_CHUNK_SIZE + z / BASE_CHUNK_SIZE) % 2 == 0) {
 								//SDL_BlitSurface(groundImage, NULL, screenSurface, &position);
-								SDL_RenderCopy(gRenderer, groundImage, NULL, &position);
+								drawImage(groundImage, sX, sY);
+								//SDL_RenderCopy(gRenderer, groundImage, NULL, &position);
 							}
 							else {
 								//SDL_BlitSurface(grassImage, NULL, screenSurface, &position);
-								SDL_RenderCopy(gRenderer, grassImage, NULL, &position);
+								drawImage(grassImage, sX, sY);
+								//SDL_RenderCopy(gRenderer, grassImage, NULL, &position);
 							}
 						}
 						else if (tilesMap[x][y][z] == tileGenerator) {
 							//SDL_BlitSurface(generatorImage, NULL, screenSurface, &position);
-							SDL_RenderCopy(gRenderer, generatorImage, NULL, &position);
+							drawImage(generatorImage, sX, sY);
+							//SDL_RenderCopy(gRenderer, generatorImage, NULL, &position);
 						}
 						else if (tilesMap[x][y][z] == tileWater) {
 							//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
-							SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
+							drawImage(waterTopImage, sX, sY);
+							//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 						}
 					}
 				}
 			}
 			else {
 				if (viewZ <= 0) {
-					position.y = screenY[i][j][0 - viewZ];
+					sY = screenY[i][j][0 - viewZ];
 					//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
-					SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
+					drawImage(waterTopImage, sX, sY);
+					//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 				}
 			}
 		}
 	}
 
 	//This draws the blacked out sides
-	SDL_Rect positionLeft;
-	SDL_Rect positionRight;
-	SDL_Rect positionRightPlus;
+	int sLX, sRX;
 	int leftSideY = viewY + VIEW_WIDTH - 1;
 	int rightSideX = viewX + VIEW_WIDTH - 1;
 	for (int i = 0; i < VIEW_WIDTH; i++) {
 		int leftSideX = i + viewX;
 		int rightSideY = i + viewY;
-		positionLeft.x = screenX[i][VIEW_WIDTH - 1];
-		positionRight.x = screenX[VIEW_WIDTH - 1][i] + 5;
-		positionRightPlus.x = positionRight.x - 1;
+		sLX = screenX[i][VIEW_WIDTH - 1];
+		sRX = screenX[VIEW_WIDTH - 1][i];
 		for (int k = 0; k < VIEW_HEIGHT; k++) {
 			int z = viewZ + k;
 			if (z < MAP_HEIGHT) {
-				positionLeft.y = screenY[i][VIEW_WIDTH - 1][k] + 5;
-				positionRight.y = screenY[VIEW_WIDTH - 1][i][k] + 5;
-				positionRightPlus.y = positionRight.y;
+				sY = screenY[i][VIEW_WIDTH - 1][k];
+				//positionRight.y = screenY[VIEW_WIDTH - 1][i][k] + 5;
 				if (safeTilesMap(leftSideX, leftSideY, z) != tileEmpty) {
 					if (i + 1 < VIEW_WIDTH && safeTilesMap(leftSideX + 1, leftSideY, z) != tileEmpty) {
 						//SDL_BlitSurface(blackLeftPlusImage, NULL, screenSurface, &positionLeft);
-						SDL_RenderCopy(gRenderer, blackLeftPlusImage, NULL, &position);
+						drawImage(blackLeftPlusImage, sLX, sY);
+						//SDL_RenderCopy(gRenderer, blackLeftPlusImage, NULL, &position);
 					}
 					else {
 						//SDL_BlitSurface(blackLeftImage, NULL, screenSurface, &positionLeft);
-						SDL_RenderCopy(gRenderer, blackLeftImage, NULL, &position);
+						drawImage(blackLeftImage, sLX, sY);
+						//SDL_RenderCopy(gRenderer, blackLeftImage, NULL, &position);
 					}
 				}
 				if (safeTilesMap(rightSideX, rightSideY, z) != tileEmpty) {
 					if (i + 1 < VIEW_WIDTH && safeTilesMap(rightSideX, rightSideY + 1, z) != tileEmpty) {
 						//SDL_BlitSurface(blackRightPlusImage, NULL, screenSurface, &positionRightPlus);
-						SDL_RenderCopy(gRenderer, blackRightPlusImage, NULL, &position);
+						drawImage(blackRightPlusImage, sRX, sY);
+						//SDL_RenderCopy(gRenderer, blackRightPlusImage, NULL, &position);
 					}
 					else {
 						//SDL_BlitSurface(blackRightImage, NULL, screenSurface, &positionRight);
-						SDL_RenderCopy(gRenderer, blackRightImage, NULL, &position);
+						drawImage(blackRightImage, sRX, sY);
+						//SDL_RenderCopy(gRenderer, blackRightImage, NULL, &position);
 					}
 				}
 			}
@@ -448,10 +417,11 @@ void graphics_draw_map() {
 						int z = viewZ + VIEW_HEIGHT - 1;
 						if (z < MAP_HEIGHT) {
 							if (tilesMap[x][y][z] != tileEmpty) {
-								position.x = screenX[i][j];
-								position.y = screenY[i][j][VIEW_HEIGHT - 1];
+								sX = screenX[i][j];
+								sY = screenY[i][j][VIEW_HEIGHT - 1];
 								//SDL_BlitSurface(blackTopImage, NULL, screenSurface, &position);
-								SDL_RenderCopy(gRenderer, blackTopImage, NULL, &position);
+								drawImage(blackTopImage, sX, sY);
+								//SDL_RenderCopy(gRenderer, blackTopImage, NULL, &position);
 							}
 						}
 					}
@@ -459,6 +429,8 @@ void graphics_draw_map() {
 			}
 		}
 	}
+
+	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
 }
 
 void graphics_draw() {
