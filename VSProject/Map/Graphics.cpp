@@ -393,15 +393,15 @@ void graphics_draw() {
 	}
 	graphics_draw_map();
 	graphics_draw_text();
-	//graphics_draw_minimap();
+	graphics_draw_minimap();
 	SDL_RenderPresent(gRenderer);
 }
 
 void graphics_draw_minimap() {
-	/*SDL_Rect rect = { SCREEN_WIDTH - MAP_WIDTH / 3, 0, MAP_WIDTH / 3, MAP_WIDTH / 3 };
+	SDL_Rect rect = { SCREEN_WIDTH - MAP_WIDTH / 3, 0, MAP_WIDTH / 3, MAP_WIDTH / 3 };
 	SDL_FillRect(screenSurface, &rect, 255);
 	SDL_Rect rect2 = { SCREEN_WIDTH - (MAP_WIDTH - viewX) / 3, viewY / 3, VIEW_WIDTH / 3, VIEW_WIDTH / 3 };
-	SDL_FillRect(screenSurface, &rect2, 10000);*/
+	SDL_FillRect(screenSurface, &rect2, 10000);
 }
 
 void graphics_close()
