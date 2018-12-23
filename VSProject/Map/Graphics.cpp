@@ -210,21 +210,26 @@ void graphics_draw_text() {
 	drawText(20, SCREEN_HEIGHT - 50, "Units: %d", debug_unitCount);
 #	endif
 
-	/*if (selected != NULL) {
-	if (selected->objectType == objectUnit) {
-	Unit* selectedUnit = (Unit*)selected;
-	Unit* parent = selectedUnit->parent;
-	if (parent != NULL && parent->alive) {
-	if (abs(parent->x - selected->x) < SCREEN_WIDTH / 2 &&
-	abs(parent->y - selected->y) < SCREEN_WIDTH / 2 &&
-	abs(parent->z - selected->z) < SCREEN_HEIGHT / 2) {
+	if (selected != NULL) {
+		if (selected->objectType == objectUnit) {
+			Unit* selectedUnit = (Unit*)selected;
+			Unit* parent = selectedUnit->parent;
+			if (parent != NULL && parent->alive) {
+				if (abs(parent->x - selected->x) < SCREEN_WIDTH / 2 &&
+						abs(parent->y - selected->y) < SCREEN_WIDTH / 2 &&
+						abs(parent->z - selected->z) < SCREEN_HEIGHT / 2) {
+					int selectedX = screenX[selected->x][selected->y];
+					int selectedY = screenY[selected->x][selected->y][selected->z];
+					int parentX = screenX[parent->x][parent->y];
+					int parentY = screenY[parent->x][parent->y][parent->z];
+					SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+					SDL_RenderDrawLine(gRenderer, selectedX, selectedY, parentX, parentY); 
+				}
+			}
+		}
+	}
 
-	}
-	}
-	}
-	}
-
-
+	/*
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
 	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);*/
 }
