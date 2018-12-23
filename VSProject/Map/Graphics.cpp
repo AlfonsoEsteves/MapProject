@@ -144,7 +144,7 @@ bool graphics_init() {
 		}
 	}
 
-	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 
 	return true;
 }
@@ -259,31 +259,21 @@ void graphics_draw_map() {
 				if (x >= 0 && y >= 0 && x < MAP_WIDTH && y < MAP_WIDTH) {
 					if (tilesMap[x][y][viewZ - 1] == tileGround) {
 						if ((x / BASE_CHUNK_SIZE + y / BASE_CHUNK_SIZE + (viewZ - 1) / BASE_CHUNK_SIZE) % 2 == 0) {
-							//SDL_BlitSurface(groundTopImage, NULL, screenSurface, &position);
 							drawImage(groundTopImage, sX, sY);
-							//SDL_RenderCopy(gRenderer, groundTopImage, NULL, &position);
 						}
 						else {
-							//SDL_BlitSurface(grassTopImage, NULL, screenSurface, &position);
 							drawImage(grassTopImage, sX, sY);
-							//SDL_RenderCopy(gRenderer, grassTopImage, NULL, &position);
 						}
 					}
 					else if (tilesMap[x][y][viewZ - 1] == tileGenerator) {
-						//SDL_BlitSurface(generatorTopImage, NULL, screenSurface, &position);
 						drawImage(generatorTopImage, sX, sY);
-						//SDL_RenderCopy(gRenderer, generatorTopImage, NULL, &position);
 					}
 					else if (tilesMap[x][y][viewZ - 1] == tileWater) {
-						//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
 						drawImage(waterTopImage, sX, sY);
-						//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 					}
 				}
 				else {
-					//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
 					drawImage(waterTopImage, sX, sY);
-					//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 				}
 			}
 		}
@@ -306,47 +296,33 @@ void graphics_draw_map() {
 								if (current->type() == objectUnit) {
 									Unit* unit = (Unit*)current;
 									sY = screenY[i][j][k] + 4;
-									//SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 									drawImage(unitImage[unit->resourceType], sX, sY);
-									//SDL_RenderCopy(gRenderer, unitImage[unit->resourceType], NULL, &position);
 									if (unit->calculateWorth() > 100) {
 										sY = screenY[i][j][k] + 1;
-										//SDL_BlitSurface(unitImage[unit->resourceType], NULL, screenSurface, &position);
 										drawImage(unitImage[unit->resourceType], sX, sY);
-										//SDL_RenderCopy(gRenderer, unitImage[unit->resourceType], NULL, &position);
 									}
 									sY = screenY[i][j][k];
 								}
 								else if (current->type() == objectResource) {
 									Resource* resource = (Resource*)current;
-									//SDL_BlitSurface(resourceImages[resource->resourceType], NULL, screenSurface, &position);
 									drawImage(resourceImages[resource->resourceType], sX, sY);
-									//SDL_RenderCopy(gRenderer, resourceImages[resource->resourceType], NULL, &position);
 								}
 								current = current->sharesTileWithObject;
 							}
 						}
 						else if (tilesMap[x][y][z] == tileGround) {
 							if ((x / BASE_CHUNK_SIZE + y / BASE_CHUNK_SIZE + z / BASE_CHUNK_SIZE) % 2 == 0) {
-								//SDL_BlitSurface(groundImage, NULL, screenSurface, &position);
 								drawImage(groundImage, sX, sY);
-								//SDL_RenderCopy(gRenderer, groundImage, NULL, &position);
 							}
 							else {
-								//SDL_BlitSurface(grassImage, NULL, screenSurface, &position);
 								drawImage(grassImage, sX, sY);
-								//SDL_RenderCopy(gRenderer, grassImage, NULL, &position);
 							}
 						}
 						else if (tilesMap[x][y][z] == tileGenerator) {
-							//SDL_BlitSurface(generatorImage, NULL, screenSurface, &position);
 							drawImage(generatorImage, sX, sY);
-							//SDL_RenderCopy(gRenderer, generatorImage, NULL, &position);
 						}
 						else if (tilesMap[x][y][z] == tileWater) {
-							//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
 							drawImage(waterTopImage, sX, sY);
-							//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 						}
 					}
 				}
@@ -354,9 +330,7 @@ void graphics_draw_map() {
 			else {
 				if (viewZ <= 0) {
 					sY = screenY[i][j][0 - viewZ];
-					//SDL_BlitSurface(waterTopImage, NULL, screenSurface, &position);
 					drawImage(waterTopImage, sX, sY);
-					//SDL_RenderCopy(gRenderer, waterTopImage, NULL, &position);
 				}
 			}
 		}
@@ -375,29 +349,20 @@ void graphics_draw_map() {
 			int z = viewZ + k;
 			if (z < MAP_HEIGHT) {
 				sY = screenY[i][VIEW_WIDTH - 1][k];
-				//positionRight.y = screenY[VIEW_WIDTH - 1][i][k] + 5;
 				if (safeTilesMap(leftSideX, leftSideY, z) != tileEmpty) {
 					if (i + 1 < VIEW_WIDTH && safeTilesMap(leftSideX + 1, leftSideY, z) != tileEmpty) {
-						//SDL_BlitSurface(blackLeftPlusImage, NULL, screenSurface, &positionLeft);
 						drawImage(blackLeftPlusImage, sLX, sY);
-						//SDL_RenderCopy(gRenderer, blackLeftPlusImage, NULL, &position);
 					}
 					else {
-						//SDL_BlitSurface(blackLeftImage, NULL, screenSurface, &positionLeft);
 						drawImage(blackLeftImage, sLX, sY);
-						//SDL_RenderCopy(gRenderer, blackLeftImage, NULL, &position);
 					}
 				}
 				if (safeTilesMap(rightSideX, rightSideY, z) != tileEmpty) {
 					if (i + 1 < VIEW_WIDTH && safeTilesMap(rightSideX, rightSideY + 1, z) != tileEmpty) {
-						//SDL_BlitSurface(blackRightPlusImage, NULL, screenSurface, &positionRightPlus);
 						drawImage(blackRightPlusImage, sRX, sY);
-						//SDL_RenderCopy(gRenderer, blackRightPlusImage, NULL, &position);
 					}
 					else {
-						//SDL_BlitSurface(blackRightImage, NULL, screenSurface, &positionRight);
 						drawImage(blackRightImage, sRX, sY);
-						//SDL_RenderCopy(gRenderer, blackRightImage, NULL, &position);
 					}
 				}
 			}
@@ -417,9 +382,7 @@ void graphics_draw_map() {
 							if (tilesMap[x][y][z] != tileEmpty) {
 								sX = screenX[i][j];
 								sY = screenY[i][j][VIEW_HEIGHT - 1];
-								//SDL_BlitSurface(blackTopImage, NULL, screenSurface, &position);
 								drawImage(blackTopImage, sX, sY);
-								//SDL_RenderCopy(gRenderer, blackTopImage, NULL, &position);
 							}
 						}
 					}
@@ -428,7 +391,7 @@ void graphics_draw_map() {
 		}
 	}
 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
 }
 
 void graphics_draw() {
