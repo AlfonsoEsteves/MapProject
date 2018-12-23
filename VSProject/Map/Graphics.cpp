@@ -57,7 +57,6 @@ SDL_Color textColor = { 255, 255, 255 };
 
 Image* loadTexture(std::string path, int wCenter, int hCenter) {
 	SDL_Texture * texture = IMG_LoadTexture(gRenderer, path.c_str());
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	int w, h;
 	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 	if (wCenter == -99) {
@@ -79,21 +78,18 @@ bool graphics_init() {
 		error("SDL_ttf could not initialize");
 		return false;
 	}
+	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+		error("SDL_image could not initialize");
+		return false;
+	}
 	window = SDL_CreateWindow("MAP", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (window == NULL) {
 		error("Window could not be created");
 		return false;
 	}
 
-	int imgFlags = IMG_INIT_PNG;
-	if (!(IMG_Init(imgFlags) & imgFlags))
-	{
-		error("SDL_image could not initialize");
-		return false;
-	}
-
 	screenSurface = SDL_GetWindowSurface(window);
-	
+
 	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (gRenderer == NULL)
 	{
@@ -101,17 +97,18 @@ bool graphics_init() {
 		return false;
 	}
 
+	const int imageHeightTerrain = 4;
 	blackTopImage = loadTexture(RESOURCES_PATH + "Images/black_top.png", -99, -99);
 	blackLeftImage = loadTexture(RESOURCES_PATH + "Images/black_left.png", 5, -1);
 	blackLeftPlusImage = loadTexture(RESOURCES_PATH + "Images/black_left_plus.png", 5, -1);
 	blackRightImage = loadTexture(RESOURCES_PATH + "Images/black_right.png", 0, -1);
 	blackRightPlusImage = loadTexture(RESOURCES_PATH + "Images/black_right_plus.png", 1, -1);
-	groundImage = loadTexture(RESOURCES_PATH + "Images/ground.png", -99, 4);
+	groundImage = loadTexture(RESOURCES_PATH + "Images/ground.png", -99, imageHeightTerrain);
 	groundTopImage = loadTexture(RESOURCES_PATH + "Images/ground_top.png", -99, -99);
-	grassImage = loadTexture(RESOURCES_PATH + "Images/grass.png", -99, 4);
+	grassImage = loadTexture(RESOURCES_PATH + "Images/grass.png", -99, imageHeightTerrain);
 	grassTopImage = loadTexture(RESOURCES_PATH + "Images/grass_top.png", -99, -99);
 	waterTopImage = loadTexture(RESOURCES_PATH + "Images/water_top.png", -99, -99);
-	generatorImage = loadTexture(RESOURCES_PATH + "Images/generator.png", -99, 10);
+	generatorImage = loadTexture(RESOURCES_PATH + "Images/generator.png", -99, imageHeightTerrain);
 	generatorTopImage = loadTexture(RESOURCES_PATH + "Images/generator_top.png", -99, -99);
 	unitImage[0] = loadTexture(RESOURCES_PATH + "Images/unitRed.png", -99, -99);
 	unitImage[1] = loadTexture(RESOURCES_PATH + "Images/unitYellow.png", -99, -99);
@@ -123,19 +120,20 @@ bool graphics_init() {
 	unitImage[7] = loadTexture(RESOURCES_PATH + "Images/unitWhite.png", -99, -99);
 	unitImage[8] = loadTexture(RESOURCES_PATH + "Images/unitOrange.png", -99, -99);
 	unitImage[9] = loadTexture(RESOURCES_PATH + "Images/unitDirt.png", -99, -99);
-	resourceImages[0] = loadTexture(RESOURCES_PATH + "Images/resourceRed.png", -99, -99);
-	resourceImages[1] = loadTexture(RESOURCES_PATH + "Images/resourceYellow.png", -99, -99);
-	resourceImages[2] = loadTexture(RESOURCES_PATH + "Images/resourceGreen.png", -99, -99);
-	resourceImages[3] = loadTexture(RESOURCES_PATH + "Images/resourceSky.png", -99, -99);
-	resourceImages[4] = loadTexture(RESOURCES_PATH + "Images/resourceBlue.png", -99, -99);
-	resourceImages[5] = loadTexture(RESOURCES_PATH + "Images/resourcePurple.png", -99, -99);
-	resourceImages[6] = loadTexture(RESOURCES_PATH + "Images/resourceBlack.png", -99, -99);
-	resourceImages[7] = loadTexture(RESOURCES_PATH + "Images/resourceWhite.png", -99, -99);
-	resourceImages[8] = loadTexture(RESOURCES_PATH + "Images/resourceOrange.png", -99, -99);
-	resourceImages[9] = loadTexture(RESOURCES_PATH + "Images/resourceDirt.png", -99, -99);
-	
+	const int imageHightResource = 1;
+	resourceImages[0] = loadTexture(RESOURCES_PATH + "Images/resourceRed.png", -99, imageHightResource);
+	resourceImages[1] = loadTexture(RESOURCES_PATH + "Images/resourceYellow.png", -99, imageHightResource);
+	resourceImages[2] = loadTexture(RESOURCES_PATH + "Images/resourceGreen.png", -99, imageHightResource);
+	resourceImages[3] = loadTexture(RESOURCES_PATH + "Images/resourceSky.png", -99, imageHightResource);
+	resourceImages[4] = loadTexture(RESOURCES_PATH + "Images/resourceBlue.png", -99, imageHightResource);
+	resourceImages[5] = loadTexture(RESOURCES_PATH + "Images/resourcePurple.png", -99, imageHightResource);
+	resourceImages[6] = loadTexture(RESOURCES_PATH + "Images/resourceBlack.png", -99, imageHightResource);
+	resourceImages[7] = loadTexture(RESOURCES_PATH + "Images/resourceWhite.png", -99, imageHightResource);
+	resourceImages[8] = loadTexture(RESOURCES_PATH + "Images/resourceOrange.png", -99, imageHightResource);
+	resourceImages[9] = loadTexture(RESOURCES_PATH + "Images/resourceDirt.png", -99, imageHightResource);
+
 	font = TTF_OpenFont((RESOURCES_PATH + "OpenSans-Regular.ttf").c_str(), 14);
-	
+
 	for (int i = 0; i < VIEW_WIDTH; i++) {
 		for (int j = 0; j < VIEW_WIDTH; j++) {
 			screenX[i][j] = i * 6 - j * 6 + SCREEN_WIDTH / 2;
@@ -146,7 +144,7 @@ bool graphics_init() {
 		}
 	}
 
-	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
 
 	return true;
 }
@@ -154,86 +152,86 @@ bool graphics_init() {
 void graphics_draw_text() {
 	/*Object* currentObject = NULL;
 	if (selected != NULL) {
-		currentObject = unitsMap[selected->x][selected->y][selected->z];
+	currentObject = unitsMap[selected->x][selected->y][selected->z];
 	}
 	int xDisplacement = 0;
 	while (currentObject != NULL) {
-#		ifdef DEBUG
-		format("Object's id: %d", currentObject->id);
-		message = TTF_RenderText_Solid(font, formated, textColor);
-		SDL_Rect position = { xDisplacement + 20, 20, 0, 0 };
-		SDL_BlitSurface(message, NULL, screenSurface, &position);
-		SDL_FreeSurface(message);
+	#		ifdef DEBUG
+	format("Object's id: %d", currentObject->id);
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	SDL_Rect position = { xDisplacement + 20, 20, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
 
-		if (currentObject->objectType == objectUnit) {
-			Unit* unit = (Unit*)selected;
-			if (unit->parent != NULL && unit->parent->alive) {
-				int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
-				format("Parent distance: %d", dist);
-				message = TTF_RenderText_Solid(font, formated, textColor);
-				position = { xDisplacement + 20, 60, 0, 0 };
-				SDL_BlitSurface(message, NULL, screenSurface, &position);
-				SDL_FreeSurface(message);
-			}
-		}
-#		endif
-		if (currentObject->type() == objectUnit) {
-			Unit* currentUnit = (Unit*)currentObject;
-			format("Unit's life: %d", currentUnit->life);
-			message = TTF_RenderText_Solid(font, formated, textColor);
-			SDL_Rect position = { xDisplacement + 20, 40, 0, 0 };
-			SDL_BlitSurface(message, NULL, screenSurface, &position);
-			SDL_FreeSurface(message);
+	if (currentObject->objectType == objectUnit) {
+	Unit* unit = (Unit*)selected;
+	if (unit->parent != NULL && unit->parent->alive) {
+	int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
+	format("Parent distance: %d", dist);
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	position = { xDisplacement + 20, 60, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
+	}
+	}
+	#		endif
+	if (currentObject->type() == objectUnit) {
+	Unit* currentUnit = (Unit*)currentObject;
+	format("Unit's life: %d", currentUnit->life);
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	SDL_Rect position = { xDisplacement + 20, 40, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
 
-			for (int i = 0; i < currentUnit->cycleLength; i++) {
-				if (i == currentUnit->cycleCurrentStep) {
-					format("%s <<", stepName(currentUnit->cycle[i]).c_str());
-				}
-				else {
-					format("%s", stepName(currentUnit->cycle[i]).c_str());
-				}
-				message = TTF_RenderText_Solid(font, formated, textColor);
-				SDL_Rect position = { xDisplacement + 20, 100 + i * 15, 0, 0 };
-				SDL_BlitSurface(message, NULL, screenSurface, &position);
-				SDL_FreeSurface(message);
-			}
+	for (int i = 0; i < currentUnit->cycleLength; i++) {
+	if (i == currentUnit->cycleCurrentStep) {
+	format("%s <<", stepName(currentUnit->cycle[i]).c_str());
+	}
+	else {
+	format("%s", stepName(currentUnit->cycle[i]).c_str());
+	}
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	SDL_Rect position = { xDisplacement + 20, 100 + i * 15, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
+	}
 
-			for (int i = 0; i < currentUnit->bag.size(); i++) {
-				format("%s", stepName(currentUnit->bag[i]).c_str());
-				message = TTF_RenderText_Solid(font, formated, textColor);
-				SDL_Rect position = { xDisplacement + 20, 400 + i * 15, 0, 0 };
-				SDL_BlitSurface(message, NULL, screenSurface, &position);
-				SDL_FreeSurface(message);
-			}
-		}
-		currentObject = currentObject->sharesTileWithObject;
-		xDisplacement += 150;
+	for (int i = 0; i < currentUnit->bag.size(); i++) {
+	format("%s", stepName(currentUnit->bag[i]).c_str());
+	message = TTF_RenderText_Solid(font, formated, textColor);
+	SDL_Rect position = { xDisplacement + 20, 400 + i * 15, 0, 0 };
+	SDL_BlitSurface(message, NULL, screenSurface, &position);
+	SDL_FreeSurface(message);
+	}
+	}
+	currentObject = currentObject->sharesTileWithObject;
+	xDisplacement += 150;
 	}
 	format("Time: %d", time);
 	message = TTF_RenderText_Solid(font, formated, textColor);
 	SDL_Rect position = { SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50, 0, 0 };
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
-#	ifdef DEBUG
+	#	ifdef DEBUG
 	format("Units: %d", debug_unitCount);
 	message = TTF_RenderText_Solid(font, formated, textColor);
 	position = { 20, SCREEN_HEIGHT - 50, 0, 0 };
 	SDL_BlitSurface(message, NULL, screenSurface, &position);
 	SDL_FreeSurface(message);
-#	endif*/
+	#	endif*/
 
 	/*if (selected != NULL) {
-		if (selected->objectType == objectUnit) {
-			Unit* selectedUnit = (Unit*)selected;
-			Unit* parent = selectedUnit->parent;
-			if (parent != NULL && parent->alive) {
-				if (abs(parent->x - selected->x) < SCREEN_WIDTH / 2 && 
-					abs(parent->y - selected->y) < SCREEN_WIDTH / 2 && 
-					abs(parent->z - selected->z) < SCREEN_HEIGHT / 2) {
-					
-				}
-			}
-		}
+	if (selected->objectType == objectUnit) {
+	Unit* selectedUnit = (Unit*)selected;
+	Unit* parent = selectedUnit->parent;
+	if (parent != NULL && parent->alive) {
+	if (abs(parent->x - selected->x) < SCREEN_WIDTH / 2 &&
+	abs(parent->y - selected->y) < SCREEN_WIDTH / 2 &&
+	abs(parent->z - selected->z) < SCREEN_HEIGHT / 2) {
+
+	}
+	}
+	}
 	}
 
 
@@ -247,7 +245,7 @@ void drawImage(Image* image, int x, int y) {
 	SDL_RenderCopy(gRenderer, image->t, NULL, &(image->position));
 }
 
-void graphics_draw_map() {	
+void graphics_draw_map() {
 	int sX, sY;
 
 	//This draws the floor, which is only tops instead of full blocks
@@ -430,11 +428,10 @@ void graphics_draw_map() {
 		}
 	}
 
-	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
 }
 
 void graphics_draw() {
-	//SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0, 0, 0));
 	SDL_RenderClear(gRenderer);
 	if (selected != NULL) {
 		viewX = selected->x - VIEW_WIDTH / 2;
