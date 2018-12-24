@@ -48,7 +48,7 @@ Image* resourceImages[RESOURCE_TYPES_IMAGES];
 vector<SDL_Texture*> images;
 
 int screenX[VIEW_WIDTH][VIEW_WIDTH];
-int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_WIDTH];
+int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_HEIGHT];
 int screenYfloor[VIEW_WIDTH][VIEW_WIDTH];
 
 TTF_Font* font = NULL;
@@ -139,7 +139,7 @@ bool graphics_init() {
 	for (int i = 0; i < VIEW_WIDTH; i++) {
 		for (int j = 0; j < VIEW_WIDTH; j++) {
 			screenX[i][j] = i * 6 - j * 6 + SCREEN_WIDTH / 2;
-			for (int k = 0; k < VIEW_WIDTH; k++) {
+			for (int k = 0; k < VIEW_HEIGHT; k++) {
 				screenY[i][j][k] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (k - VIEW_HEIGHT / 2) + SCREEN_HEIGHT / 2 - 5;
 			}
 			screenYfloor[i][j] = (i - VIEW_WIDTH / 2) * 4 + (j - VIEW_WIDTH / 2) * 4 - 6 * (0 - 1 - VIEW_HEIGHT / 2) + SCREEN_HEIGHT / 2 - 5;
@@ -210,25 +210,6 @@ void graphics_draw_text() {
 	drawText(20, SCREEN_HEIGHT - 50, "Units: %d", debug_unitCount);
 #	endif
 
-	if (selected != NULL) {
-		if (selected->objectType == objectUnit) {
-			Unit* selectedUnit = (Unit*)selected;
-			Unit* parent = selectedUnit->parent;
-			if (parent != NULL && parent->alive) {
-				if (abs(parent->x - selected->x) < SCREEN_WIDTH / 2 &&
-						abs(parent->y - selected->y) < SCREEN_WIDTH / 2 &&
-						abs(parent->z - selected->z) < SCREEN_HEIGHT / 2) {
-					int selectedX = screenX[selected->x][selected->y];
-					int selectedY = screenY[selected->x][selected->y][selected->z];
-					int parentX = screenX[parent->x][parent->y];
-					int parentY = screenY[parent->x][parent->y][parent->z];
-					SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-					SDL_RenderDrawLine(gRenderer, selectedX, selectedY, parentX, parentY); 
-				}
-			}
-		}
-	}
-
 	/*
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
 	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);*/
@@ -238,6 +219,31 @@ void drawImage(Image* image, int x, int y) {
 	image->position.x = x - image->wCenter;
 	image->position.y = y - image->hCenter;
 	SDL_RenderCopy(gRenderer, image->t, NULL, &(image->position));
+}
+
+void drawUnit(Unit* unit, int i, int j, int k) {
+	int sX = screenX[i][j];
+	int sY = screenY[i][j][k] + 4;
+	drawImage(unitImage[unit->resourceType], sX, sY);
+	if (unit->calculateWorth() > 100) {
+		drawImage(unitImage[unit->resourceType], sX, sY + 1);
+	}
+
+	//Draw connection to the parent
+	Unit* parent = unit->parent;
+	if (parent != NULL && parent->alive) {
+		if (parent->x - viewX >= 0 && parent->x - viewX < VIEW_WIDTH &&
+				parent->y - viewY >= 0 && parent->y - viewY < VIEW_WIDTH &&
+				parent->z - viewZ >= 0 && parent->z - viewZ < VIEW_HEIGHT) {
+			int unitX = screenX[unit->x - viewX][unit->y - viewY];
+			int unitY = screenY[unit->x - viewX][unit->y - viewY][unit->z - viewZ] + unitImage[0]->hCenter;
+			int parentX = screenX[parent->x - viewX][parent->y - viewY];
+			int parentY = screenY[parent->x - viewX][parent->y - viewY][parent->z - viewZ] + unitImage[0]->hCenter;
+			SDL_SetRenderDrawColor(gRenderer, 0xEE, 0xEE, 0xEE, 0xFF);
+			SDL_RenderDrawLine(gRenderer, unitX, unitY, parentX, parentY);
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+		}
+	}
 }
 
 void graphics_draw_map() {
@@ -290,13 +296,7 @@ void graphics_draw_map() {
 							while (current != NULL) {
 								if (current->type() == objectUnit) {
 									Unit* unit = (Unit*)current;
-									sY = screenY[i][j][k] + 4;
-									drawImage(unitImage[unit->resourceType], sX, sY);
-									if (unit->calculateWorth() > 100) {
-										sY = screenY[i][j][k] + 1;
-										drawImage(unitImage[unit->resourceType], sX, sY);
-									}
-									sY = screenY[i][j][k];
+									drawUnit(unit, i, j, k);
 								}
 								else if (current->type() == objectResource) {
 									Resource* resource = (Resource*)current;

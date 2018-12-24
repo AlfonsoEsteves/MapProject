@@ -4,6 +4,6 @@ For this first version,
 
 A subgoal is to have procedurally generated behaviour.
 
-another subgoal is trying to have both:
+Another subgoal is trying to have both:
   groups of units that settle in a good place
   groups of units that migrate (but the group remains)

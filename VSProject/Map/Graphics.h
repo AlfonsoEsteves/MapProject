@@ -24,5 +24,5 @@ string stepName(int step);
 unsigned char safeTilesMap(int x, int y, int z);
 
 extern int screenX[VIEW_WIDTH][VIEW_WIDTH];
-extern int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_WIDTH];
+extern int screenY[VIEW_WIDTH][VIEW_WIDTH][VIEW_HEIGHT];
 

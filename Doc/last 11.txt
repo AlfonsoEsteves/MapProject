@@ -1,0 +1,6 @@
+voy a mostrar las relaciones de todos
+
+y despues voy a proibir que un hijo se aleje mucho de un padre
+
+
+podria hacer que si una unidad no tiene padra agarre un padre cualquiera cuando le de un recurso
