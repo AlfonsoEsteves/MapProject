@@ -4,8 +4,11 @@ notar que meti un rand()%3 para que no siempre comer un recurso sea exitoso
 
 
 
-tengo que:
-  hacer que toda la info de una unidad se imprima en una columna
+
+y despues voy a proibir que un hijo se aleje mucho de un padre
+
+
+podria hacer que si una unidad no tiene padra agarre un padre cualquiera cuando le de un recurso
   imprimir varias columnas si hay varias unidades
 
 
@@ -13,4 +16,9 @@ tengo que:
 
 
 
-hacer que se dibuje una linea entre una unidad y si padre
+las unidades que no tienen instrucciones complejas ni tienen sentido que tengan padre
+  de hecho sola las unidades que tienen un give les sirve tener un padra
+
+
+capas lo mejor es hacer que solo las unidades que tienen give tengan un padre
+  y si tiene mas de un give, solo el primero se setea de entrada, los demas empiesan en NULL y se setean con el primero que encuentre
