@@ -1,0 +1,9 @@
+I am gonna remove the fact that units can eat each other
+
+Now they will be able to attack the types they don't like
+
+
+
+
+for the time being resource type and unit type won't have any connection
+I am ussing the same colors just to avoid changing the sprites
