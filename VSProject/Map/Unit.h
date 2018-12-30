@@ -104,7 +104,7 @@ public:
 
 	//bool dummyMovementSeemsFine;
 
-	Unit(int _x, int _y, int _z, int _life, Unit* _parent);
+	Unit(int _x, int _y, int _z, int _life, Unit* _parent, int _resourceType);
 	~Unit();
 	void execute();
 	void addRandomStepToCycle();
@@ -112,7 +112,7 @@ public:
 	void nextStep();
 	unsigned char type();
 	void initializeUnit();
-	void adjustResourceType();
+	//void adjustResourceType();
 	int calculateWorth();
 	void newInstruction();
 	void giveResource(Unit* taker);

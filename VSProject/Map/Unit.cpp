@@ -4,13 +4,17 @@
 int debug_unitCount = 0;
 #endif
 
-Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit, _x, _y, _z)
+Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent, int _resourceType) : Object(objectUnit, _x, _y, _z)
 {
 	life = _life;
 	parent = _parent;
+	if (parent == NULL) {
+		resourceType = _resourceType;
+	}
 	childs = 0;
 	inBucket = true;
 	destinationObject = NULL;
+
 
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
@@ -18,9 +22,6 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit
 	slowness = 2 + rand() % 6;
 
 	objects[(time + (rand() % slowness)) % BUCKETS].push_back(this);
-
-	//This is needed because the method addStepToCycle needs the resourceType preset
-	resourceType = rand() % RESOURCE_TYPES;
 
 	if (parent == NULL) {
 		for (int i = 0; i < RESOURCE_TYPES; i++) {
@@ -31,10 +32,15 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit
 				hate[i] = true;
 			}
 		}
+		hate[resourceType] = false;
 	}
 	else {
 		for (int i = 0; i < RESOURCE_TYPES; i++) {
 			hate[i] = parent->hate[i];
+		}
+		resourceType = rand() % RESOURCE_TYPES;
+		while (hate[resourceType]) {
+			resourceType = (resourceType + 1) % RESOURCE_TYPES;
 		}
 	}
 
@@ -55,7 +61,6 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit
 
 void Unit::initializeUnit() {
 	cycleCurrentStep = 0;
-	adjustResourceType();
 	initializeStep();
 	addToTile();
 }
@@ -128,7 +133,6 @@ void Unit::execute() {
 		if (rand() % 2 == 0 && cycleLength < MAX_CYCLE_LENGTH) {
 			life = LIFE;
 			addRandomStepToCycle();
-			adjustResourceType();
 		}
 		else {
 			alive = false;
@@ -174,7 +178,7 @@ void Unit::createUnit() {
 		int newLife = sqrt(life * alpha * alpha) + 1 - alpha;
 		if (newLife > 0) {
 			childs++;
-			Unit * unit = new Unit(x, y, z, newLife, this);
+			Unit * unit = new Unit(x, y, z, newLife, this, -1);
 			for (int i = 0; i < bag.size(); i++) {
 				unit->cycle[i] = bag[i];
 			}
@@ -212,7 +216,7 @@ void Unit::addRandomStepToCycle() {
 		cycleCurrentStep++;
 	}
 }
-
+/*
 void Unit::adjustResourceType() {
 	if (cycleLength == 1) {
 		resourceType = (cycle[0] + 1) % RESOURCE_TYPES;
@@ -248,7 +252,7 @@ void Unit::adjustResourceType() {
 		}
 	}
 	hasToResetPath = true;
-}
+}*/
 
 #define INITIAL_WORTH 80
 #define RESOURCE_WORTH 30

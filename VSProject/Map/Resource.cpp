@@ -29,7 +29,7 @@ void Resource::execute() {
 			if (current->type() == objectResource) {
 				Resource* currentResource = (Resource*)current;
 				if (currentResource->resourceType == resourceType) {
-					Unit* unit = new Unit(x, y, z, LIFE, NULL);
+					Unit* unit = new Unit(x, y, z, LIFE, NULL, resourceType);
 
 					//This line will depend on the implementation of the resourceType assignment of units
 					unit->cycle[0] = (resourceType - 1 + RESOURCE_TYPES) % RESOURCE_TYPES;
