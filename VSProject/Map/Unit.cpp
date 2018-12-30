@@ -22,6 +22,22 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent) : Object(objectUnit
 	//This is needed because the method addStepToCycle needs the resourceType preset
 	resourceType = rand() % RESOURCE_TYPES;
 
+	if (parent == NULL) {
+		for (int i = 0; i < RESOURCE_TYPES; i++) {
+			if (rand() % 4 == 0) {
+				hate[i] = false;
+			}
+			else {
+				hate[i] = true;
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < RESOURCE_TYPES; i++) {
+			hate[i] = parent->hate[i];
+		}
+	}
+
 #	ifdef DEBUG
 	cycleCurrentStep = 0;
 	baseDestinationArea = NULL;
