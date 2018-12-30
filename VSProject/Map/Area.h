@@ -14,7 +14,7 @@ public:
 	Chunk * chunk;
 	Area * superArea;
 	vector<Area*> adjacentAreas;
-	int resources[RESOURCE_TYPES * 2];
+	int resources[RESOURCE_TYPES * 3];
 
 	//These variable is only used by the pathfinding algorithm
 	Unit* lastCheckedByUnit;

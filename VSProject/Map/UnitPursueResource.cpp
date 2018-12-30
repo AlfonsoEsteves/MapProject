@@ -147,26 +147,24 @@ bool Unit::checkReachedResourceSearch() {
 
 				return true;
 			}
-			if (currentUnit->resourceType == resourceSearchStatus) {
-				if (life >= currentUnit->life) {
-					life -= currentUnit->life;
-					pickUpUnit = true;
-				}
-				else {
-					alive = false;
-					currentUnit->life -= life;
-				}
-			}
 		}
 		else if (current->type() == objectResource) {
+			Resource* currentResource = (Resource*)current;
+			if (currentResource->resourceType == resourceSearchStatus) {
 
 
-			if (rand() % 3 == 0) {
+
+				if (rand() % 3 == 0) {
 
 
-				Resource* currentResource = (Resource*)current;
-				if (currentResource->resourceType == resourceSearchStatus) {
-					pickUpUnit = true;
+
+					current->removeFromTile();
+					current->alive = false;
+					aquireResource();
+					return true;
+
+
+
 				}
 
 
@@ -177,15 +175,6 @@ bool Unit::checkReachedResourceSearch() {
 				current->alive = false;
 				return false;
 			}
-		}
-		if (pickUpUnit) {
-			current->removeFromTile();
-			current->alive = false;
-			aquireResource();
-			return true;
-		}
-		if (!alive) {
-			return true;
 		}
 		current = current->sharesTileWithObject;
 	}

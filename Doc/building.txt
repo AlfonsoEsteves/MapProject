@@ -1,0 +1,2 @@
+based on the id of a unit (or its parent), 
+  it tries to create a pseudo random fortress/maze

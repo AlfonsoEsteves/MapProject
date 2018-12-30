@@ -62,7 +62,6 @@ Unit::~Unit(){
 
 void Unit::addToTileExtra() {
 	Area* area = areasMap[x][y][z];
-	area->increaseResource(resourceType);
 	if (resourceSearchStatus != -1) {
 		if (resourceSearchStatus < RESOURCE_TYPES) {
 			area->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
@@ -75,7 +74,6 @@ void Unit::addToTileExtra() {
 
 void Unit::removeFromTileExtra() {
 	Area* area = areasMap[x][y][z];
-	area->decreaseResource(resourceType);
 	if (resourceSearchStatus != -1) {
 		if (resourceSearchStatus < RESOURCE_TYPES) {
 			//The unit was looking for a resource
