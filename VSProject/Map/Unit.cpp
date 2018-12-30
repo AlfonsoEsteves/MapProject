@@ -43,6 +43,12 @@ Unit::Unit(int _x, int _y, int _z, int _life, Unit* _parent, int _resourceType) 
 			resourceType = (resourceType + 1) % RESOURCE_TYPES;
 		}
 	}
+	friendTypes = 0;
+	for (int i = 0; i < RESOURCE_TYPES; i++) {
+		if (!hate[i]) {
+			friendTypes++;
+		}
+	}
 
 #	ifdef DEBUG
 	cycleCurrentStep = 0;
@@ -129,7 +135,11 @@ void Unit::execute() {
 	removeFromTile();
 
 	life--;
-	if (life == 0) {
+	if (rand() % RESOURCE_TYPES < friendTypes) {
+		life -= 2;
+	}
+
+	if (life <= 0) {
 		if (rand() % 2 == 0 && cycleLength < MAX_CYCLE_LENGTH) {
 			life = LIFE;
 			addRandomStepToCycle();
@@ -261,7 +271,7 @@ void Unit::adjustResourceType() {
 #define RESOURCE_WORTH 30
 #define INSTRUCTION_WORTH 60
 #define LINEAR_FACTOR 30
-#define WORTH_DIVISOR 400
+#define WORTH_DIVISOR 420
 
 int Unit::calculateWorth() {
 	int worth = INITIAL_WORTH;

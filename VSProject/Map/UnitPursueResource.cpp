@@ -165,8 +165,8 @@ bool Unit::checkReachedResourceSearch() {
 
 
 
-					printf("%d\n", id);
-					selected = currentUnit;
+					//printf("%d\n", id);
+					//selected = currentUnit;
 
 
 

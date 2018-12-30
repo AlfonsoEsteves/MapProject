@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 129
+#define SEED 132
 
 #define UNIT_COUNT 100
 
@@ -43,12 +43,12 @@
 //If the unit exceeds this distance to its destination, it must be in a different area
 //#define DUMMY_MOVEMENT_TOWARDS_POINT_DISTANCE 12
 
-#define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 900)
+#define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 1000)
 #define	GENERATION_DURATION 800
 
 #define RESOURCE_TYPES 10
 
-#define FAST_FOWARD 5000
+#define FAST_FOWARD 12000
 //#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency

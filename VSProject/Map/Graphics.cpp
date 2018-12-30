@@ -411,10 +411,52 @@ void graphics_draw() {
 }
 
 void graphics_draw_minimap() {
-	SDL_Rect rect = { SCREEN_WIDTH - MAP_WIDTH / 3, 0, MAP_WIDTH / 3, MAP_WIDTH / 3 };
-	SDL_FillRect(screenSurface, &rect, 255);
-	SDL_Rect rect2 = { SCREEN_WIDTH - (MAP_WIDTH - viewX) / 3, viewY / 3, VIEW_WIDTH / 3, VIEW_WIDTH / 3 };
-	SDL_FillRect(screenSurface, &rect2, 10000);
+	int ratio = 3;
+	SDL_Rect rect = { SCREEN_WIDTH - MAP_WIDTH / ratio, 0, MAP_WIDTH / ratio, MAP_WIDTH / ratio };
+	SDL_FillRect(screenSurface, &rect, 120 * 256 * 256 + 120 * 256 + 120);
+	SDL_Rect rect2 = { SCREEN_WIDTH - (MAP_WIDTH - viewX) / ratio, viewY / ratio, VIEW_WIDTH / ratio, VIEW_WIDTH / ratio };
+	SDL_FillRect(screenSurface, &rect2, 136 * 256 * 256 + 136 * 256 + 136);
+
+	for (int i = 0; i < 10; i++) {
+		for (std::list<Object*>::iterator it = objects[(time + i) % BUCKETS].begin(); it != objects[(time + i) % BUCKETS].end(); it++) {
+			Object* object = *it;
+			if (object->objectType == objectUnit) {
+				Unit* unit = (Unit*)object;
+				if (unit->resourceType == 0) {
+					SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0);
+				}
+				else if (unit->resourceType == 1) {
+					SDL_SetRenderDrawColor(gRenderer, 255, 255, 0, 0);
+				}
+				else if (unit->resourceType == 2) {
+					SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 0);
+				}
+				else if (unit->resourceType == 3) {
+					SDL_SetRenderDrawColor(gRenderer, 0, 255, 255, 0);
+				}
+				else if (unit->resourceType == 4) {
+					SDL_SetRenderDrawColor(gRenderer, 0, 0, 255, 0);
+				}
+				else if (unit->resourceType == 5) {
+					SDL_SetRenderDrawColor(gRenderer, 255, 0, 255, 0);
+				}
+				else if (unit->resourceType == 6) {
+					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+				}
+				else if (unit->resourceType == 7) {
+					SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
+				}
+				else if (unit->resourceType == 8) {
+					SDL_SetRenderDrawColor(gRenderer, 255, 126, 0, 0);
+				}
+				else if (unit->resourceType == 9) {
+					SDL_SetRenderDrawColor(gRenderer, 160, 207, 112, 0);
+				}
+				SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH - (MAP_WIDTH - unit->x) / ratio, unit->y / ratio);
+			}
+		}
+	}
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 }
 
 void graphics_close()

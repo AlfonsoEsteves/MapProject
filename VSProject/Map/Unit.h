@@ -59,6 +59,7 @@ public:
 	int life;
 
 	bool hate[RESOURCE_TYPES];
+	int friendTypes;
 
 	int slowness;//The amount of turns the unit has to wait after moving
 
