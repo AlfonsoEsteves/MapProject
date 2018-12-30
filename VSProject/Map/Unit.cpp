@@ -78,7 +78,7 @@ Unit::~Unit(){
 
 void Unit::addToTileExtra() {
 	Area* area = areasMap[x][y][z];
-	//area->increaseResource(RESOURCE_TYPES * 2 + resourceType);
+	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].addUnit(this);
 	if (resourceSearchStatus != -1) {
 		if (resourceSearchStatus < RESOURCE_TYPES) {
 			area->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
@@ -91,7 +91,7 @@ void Unit::addToTileExtra() {
 
 void Unit::removeFromTileExtra() {
 	Area* area = areasMap[x][y][z];
-	///area->decreaseResource(RESOURCE_TYPES * 2 + resourceType);
+	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].removeUnit(this);
 	if (resourceSearchStatus != -1) {
 		if (resourceSearchStatus < RESOURCE_TYPES) {
 			//The unit was looking for a resource
@@ -120,7 +120,7 @@ void Unit::execute() {
 		error("A unit can not have less than 0 life");
 	}
 #	endif
-
+	
 	removeFromTile();
 
 	life--;

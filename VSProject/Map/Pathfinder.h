@@ -2,12 +2,15 @@
 
 #include "Unit.h"
 #include "Map.h"
+#include "NearZone.h"
 
 extern Unit* tileWasLastCheckedByUnit[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];//It indicates the last unit that checked a tile
 extern int tileWasLastCheckedAtTime[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];//It indicates the last time a tile was checked
 extern Area * areasMap[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];//It indicates the area to which each tile belongs
 
 extern Chunk**** chunks[LEVELS];
+
+extern NearZone nearZones[MAP_WIDTH / NEAR_ZONE_DISTANCE][MAP_WIDTH / NEAR_ZONE_DISTANCE];
 
 struct PFTile {
 	int x, y, z;

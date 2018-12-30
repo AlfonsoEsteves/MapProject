@@ -20,6 +20,8 @@ Area * areasMap[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];
 
 Chunk**** chunks[LEVELS];
 
+NearZone nearZones[MAP_WIDTH / NEAR_ZONE_DISTANCE][MAP_WIDTH / NEAR_ZONE_DISTANCE];
+
 PFTile circularArrayOfTiles[CIRCULAR_ARRAY_OF_TILES];
 Area* circularArrayOfAreas[CIRCULAR_ARRAY_OF_AREAS];
 int circularArrayStart;
