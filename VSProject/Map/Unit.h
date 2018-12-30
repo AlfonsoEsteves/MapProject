@@ -120,4 +120,5 @@ public:
 	void addToTileExtra();
 	void removeFromTileExtra();
 	bool providesResource(char _resourceType);
+	Unit* findNearEnemy();
 };

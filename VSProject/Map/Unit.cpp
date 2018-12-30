@@ -139,6 +139,9 @@ void Unit::execute() {
 			return;
 		}
 	}
+
+	destinationObject = findNearEnemy();
+
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		pursueResource();
 	}
@@ -175,7 +178,7 @@ void Unit::execute() {
 void Unit::createUnit() {
 	if (bag.size() > 0) {
 		int alpha = 6;
-		int newLife = sqrt(life * alpha * alpha) + 1 - alpha;
+		int newLife = (int)(sqrt(life * alpha * alpha) + 1 - alpha);
 		if (newLife > 0) {
 			childs++;
 			Unit * unit = new Unit(x, y, z, newLife, this, -1);
@@ -308,4 +311,42 @@ bool Unit::providesResource(char _resourceType) {
 		}
 	}
 	return false;
+}
+
+Unit* Unit::findNearEnemy() {
+	Unit* nearestEnemy = NULL;
+	int nearestDistance = NEAR_ZONE_DISTANCE;
+	int xB = x / NEAR_ZONE_DISTANCE - 1;
+	if (xB < 0) {
+		xB = 0;
+	}
+	int xE = x / NEAR_ZONE_DISTANCE + 1;
+	if (xE >= MAP_WIDTH / NEAR_ZONE_DISTANCE) {
+		xE = MAP_WIDTH / NEAR_ZONE_DISTANCE - 1;
+	}
+	int yB = y / NEAR_ZONE_DISTANCE - 1;
+	if (yB < 0) {
+		yB = 0;
+	}
+	int yE = y / NEAR_ZONE_DISTANCE + 1;
+	if (yE >= MAP_WIDTH / NEAR_ZONE_DISTANCE) {
+		yE = MAP_WIDTH / NEAR_ZONE_DISTANCE - 1;
+	}
+	for (int i = xB; i <= xE; i++) {
+		for (int j = yB; j <= yE; j++) {
+			for (int r = 0; r < RESOURCE_TYPES; r++) {
+				if (hate[r]) {
+					for (int k = 0; k < nearZones[i][j].units[r].size(); k++) {
+						Unit* unit = nearZones[i][j].units[r][k];
+						int dist = abs(x - unit->x) + abs(y - unit->y);
+						if (dist < nearestDistance) {
+							nearestDistance = dist;
+							nearestEnemy = unit;
+						}
+					}
+				}
+			}
+		}
+	}
+	return nearestEnemy;
 }

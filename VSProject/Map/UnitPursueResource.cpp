@@ -130,6 +130,8 @@ bool Unit::checkReachedResourceSearch() {
 				currentUnit->addToTile();
 
 
+
+
 				if (currentUnit->parent == this) {
 					currentUnit->life += 200;
 					life += 300;
