@@ -46,7 +46,7 @@
 
 #define RESOURCE_TYPES 8
 
-#define FAST_FOWARD 1000
+#define FAST_FOWARD 600
 //#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
