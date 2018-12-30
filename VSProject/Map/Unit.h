@@ -64,7 +64,7 @@ public:
 
 	Unit* parent;
 	int childs;
-	Object* destinationObject;//The unit can be moving towards its parent
+	Unit* destinationObject;//The unit can be moving towards its parent
 	
 	//Whether the unit is is a bucket or not
 	//If the last child of a dead unit dies, the unit can be deleted only if it is not in a bucket

@@ -77,13 +77,32 @@ void Unit::pursueResource() {
 }
 
 bool Unit::checkReachedResource() {
+	if (destinationObject != NULL && destinationObject != parent) {
+		if (destinationObject->x == x && destinationObject->y == y && destinationObject->z == z) {
+			int auxLife = life;
+			if (destinationObject->life <= life) {
+				destinationObject->alive = false;
+				destinationObject->removeFromTile();
+				life -= destinationObject->life;
+			}
+			if (auxLife <= destinationObject->life) {
+				alive = false;
+				destinationObject->life -= auxLife;
+			}
+			return true;
+		}
+	}
+
+
 	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
 		return checkReachedResourceSearch();
 	}
 	else {
-		if (cycle[cycleCurrentStep]  % 2 != INSTRUCTION_GIVE_RESOURCE) {
+#		ifdef DEBUG
+		if (cycle[cycleCurrentStep] % 2 != INSTRUCTION_GIVE_RESOURCE) {
 			error("Wrong cycle instruction");
 		}
+#		endif
 		return checkReachedResourceGive();
 	}
 }
@@ -98,6 +117,13 @@ bool Unit::checkReachedResourceGive() {
 	while (current != NULL) {
 		if (current->objectType == objectUnit) {
 			Unit* currentUnit = (Unit*)current;
+
+
+
+			//aca podria chequear que si le quire dar al padre, solo le de al padre y no a otros
+
+
+
 			if (currentUnit->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
 				currentUnit->removeFromTile();
 				giveResource(currentUnit);

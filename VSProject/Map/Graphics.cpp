@@ -199,7 +199,15 @@ void graphics_draw_text() {
 			}
 
 			for (int i = 0; i < currentUnit->bag.size(); i++) {
-				drawText(xDisplacement + 20, 400 + i * 15, "%s", stepName(currentUnit->bag[i]).c_str());
+				drawText(xDisplacement + 20, 370 + i * 15, "%s", stepName(currentUnit->bag[i]).c_str());
+			}
+
+			int friendTypes = 0;
+			for (int i = 0; i < RESOURCE_TYPES; i++) {
+				if (!currentUnit->hate[i]) {
+					drawText(xDisplacement + 20, 500 + friendTypes * 15, "%s", stepName(i).c_str());
+					friendTypes++;
+				}
 			}
 		}
 		currentObject = currentObject->sharesTileWithObject;

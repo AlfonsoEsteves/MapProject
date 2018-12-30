@@ -1,14 +1,14 @@
 #pragma once
 
-#define SEED 128
+#define SEED 129
 
 #define UNIT_COUNT 100
 
-/*#define MAP_WIDTH 875 //7*5*5*5
+#define MAP_WIDTH 875 //7*5*5*5
 #define MAP_HEIGHT 35 //7*5
 
 #define BASE_CHUNK_SIZE 7
-#define SUPER_CHUNK_SIZE 5*/
+#define SUPER_CHUNK_SIZE 5
 
 /*#define MAP_WIDTH 750 //6*5*5*5
 #define MAP_HEIGHT 30 //6*5
@@ -22,11 +22,11 @@
 #define BASE_CHUNK_SIZE 7
 #define SUPER_CHUNK_SIZE 4*/
 
-#define MAP_WIDTH 384 //6*4*4*4
+/*#define MAP_WIDTH 384 //6*4*4*4
 #define MAP_HEIGHT 24 //6*4
 
 #define BASE_CHUNK_SIZE 6
-#define SUPER_CHUNK_SIZE 4
+#define SUPER_CHUNK_SIZE 4*/
 
 #define NEAR_ZONE_DISTANCE (BASE_CHUNK_SIZE * SUPER_CHUNK_SIZE)
 
@@ -46,7 +46,7 @@
 #define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 900)
 #define	GENERATION_DURATION 800
 
-#define RESOURCE_TYPES 8
+#define RESOURCE_TYPES 10
 
 #define FAST_FOWARD 5000
 //#define CALCULATE_HASH_AT_TIME 5001
