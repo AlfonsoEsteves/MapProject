@@ -2,13 +2,7 @@
 
 #include <vector>
 
-#define INSTRUCTION_NEW_INSTRUCTION 0
-#define INSTRUCTION_GIVE_RESOURCE 1
-#define INSTRUCTIONS (RESOURCE_TYPES * 2)
-
 #define LIFE 220
-
-#define MAX_CYCLE_LENGTH 15
 
 #define PATH_NOT_FOUND -1
 #define PATH_OUTDATED -2
@@ -22,10 +16,8 @@ class Area;
 class Unit : public Object{
 private:
 	bool checkReachedResource();
-	bool checkReachedResourceGive();
 	bool checkReachedResourceSearch();
 	void pursueResource();
-	void createUnit();
 
 	//Pathfinding towards point
 	int resetPathTowardsObject();
@@ -54,12 +46,7 @@ private:
 #	endif
 
 public:
-	char resourceType;
-
 	int life;
-
-	bool hate[RESOURCE_TYPES];
-	int friendTypes;
 
 	int slowness;//The amount of turns the unit has to wait after moving
 
@@ -71,16 +58,12 @@ public:
 	//If the last child of a dead unit dies, the unit can be deleted only if it is not in a bucket
 	//If it is in a bucket, the main loop will take care of deleting it
 	bool inBucket;
-	
-	char cycle[MAX_CYCLE_LENGTH];
-	char cycleLength;
-	char cycleCurrentStep;
 
 	//If this var is less than RESOURCE_TYPES, then it measn the unit is looking for that resource
 	//If it is grater, then it means the unit is trying to give that resource
 	char resourceSearchStatus;
 
-	std::vector<char> bag;
+	char carrying;
 
 	//Pathfinding vars
 	bool hasToResetPath;
@@ -105,21 +88,16 @@ public:
 
 	//bool dummyMovementSeemsFine;
 
-	Unit(int _x, int _y, int _z, int _life, Unit* _parent, int _resourceType);
+	Unit(int _x, int _y, int _z, int _life);
 	~Unit();
 	void execute();
-	void addRandomStepToCycle();
+	void randomModification();
 	void initializeStep();
 	void nextStep();
 	unsigned char type();
 	void initializeUnit();
-	//void adjustResourceType();
-	int calculateWorth();
-	void newInstruction();
-	void giveResource(Unit* taker);
 	void aquireResource();
 	void addToTileExtra();
 	void removeFromTileExtra();
-	bool providesResource(char _resourceType);
 	Unit* findNearEnemy();
 };

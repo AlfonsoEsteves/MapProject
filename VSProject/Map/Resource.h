@@ -12,6 +12,5 @@ public:
 	unsigned char type();
 	void addToTileExtra();
 	void removeFromTileExtra();
-	bool providesResource(char _resourceType);
 };
 

@@ -1,0 +1,40 @@
+las secuencias no funcionarol at all
+
+voy a hacer que las unidades tengan necesidades basicas medias y complejas
+
+
+
+
+estaria bueno que si se mata al lider, los hijos se peleen
+
+
+
+las unidades no van a tener mas color
+
+
+
+cada unidad tiene predeterminado su tipo de hijo
+
+cuando se crea una unidad esta queda libre para que venga alguin y la "adopte"
+  lo que le setea las necesidades
+
+Si una unidad ya fue adoptada no puede volver a ser adoptada devuelta por mas que su padre muera, ya que esto implicaria resetearla
+
+
+si una unidad muere de hambre puede cambiar sus preferencias o desaparecer
+  es random
+
+
+
+si una unidad tiene mas vida que su padre, va y le da vida a su padra
+  queda con un tercio del total y el padre queda con 2 tercios del total
+
+
+
+
+
+la manera de pasarse recursos va a ser dejandolos en depositos... o capas tambien soltandolos en el suelo cerca del padre
+
+
+
+

@@ -4,7 +4,7 @@
 class NearZone
 {
 public:
-	vector<Unit*> units[RESOURCE_TYPES];
+	vector<Unit*> units;
 
 	NearZone();
 	~NearZone();

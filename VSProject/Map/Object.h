@@ -32,7 +32,6 @@ public:
 	void virtual addToTileExtra() {}
 	void removeFromTile();
 	void virtual removeFromTileExtra() {}
-	bool virtual providesResource(char _resourceType) = 0;
 
 #	ifdef DEBUG
 	void checkTileIsOccupiedByAliveObjects();
