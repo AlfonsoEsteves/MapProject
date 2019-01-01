@@ -90,18 +90,23 @@ bool Unit::checkReachedGoal() {
 				alive = false;
 				destinationObject->life -= auxLife;
 			}
+			/*
+			//Reset pathfinding
+			hasToResetPath = true;
+			destinationObject = NULL;*/
+
 			return true;
 		}
 	}
 
-	checkReachedResourceSearch();
+	//Checks if it reached a resource
+	return checkReachedResourceSearch();
 
 }
 
 bool Unit::checkReachedResourceSearch() {
 	Object* current = unitsMap[x][y][z];
 	while (current != NULL) {
-		bool pickUpUnit = false;
 		if (current->type() == objectResource) {
 			Resource* currentResource = (Resource*)current;
 			bool rightResource = false;
@@ -118,24 +123,28 @@ bool Unit::checkReachedResourceSearch() {
 				current->alive = false;
 				if (consuming) {
 					life += LIFE;
+					if (currentResource->resourceType > RESOURCE_TYPES) {
+						life += LIFE;
+						if (currentResource->resourceType > RESOURCE_TYPES * 2) {
+							life += LIFE;
+						}
+					}
+					resetActivity();
+					return true;
 				}
 				else {
 					if (carrying == NO_RESOURCE && storingResource > RESOURCE_TYPES) {
 						carrying = currentResource->resourceType;
+						life += LIFE * 3;
 					}
 					else {//It stores the resource (for the time being it just drops it)
 						carrying = NO_RESOURCE;
 						Resource* resource = new Resource(x, y, z, storingResource);
 						resource->addToTile();
+						resetActivity();
 					}
-					resetActivity();
 					return true;
 				}
-			}
-			else {
-				current->removeFromTile();
-				current->alive = false;
-				return false;
 			}
 		}
 		current = current->sharesTileWithObject;

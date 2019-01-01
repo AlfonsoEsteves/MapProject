@@ -190,7 +190,14 @@ void graphics_draw_text() {
 			drawText(xDisplacement + 20, 40, "Unit's life: %d", currentUnit->life);
 
 			for (int i = 0; i < RESOURCE_CATEGORIES; i++) {
-				drawText(xDisplacement + 20, 100 + i * 15, "%s", stepName(currentUnit->desiredResources[i]).c_str());
+				drawText(xDisplacement + 20, 100 + i * 15, "%s", stepName(currentUnit->desiredResources[i] + RESOURCE_TYPES * i).c_str());
+			}
+
+			if (currentUnit->consuming) {
+				drawText(xDisplacement + 20, 350, "consume");
+			}
+			else {
+				drawText(xDisplacement + 20, 350, "store");
 			}
 
 			if(currentUnit->carrying != NO_RESOURCE) {
@@ -307,7 +314,14 @@ void graphics_draw_map() {
 								}
 								else if (current->type() == objectResource) {
 									Resource* resource = (Resource*)current;
-									drawImage(resourceImages[resource->resourceType], sX, sY);
+									Image* image = resourceImages[resource->resourceType % RESOURCE_TYPES];
+									drawImage(image, sX, sY);
+									if (resource->resourceType > RESOURCE_TYPES) {
+										drawImage(image, sX, sY - 2);
+										if (resource->resourceType > RESOURCE_TYPES * 2) {
+											drawImage(image, sX, sY - 4);
+										}
+									}
 								}
 								current = current->sharesTileWithObject;
 							}
@@ -471,29 +485,40 @@ void graphics_close()
 }
 
 string stepName(int step) {
+	string str;
 	switch (step % RESOURCE_TYPES) {
 	case 0:
-		return "red" + step;
+		str = "red";
+		break;
 	case 1:
-		return "yellow" + step;
+		str = "yellow";
+		break;
 	case 2:
-		return "green" + step;
+		str = "green";
+		break;
 	case 3:
-		return "sky" + step;
+		str = "sky";
+		break;
 	case 4:
-		return "blue" + step;
+		str = "blue";
+		break;
 	case 5:
-		return "purple" + step;
+		str = "purple";
+		break;
 	case 6:
-		return "black" + step;
+		str = "black";
+		break;
 	case 7:
-		return "white" + step;
+		str = "white";
+		break;
 	case 8:
-		return "orange" + step;
+		str = "orange";
+		break;
 	case 9:
-		return "dirt" + step;
+		str = "dirt";
+		break;
 	}
-	return NULL;
+	return str + std::to_string(step);
 }
 
 unsigned char safeTilesMap(int x, int y, int z) {
