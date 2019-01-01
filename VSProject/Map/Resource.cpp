@@ -29,26 +29,11 @@ void Resource::execute() {
 			if (current->type() == objectResource) {
 				Resource* currentResource = (Resource*)current;
 				if (currentResource->resourceType == resourceType) {
-					Unit* unit = new Unit(x, y, z, LIFE, NULL, resourceType);
-
-					//This line will depend on the implementation of the resourceType assignment of units
-					unit->cycle[0] = (resourceType - 1 + RESOURCE_TYPES) % RESOURCE_TYPES;
-					unit->cycleLength = 1;
-					unit->initializeUnit();
-#					ifdef DEBUG
-					if (unit->resourceType != resourceType) {
-						error("When 2 resources merge they should create a unit of the same type as the resources");
-					}
-#					endif
-
+					Unit* unit = new Unit(x, y, z, LIFE, -1);
+					unit->addToTile();
 					current->removeFromTile();
 					current->alive = false;
 					alive = false;
-#					ifdef DEBUG
-					if (unit->resourceType != resourceType) {
-						error("When 2 resources of the same type collide they should create a unit of the same type");
-					}
-#					endif
 					return;
 				}
 			}
@@ -58,15 +43,6 @@ void Resource::execute() {
 
 	addToTile();
 	objects[(time +  RESOURCE_SLOWNESS) % BUCKETS].push_back(this);
-}
-
-bool Resource::providesResource(char _resourceType) {
-	if (_resourceType == resourceType) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
 void Resource::addToTileExtra() {

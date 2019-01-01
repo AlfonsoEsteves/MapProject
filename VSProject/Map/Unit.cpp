@@ -4,7 +4,7 @@
 int debug_unitCount = 0;
 #endif
 
-Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
+Unit::Unit(int _x, int _y, int _z, int _life, int parentSeed) : Object(objectUnit, _x, _y, _z)
 {
 	life = _life;
 	parent = NULL;
@@ -12,15 +12,30 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 	inBucket = true;
 	destinationObject = NULL;
 
+	if (parentSeed == -1) {
+		seed = rand() % MAX_SEED;
+	}
+	else {
+		seed = randFunction(parentSeed);
+	}
+
+	int aux = seed;
+	for (int i = 0; i < RESOURCE_CATEGORIES;i++) {
+		aux = randFunction(aux);
+		desiredResources[i] = aux % RESOURCE_TYPES;
+	}
+
 	for (int i = 0; i < LEVELS - 1; i++) {
 		destinationSuperAreas[i] = NULL;
 	}
 	slowness = 2 + rand() % 6;
 
+	consuming = false;
+	resetActivity();
+
 	objects[(time + (rand() % slowness)) % BUCKETS].push_back(this);
 
-#	ifdef DEBUG
-
+#	ifdef SAFE
 	baseDestinationArea = NULL;
 	hasToResetPath = true;
 #	endif
@@ -32,11 +47,6 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 		error("A unit can only occupy steppable tiles");
 	}
 #	endif
-}
-
-void Unit::initializeUnit() {
-	initializeStep();
-	addToTile();
 }
 
 Unit::~Unit(){
@@ -56,31 +66,11 @@ Unit::~Unit(){
 }
 
 void Unit::addToTileExtra() {
-	Area* area = areasMap[x][y][z];
 	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].addUnit(this);
-	if (resourceSearchStatus != -1) {
-		if (resourceSearchStatus < RESOURCE_TYPES) {
-			area->increaseResource(RESOURCE_TYPES + resourceSearchStatus);
-		}
-		else {
-			area->increaseResource(resourceSearchStatus - RESOURCE_TYPES);
-		}
-	}
 }
 
 void Unit::removeFromTileExtra() {
-	Area* area = areasMap[x][y][z];
 	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].removeUnit(this);
-	if (resourceSearchStatus != -1) {
-		if (resourceSearchStatus < RESOURCE_TYPES) {
-			//The unit was looking for a resource
-			area->decreaseResource(RESOURCE_TYPES + resourceSearchStatus);
-		}
-		else {
-			//The unit was trying to give a resource
-			area->decreaseResource(resourceSearchStatus - RESOURCE_TYPES);
-		}
-	}
 }
 
 unsigned char Unit::type() {
@@ -102,53 +92,17 @@ void Unit::execute() {
 	life--;
 
 	if (life <= 0) {
-		if (rand() % 2 == 0) {
-			life = LIFE;
-			randomModification();
-		}
-		else {
-			alive = false;
-			return;
-		}
+		alive = false;
+		return;
 	}
 
 	destinationObject = findNearEnemy();
 
-	pursueResource();
+	pursueGoal();
 
 	if (alive) {
 		addToTile();
 		objects[(time + slowness) % BUCKETS].push_back(this);
-	}
-}
-
-void Unit::randomModification() {
-	re implementar
-
-	int position = rand() % (cycleLength + 1);
-	for (int i = cycleLength; i > position; i--) {
-		cycle[i] = cycle[i - 1];
-	}
-	int instruction;
-	bool correct = false;
-	while(!correct){
-		instruction = (resourceType + rand() % (INSTRUCTIONS - 1) + 1) % INSTRUCTIONS;
-		if (instruction < RESOURCE_TYPES) {
-			correct = true;
-		}
-		if (instruction >= RESOURCE_TYPES) {
-			if (position > 0) {
-				if (cycle[position - 1] < RESOURCE_TYPES) {
-					correct = true;
-				}
-			}
-		}
-	}
-	cycle[position] = instruction;
-
-	cycleLength++;
-	if (position <= cycleCurrentStep) {
-		cycleCurrentStep++;
 	}
 }
 
@@ -186,4 +140,91 @@ Unit* Unit::findNearEnemy() {
 		}
 	}
 	return nearestEnemy;
+}
+
+Unit* Unit::master() {
+	if (parent == NULL) {
+		return this;
+	}
+	else {
+		return parent->master();
+	}
+}
+
+void Unit::resetActivity() {
+	storingResource = NO_RESOURCE;
+	searching1 = NO_RESOURCE;
+	searching2 = NO_RESOURCE;
+	carrying = NO_RESOURCE;
+	consuming = !consuming;
+	if (consuming) {
+		int r = rand() % RESOURCE_CATEGORIES;
+		searching1 = desiredResources[r] + RESOURCE_TYPES * r;
+	}
+	else {
+#		ifdef DEBUG
+		if (RESOURCE_CATEGORIES != 3) {
+			error("This implementation only works with RESOURCE_CATEGORIES=3");
+		}
+#		endif
+		int r = rand() % RESOURCE_CATEGORIES;
+		if (r == 0) {//First category resource
+			storingResource = desiredResources[0];
+			searching1 = storingResource;
+		}
+		else if (r == 1) {
+			r = rand() % 3;
+			if (r == 0) {//Second category resource
+				storingResource = desiredResources[1] + RESOURCE_TYPES;
+				searching1 = desiredResources[1];
+				searching2 = (desiredResources[1] + 1) % RESOURCE_TYPES;
+			}
+			else if (r == 1) {//First component
+				storingResource = desiredResources[1];
+				searching1 = storingResource;
+			}
+			else if (r == 2) {//Second component
+				storingResource = (desiredResources[1] + 1) % RESOURCE_TYPES;
+				searching1 = storingResource;
+			}
+		}
+		else if(r == 2) {
+			r = rand() % 7;
+			if (r == 0) {//Third category resource
+				storingResource = desiredResources[2] + RESOURCE_TYPES * 2;
+				searching1 = desiredResources[2] + RESOURCE_TYPES;
+				searching2 = desiredResources[2] + 2 + RESOURCE_TYPES;
+			}
+			else if (r == 1) {//First component
+				storingResource = desiredResources[2] + RESOURCE_TYPES;
+				searching1 = desiredResources[2];
+				searching2 = desiredResources[2] + 1;
+			}
+			else if (r == 2) {//Second component
+				storingResource = desiredResources[2] + 2 + RESOURCE_TYPES;
+				searching1 = desiredResources[2] + 2;
+				searching2 = desiredResources[2] + 3;
+			}
+			else if (r == 3) {//First component first subcomponent
+				storingResource = desiredResources[2];
+				searching1 = storingResource;
+			}
+			else if (r == 4) {//First component second subcomponent
+				storingResource = desiredResources[2] + 1;
+				searching1 = storingResource;
+			}
+			else if (r == 5) {//Second component first subcomponent
+				storingResource = desiredResources[2] + 2;
+				searching1 = storingResource;
+			}
+			else if (r == 6) {//Second component second subcomponent
+				storingResource = desiredResources[2] + 3;
+				searching1 = storingResource;
+			}
+		}
+	}
+
+	//Pathfinding stuff
+	hasToResetPath = true;
+	destinationObject = NULL;
 }

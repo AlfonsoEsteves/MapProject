@@ -189,25 +189,24 @@ void graphics_draw_text() {
 			Unit* currentUnit = (Unit*)currentObject;
 			drawText(xDisplacement + 20, 40, "Unit's life: %d", currentUnit->life);
 
-			for (int i = 0; i < currentUnit->cycleLength; i++) {
-				if (i == currentUnit->cycleCurrentStep) {
-					drawText(xDisplacement + 20, 100 + i * 15, "%s <<", stepName(currentUnit->cycle[i]).c_str());
-				}
-				else {
-					drawText(xDisplacement + 20, 100 + i * 15, "%s", stepName(currentUnit->cycle[i]).c_str());
-				}
+			for (int i = 0; i < RESOURCE_CATEGORIES; i++) {
+				drawText(xDisplacement + 20, 100 + i * 15, "%s", stepName(currentUnit->desiredResources[i]).c_str());
 			}
 
-			for (int i = 0; i < currentUnit->bag.size(); i++) {
-				drawText(xDisplacement + 20, 370 + i * 15, "%s", stepName(currentUnit->bag[i]).c_str());
+			if(currentUnit->carrying != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 370, "carrying %s", stepName(currentUnit->carrying).c_str());
 			}
 
-			int friendTypes = 0;
-			for (int i = 0; i < RESOURCE_TYPES; i++) {
-				if (!currentUnit->hate[i]) {
-					drawText(xDisplacement + 20, 500 + friendTypes * 15, "%s", stepName(i).c_str());
-					friendTypes++;
-				}
+			if (currentUnit->searching1 != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 390, "searching1 %s", stepName(currentUnit->searching1).c_str());
+			}
+
+			if (currentUnit->searching2 != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 410, "searching2 %s", stepName(currentUnit->searching2).c_str());
+			}
+
+			if (currentUnit->storingResource != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 430, "storing %s", stepName(currentUnit->storingResource).c_str());
 			}
 		}
 		currentObject = currentObject->sharesTileWithObject;
@@ -232,9 +231,9 @@ void drawImage(Image* image, int x, int y) {
 void drawUnit(Unit* unit, int i, int j, int k) {
 	int sX = screenX[i][j];
 	int sY = screenY[i][j][k] + 4;
-	drawImage(unitImage[unit->resourceType], sX, sY);
-	if (unit->calculateWorth() > 100) {
-		drawImage(unitImage[unit->resourceType], sX, sY + 1);
+	drawImage(unitImage[0], sX, sY);
+	if (unit->childs > 0) {
+		drawImage(unitImage[0], sX, sY + 1);
 	}
 
 	//Draw connection to the parent
@@ -422,7 +421,10 @@ void graphics_draw_minimap() {
 			Object* object = *it;
 			if (object->objectType == objectUnit) {
 				Unit* unit = (Unit*)object;
-				if (unit->resourceType == 0) {
+
+				SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
+
+				/*if (unit->resourceType == 0) {
 					SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0);
 				}
 				else if (unit->resourceType == 1) {
@@ -451,7 +453,7 @@ void graphics_draw_minimap() {
 				}
 				else if (unit->resourceType == 9) {
 					SDL_SetRenderDrawColor(gRenderer, 160, 207, 112, 0);
-				}
+				}*/
 				SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH - (MAP_WIDTH - unit->x) / ratio, unit->y / ratio);
 			}
 		}
@@ -469,37 +471,27 @@ void graphics_close()
 }
 
 string stepName(int step) {
-	if (step < RESOURCE_TYPES) {
-		switch (step) {
-		case 0:
-			return "red";
-		case 1:
-			return "yellow";
-		case 2:
-			return "green";
-		case 3:
-			return "sky";
-		case 4:
-			return "blue";
-		case 5:
-			return "purple";
-		case 6:
-			return "black";
-		case 7:
-			return "white";
-		case 8:
-			return "orange";
-		case 9:
-			return "dirt";
-		}
-	}
-	else {
-		switch (step % 2) {
-		case INSTRUCTION_NEW_INSTRUCTION:
-			return "NEW INSTRUCTION";
-		case INSTRUCTION_GIVE_RESOURCE:
-			return "SHIFT AND GIVE";
-		}
+	switch (step % RESOURCE_TYPES) {
+	case 0:
+		return "red" + step;
+	case 1:
+		return "yellow" + step;
+	case 2:
+		return "green" + step;
+	case 3:
+		return "sky" + step;
+	case 4:
+		return "blue" + step;
+	case 5:
+		return "purple" + step;
+	case 6:
+		return "black" + step;
+	case 7:
+		return "white" + step;
+	case 8:
+		return "orange" + step;
+	case 9:
+		return "dirt" + step;
 	}
 	return NULL;
 }

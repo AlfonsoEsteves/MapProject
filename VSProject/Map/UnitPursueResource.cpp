@@ -1,8 +1,8 @@
 #include "Common.h"
 
-void Unit::pursueResource() {
+void Unit::pursueGoal() {
 	//Remember that a resource can be created at any moment, so this is the first thing I should check
-	if (!checkReachedResource()) {
+	if (!checkReachedGoal()) {
 		int attemptedMovement = -1;
 		if (hasToResetPath) {
 			hasToResetPath = false;
@@ -68,7 +68,7 @@ void Unit::pursueResource() {
 		x = nextX;
 		y = nextY;
 
-		checkReachedResource();		
+		checkReachedGoal();
 
 		if (areasMap[x][y][z] == baseDestinationArea) {
 			reachedDestinationBaseArea = true;
@@ -76,8 +76,9 @@ void Unit::pursueResource() {
 	}
 }
 
-bool Unit::checkReachedResource() {
-	if (destinationObject != NULL && destinationObject != parent) {
+bool Unit::checkReachedGoal() {
+	//It checks if it has to attack
+	if (destinationObject != NULL) {
 		if (destinationObject->x == x && destinationObject->y == y && destinationObject->z == z) {
 			int auxLife = life;
 			if (destinationObject->life <= life) {
@@ -93,110 +94,43 @@ bool Unit::checkReachedResource() {
 		}
 	}
 
+	checkReachedResourceSearch();
 
-	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
-		return checkReachedResourceSearch();
-	}
-	else {
-#		ifdef DEBUG
-		if (cycle[cycleCurrentStep] % 2 != INSTRUCTION_GIVE_RESOURCE) {
-			error("Wrong cycle instruction");
-		}
-#		endif
-		return checkReachedResourceGive();
-	}
-}
-
-bool Unit::checkReachedResourceGive() {
-	if (bag.empty()) {
-		nextStep();
-		return true;
-	}
-
-	Object* current = unitsMap[x][y][z];
-	while (current != NULL) {
-		if (current->objectType == objectUnit) {
-			Unit* currentUnit = (Unit*)current;
-
-
-
-			//aca podria chequear que si le quire dar al padre, solo le de al padre y no a otros
-
-
-
-			if (currentUnit->resourceSearchStatus == resourceSearchStatus - RESOURCE_TYPES) {
-				currentUnit->removeFromTile();
-				giveResource(currentUnit);
-				currentUnit->addToTile();
-				return true;
-			}
-		}
-		current = current->sharesTileWithObject;
-	}
-	return false;
 }
 
 bool Unit::checkReachedResourceSearch() {
-#	ifdef DEBUG
-	if (resourceSearchStatus == -1) {
-		error("lookingForResource should not be -1");
-	}
-	if (resourceSearchStatus != cycle[cycleCurrentStep]) {
-		error("lookingForResource should be equal to the the current step");
-	}
-#	endif
 	Object* current = unitsMap[x][y][z];
 	while (current != NULL) {
 		bool pickUpUnit = false;
-		if (current->objectType == objectUnit) {
-			Unit* currentUnit = (Unit*)current;
-			if (currentUnit->resourceSearchStatus - RESOURCE_TYPES == resourceSearchStatus) {
-				currentUnit->removeFromTile();
-				currentUnit->giveResource(this);
-				currentUnit->addToTile();
-
-
-
-
-				if (currentUnit->parent == this) {
-					currentUnit->life += 200;
-					life += 300;
-
-
-
-
-					//printf("%d\n", id);
-					//selected = currentUnit;
-
-
-
-				}
-
-
-				return true;
-			}
-		}
-		else if (current->type() == objectResource) {
+		if (current->type() == objectResource) {
 			Resource* currentResource = (Resource*)current;
-			if (currentResource->resourceType == resourceSearchStatus) {
-
-
-
-				if (rand() % 3 == 0) {
-
-
-
-					current->removeFromTile();
-					current->alive = false;
-					aquireResource();
-					return true;
-
-
-
+			bool rightResource = false;
+			if (currentResource->resourceType == searching1) {
+				searching1 = NO_RESOURCE;
+				rightResource = true;
+			}
+			if (currentResource->resourceType == searching2) {
+				searching2 = NO_RESOURCE;
+				rightResource = true;
+			}
+			if (rightResource) {
+				current->removeFromTile();
+				current->alive = false;
+				if (consuming) {
+					life += LIFE;
 				}
-
-
-
+				else {
+					if (carrying == NO_RESOURCE && storingResource > RESOURCE_TYPES) {
+						carrying = currentResource->resourceType;
+					}
+					else {//It stores the resource (for the time being it just drops it)
+						carrying = NO_RESOURCE;
+						Resource* resource = new Resource(x, y, z, storingResource);
+						resource->addToTile();
+					}
+					resetActivity();
+					return true;
+				}
 			}
 			else {
 				current->removeFromTile();
@@ -207,83 +141,6 @@ bool Unit::checkReachedResourceSearch() {
 		current = current->sharesTileWithObject;
 	}
 	return false;
-}
-
-void Unit::aquireResource() {
-	if (bag.size() == MAX_CYCLE_LENGTH) {
-		bag.erase(bag.begin());
-	}
-	bag.push_back(resourceSearchStatus);
-	nextStep();
-}
-
-void Unit::nextStep() {
-
-
-
-	if (slowness < 6 && rand() % 5 == 0) {
-		slowness++;
-	}
-	else if (slowness > 2 && rand() % 5 == 0) {
-		slowness--;
-	}
-
-
-
-	if (resourceSearchStatus != -1) {
-		//The unit won't gain life if it executed:
-		// - A new instruction instruction
-		// - A give instruction when it didn't have anything to give
-		life += calculateWorth();
-	}
-	cycleCurrentStep = (cycleCurrentStep + 1) % cycleLength;
-	if (cycleCurrentStep == 0 && bag.size() > 0) {
-		createUnit();
-	}
-	initializeStep();
-}
-
-void Unit::initializeStep() {
-	hasToResetPath = true;
-	resourceSearchStatus = -1;
-	destinationObject = NULL;
-	if (cycle[cycleCurrentStep] < RESOURCE_TYPES) {
-		resourceSearchStatus = cycle[cycleCurrentStep];
-	}
-	else if (cycle[cycleCurrentStep] % 2 == INSTRUCTION_GIVE_RESOURCE) {
-		if (!bag.empty()) {
-			char lastResourceInBag = bag[bag.size() - 1];
-			if (lastResourceInBag < RESOURCE_TYPES) {
-
-
-
-				char shiftedResource = (lastResourceInBag + 1) % RESOURCE_TYPES;
-				//char shiftedResource = lastResourceInBag;
-				
-				
-				
-				
-				
-				bag[bag.size() - 1] = shiftedResource;
-				resourceSearchStatus = RESOURCE_TYPES + shiftedResource;
-			}
-
-
-
-			if (slowness > 2) {
-				slowness--;
-			}
-
-
-
-		}
-	}
-}
-
-void Unit::giveResource(Unit* taker) {
- 	bag.erase(bag.end() - 1);
-	nextStep();
-	taker->aquireResource();
 }
 
 #ifdef DEBUG

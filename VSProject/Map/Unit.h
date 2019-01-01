@@ -15,9 +15,9 @@ class Area;
 
 class Unit : public Object{
 private:
-	bool checkReachedResource();
+	bool checkReachedGoal();
 	bool checkReachedResourceSearch();
-	void pursueResource();
+	void pursueGoal();
 
 	//Pathfinding towards point
 	int resetPathTowardsObject();
@@ -52,18 +52,26 @@ public:
 
 	Unit* parent;
 	int childs;
-	Unit* destinationObject;//The unit can be moving towards its parent
+
+	//This can be used to go to a specific point
+	//For instance going to an enemy
+	Unit* destinationObject;
 	
-	//Whether the unit is is a bucket or not
+	//Whether the unit is in a bucket or not
 	//If the last child of a dead unit dies, the unit can be deleted only if it is not in a bucket
 	//If it is in a bucket, the main loop will take care of deleting it
 	bool inBucket;
 
-	//If this var is less than RESOURCE_TYPES, then it measn the unit is looking for that resource
-	//If it is grater, then it means the unit is trying to give that resource
-	char resourceSearchStatus;
+	bool consuming;//Indicates if the unit is looking for a resource to consume it or to store it
+	char storingResource;
+	char searching1;
+	char searching2;
 
 	char carrying;
+
+	char desiredResources[RESOURCE_CATEGORIES];
+
+	int seed;
 
 	//Pathfinding vars
 	bool hasToResetPath;
@@ -88,16 +96,13 @@ public:
 
 	//bool dummyMovementSeemsFine;
 
-	Unit(int _x, int _y, int _z, int _life);
+	Unit(int _x, int _y, int _z, int _life, int parentSeed);
 	~Unit();
 	void execute();
-	void randomModification();
-	void initializeStep();
-	void nextStep();
 	unsigned char type();
-	void initializeUnit();
-	void aquireResource();
 	void addToTileExtra();
 	void removeFromTileExtra();
 	Unit* findNearEnemy();
+	Unit* master();
+	void resetActivity();
 };

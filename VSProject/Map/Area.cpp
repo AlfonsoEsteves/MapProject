@@ -16,7 +16,7 @@ Area::Area() {//This is for the area of the dest tile in the pathfinder
 	lvl = 0;
 	lastCheckedByUnit = NULL;
 
-	for (int i = 0; i < RESOURCE_TYPES * 2; i++) {
+	for (int i = 0; i < RESOURCE_TYPES * RESOURCE_CATEGORIES + 1; i++) {
 		resources[i] = 0;
 	}
 }

@@ -20,7 +20,3 @@ void Generator::execute() {
 	resource->addToTile();
 	objects[(time + duration) % BUCKETS].push_back(this);
 }
-
-bool Generator::providesResource(char _resourceType) {
-	return false;
-}

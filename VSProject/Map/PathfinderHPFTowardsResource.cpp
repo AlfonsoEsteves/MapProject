@@ -21,12 +21,12 @@ int Unit::resetPathTowardsResource() {
 
 	Area * area = areasMap[x][y][z];
 
-	if (area->resources[resourceSearchStatus] > 0) {
+	if (area->resources[searching1] > 0 || area->resources[searching2] > 0) {
 		lowestDestinationAreaReached = area;
 		return dijkstraTowardsResourceOrArea(false);
 	}
 
-	while (area->resources[resourceSearchStatus] == 0) {
+	while (area->resources[searching1] == 0 && area->resources[searching2] == 0) {
 		oriAreas[area->lvl] = area;
 		area = area->superArea;
 		if (area == NULL) {
@@ -47,7 +47,7 @@ int Unit::adjustPathTowardsResource() {
 	Area * reachedArea = areasMap[x][y][z];
 
 	//The unit checks in case its current base area already has the desired resource
-	if (reachedArea->resources[resourceSearchStatus] > 0) {
+	if (reachedArea->resources[searching1] > 0 || reachedArea->resources[searching2] > 0) {
 		lowestDestinationAreaReached = reachedArea;
 		baseDestinationArea = NULL;
 		return dijkstraTowardsResourceOrArea(false);
@@ -61,7 +61,7 @@ int Unit::adjustPathTowardsResource() {
 
 		//Even if the unit didn't reach its lowestDestinationAreaReached, a resource may 
 		//have popped up nearby, so the lowestDestinationAreaReached should be updated.
-		if (reachedArea->superArea->resources[resourceSearchStatus] > 0) {
+		if (reachedArea->superArea->resources[searching1] > 0 || reachedArea->superArea->resources[searching2] > 0) {
 			lowestDestinationAreaReached = reachedArea->superArea;
 			return resetPathTowardsResource(reachedArea->lvl);
 		}
@@ -70,7 +70,7 @@ int Unit::adjustPathTowardsResource() {
 		if (reachedArea->lvl == lowestDestinationAreaReached->lvl - 1) {
 			//I check that the lowestDestinationAreaReached still has the resource
 			//  because it could have been removed
-			if (lowestDestinationAreaReached->resources[resourceSearchStatus] > 0) {
+			if (lowestDestinationAreaReached->resources[searching1] > 0 || lowestDestinationAreaReached->resources[searching2] > 0) {
 				return resetPathTowardsResource(reachedArea->lvl);
 			}
 			else {
@@ -82,7 +82,7 @@ int Unit::adjustPathTowardsResource() {
 		if (reachedArea->superArea != destinationSuperAreas[reachedArea->lvl]) {
 			//I check that the destinationSuperArea still has the resource
 			//  because it could have been removed
-			if (lowestDestinationAreaReached->resources[resourceSearchStatus] > 0) {
+			if (lowestDestinationAreaReached->resources[searching1] > 0 || lowestDestinationAreaReached->resources[searching2] > 0) {
 				return resetPathTowardsResourceOrDestinationSuperArea(reachedArea->lvl);
 			}
 			else {
@@ -114,12 +114,6 @@ int Unit::resetPathTowardsResourceOrDestinationSuperArea(int startingMacroLevel)
 }
 
 Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destArea, bool adjusting) {
-#	ifdef DEBUG
-	if (oriArea == destArea) {
-		error("findNextAreaTowardsResourceOrArea should not be called with the same origin and destination area");
-	}
-#	endif
-
 	circularArrayStart = 0;
 	circularArrayEnd = 0;
 
@@ -185,7 +179,7 @@ Area* Unit::findNextAreaTowardsResourceOrSuperArea(Area * oriArea, Area * destAr
 		Area* currentArea = circularArrayOfAreas[circularArrayStart];
 		circularArrayStart = (circularArrayStart + 1) % CIRCULAR_ARRAY_OF_AREAS;
 
-		if (currentArea->superArea == destArea || currentArea->resources[resourceSearchStatus] > 0) {
+		if (currentArea->superArea == destArea || currentArea->resources[searching1] > 0 || currentArea->resources[searching2] > 0) {
 			chunksToBeTraveled[currentArea->lvl] = distance;
 			return currentArea->pathFindingBranch;
 		}
@@ -274,9 +268,12 @@ int Unit::dijkstraTowardsResourceOrArea(bool adjusting) {
 
 		Object* current = unitsMap[tileX][tileY][tileZ];
 		while (current != NULL) {
-			if (current->providesResource(resourceSearchStatus)) {
-				tilesToBeTraveled = distance;
-				return direction;
+			if (current->objectType == objectResource) {
+				Resource* resource = (Resource*)current;
+				if (resource->resourceType == searching1 || resource->resourceType == searching2) {
+					tilesToBeTraveled = distance;
+					return direction;
+				}
 			}
 			current = current->sharesTileWithObject;
 		}

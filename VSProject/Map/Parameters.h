@@ -4,11 +4,11 @@
 
 #define UNIT_COUNT 100
 
-#define MAP_WIDTH 875 //7*5*5*5
+/*#define MAP_WIDTH 875 //7*5*5*5
 #define MAP_HEIGHT 35 //7*5
 
 #define BASE_CHUNK_SIZE 7
-#define SUPER_CHUNK_SIZE 5
+#define SUPER_CHUNK_SIZE 5*/
 
 /*#define MAP_WIDTH 750 //6*5*5*5
 #define MAP_HEIGHT 30 //6*5
@@ -22,11 +22,11 @@
 #define BASE_CHUNK_SIZE 7
 #define SUPER_CHUNK_SIZE 4*/
 
-/*#define MAP_WIDTH 384 //6*4*4*4
+#define MAP_WIDTH 384 //6*4*4*4
 #define MAP_HEIGHT 24 //6*4
 
 #define BASE_CHUNK_SIZE 6
-#define SUPER_CHUNK_SIZE 4*/
+#define SUPER_CHUNK_SIZE 4
 
 #define NEAR_ZONE_DISTANCE (BASE_CHUNK_SIZE * SUPER_CHUNK_SIZE)
 
@@ -46,17 +46,19 @@
 #define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 1000)
 #define	GENERATION_DURATION 800
 
-#define RESOURCE_TYPES 10
+#define RESOURCE_TYPES 5
+#define RESOURCE_CATEGORIES 3
+#define NO_RESOURCE (RESOURCE_TYPES + RESOURCE_CATEGORIES)
 
-#define FAST_FOWARD 12000
+#define FAST_FOWARD 0
 //#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME -1
-#define DEBUG_OBJECT -1
+#define DEBUG_TIME 0
+#define DEBUG_OBJECT 0
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

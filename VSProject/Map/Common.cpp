@@ -45,6 +45,11 @@ int getY(const int& dir) {
 		return -1;
 	return 0;
 }
+
+int randFunction(int seed) {
+	return (seed * 27 + 777769) % MAX_SEED;
+}
+
 /*
 void format(const char *fmt, ...)
 {

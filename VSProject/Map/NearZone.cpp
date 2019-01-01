@@ -9,18 +9,18 @@ NearZone::~NearZone()
 }
 
 void NearZone::addUnit(Unit* unit) {
-	units[unit->resourceType].push_back(unit);
+	units.push_back(unit);
 }
 
 void NearZone::removeUnit(Unit* unit) {
-	vector<Unit*>::iterator it = units[unit->resourceType].begin();
+	vector<Unit*>::iterator it = units.begin();
 	while (*it != unit) {
 		it++;
 #		ifdef DEBUG
-		if (it == units[unit->resourceType].end()) {
+		if (it == units.end()) {
 			error("Unit not found");
 		}
 #		endif
 	}
-	units[unit->resourceType].erase(it);
+	units.erase(it);
 }

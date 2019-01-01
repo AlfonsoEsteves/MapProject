@@ -70,11 +70,8 @@ void map_init()
 			z = rand() % MAP_HEIGHT;
 		} while (!tileIsSteppable(x, y, z));
 
-		Unit * unit = new Unit(x, y, z, rand() % LIFE + 10, NULL, rand() % RESOURCE_TYPES);
-		for (int i = rand() % 3; i >= 0; i--) {
-			unit->addRandomStepToCycle();
-		}
-		unit->initializeUnit();
+		Unit * unit = new Unit(x, y, z, rand() % LIFE + 10, -1);
+		unit->addToTile();
 	}
 
 	for (int i = 0; i < GENERATORS_COUNT; i++) {

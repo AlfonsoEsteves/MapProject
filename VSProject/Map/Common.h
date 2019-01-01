@@ -36,7 +36,7 @@ extern int lastExecutedObject;
 void bp(int id);
 #endif
 
-void format(const char *fmt, ...);
+//void format(const char *fmt, ...);
 
 void error(string msg);
 
@@ -44,3 +44,7 @@ void pause();
 
 int getX(const int& dir);
 int getY(const int& dir);
+
+#define MAX_SEED 1000000
+
+int randFunction(int seed);
