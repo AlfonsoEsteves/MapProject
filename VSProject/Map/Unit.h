@@ -102,7 +102,10 @@ public:
 	unsigned char type();
 	void addToTileExtra();
 	void removeFromTileExtra();
-	Unit* findNearEnemy();
+	Unit* findNearObjective();
 	Unit* master();
 	void resetActivity();
+	void detachFromParent();
+	bool isOrphan();
+	bool isEnemyOf(Unit* unit);
 };

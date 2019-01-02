@@ -58,10 +58,14 @@ Unit::~Unit(){
 	debug_unitCount--;
 #	endif
 	if (parent != NULL) {
-		parent->childs--;
-		if (parent->childs == 0 && !parent->inBucket) {
-			delete parent;
-		}
+		detachFromParent();
+	}
+}
+
+void Unit::detachFromParent() {
+	parent->childs--;
+	if (parent->childs == 0 && !parent->inBucket) {
+		delete parent;
 	}
 }
 
@@ -86,6 +90,11 @@ void Unit::execute() {
 		error("A unit can not have less than 0 life");
 	}
 #	endif
+
+	if (parent != NULL && !parent->alive) {
+		detachFromParent();
+		parent = NULL;
+	}
 	
 	removeFromTile();
 
@@ -96,7 +105,7 @@ void Unit::execute() {
 		return;
 	}
 
-	destinationObject = findNearEnemy();
+	destinationObject = findNearObjective();
 
 	pursueGoal();
 
@@ -106,7 +115,9 @@ void Unit::execute() {
 	}
 }
 
-Unit* Unit::findNearEnemy() {
+//Returns the nearest orphan or enemy if there is any near
+Unit* Unit::findNearObjective() {
+	Unit* nearestOrphan = NULL;
 	Unit* nearestEnemy = NULL;
 	int nearestDistance = NEAR_ZONE_DISTANCE;
 	int xB = x / NEAR_ZONE_DISTANCE - 1;
@@ -129,9 +140,10 @@ Unit* Unit::findNearEnemy() {
 		for (int j = yB; j <= yE; j++) {
 			for (int k = 0; k < nearZones[i][j].units.size(); k++) {
 				Unit* unit = nearZones[i][j].units[k];
-				if (master() != unit->master()) {
-					int dist = abs(x - unit->x) + abs(y - unit->y);
-					if (dist < nearestDistance) {
+				int dist = abs(x - unit->x) + abs(y - unit->y);
+				if (dist < nearestDistance) {
+					//It checks that it is an orphan or an enemy
+					if (unit->isOrphan() || isEnemyOf(unit)) {
 						nearestDistance = dist;
 						nearestEnemy = unit;
 					}
@@ -140,6 +152,19 @@ Unit* Unit::findNearEnemy() {
 		}
 	}
 	return nearestEnemy;
+}
+
+bool Unit::isEnemyOf(Unit* unit) {
+	if (parent == NULL || unit->parent == NULL) {
+		return false;
+	}
+	else {
+		return master() != unit->master();
+	}
+}
+
+bool Unit::isOrphan() {
+	return parent == NULL && childs == 0;
 }
 
 Unit* Unit::master() {

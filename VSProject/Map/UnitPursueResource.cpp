@@ -77,19 +77,26 @@ void Unit::pursueGoal() {
 }
 
 bool Unit::checkReachedGoal() {
-	//It checks if it has to attack
 	if (destinationObject != NULL) {
 		if (destinationObject->x == x && destinationObject->y == y && destinationObject->z == z) {
-			int auxLife = life;
-			if (destinationObject->life <= life) {
-				destinationObject->alive = false;
-				destinationObject->removeFromTile();
-				life -= destinationObject->life;
+			//It adopts the orphan
+			if (destinationObject->parent == NULL) {
+				destinationObject->parent = this;
+				childs++;
 			}
-			if (auxLife <= destinationObject->life) {
-				alive = false;
-				destinationObject->life -= auxLife;
+			else {//It attacks the enemy
+				int auxLife = life;
+				if (destinationObject->life <= life) {
+					destinationObject->alive = false;
+					destinationObject->removeFromTile();
+					life -= destinationObject->life;
+				}
+				if (auxLife <= destinationObject->life) {
+					alive = false;
+					destinationObject->life -= auxLife;
+				}
 			}
+
 			/*
 			//Reset pathfinding
 			hasToResetPath = true;

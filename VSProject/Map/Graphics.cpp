@@ -238,9 +238,16 @@ void drawImage(Image* image, int x, int y) {
 void drawUnit(Unit* unit, int i, int j, int k) {
 	int sX = screenX[i][j];
 	int sY = screenY[i][j][k] + 4;
-	drawImage(unitImage[0], sX, sY);
+	Image* image;
+	if (unit->isOrphan()) {
+		image = unitImage[7];
+	}
+	else {
+		image = unitImage[4];
+	}
+	drawImage(image, sX, sY);
 	if (unit->childs > 0) {
-		drawImage(unitImage[0], sX, sY + 1);
+		drawImage(image, sX, sY - 2);
 	}
 
 	//Draw connection to the parent
@@ -435,39 +442,19 @@ void graphics_draw_minimap() {
 			Object* object = *it;
 			if (object->objectType == objectUnit) {
 				Unit* unit = (Unit*)object;
-
+				if (unit->parent != NULL) {
+					SDL_SetRenderDrawColor(gRenderer, 180, 180, 180, 0);
+					SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH - (MAP_WIDTH - unit->x) / ratio, unit->y / ratio, SCREEN_WIDTH - (MAP_WIDTH - unit->parent->x) / ratio, unit->parent->y / ratio);
+				}
+			}
+		}
+	}
+	for (int i = 0; i < 10; i++) {
+		for (std::list<Object*>::iterator it = objects[(time + i) % BUCKETS].begin(); it != objects[(time + i) % BUCKETS].end(); it++) {
+			Object* object = *it;
+			if (object->objectType == objectUnit) {
+				Unit* unit = (Unit*)object;
 				SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
-
-				/*if (unit->resourceType == 0) {
-					SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0);
-				}
-				else if (unit->resourceType == 1) {
-					SDL_SetRenderDrawColor(gRenderer, 255, 255, 0, 0);
-				}
-				else if (unit->resourceType == 2) {
-					SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 0);
-				}
-				else if (unit->resourceType == 3) {
-					SDL_SetRenderDrawColor(gRenderer, 0, 255, 255, 0);
-				}
-				else if (unit->resourceType == 4) {
-					SDL_SetRenderDrawColor(gRenderer, 0, 0, 255, 0);
-				}
-				else if (unit->resourceType == 5) {
-					SDL_SetRenderDrawColor(gRenderer, 255, 0, 255, 0);
-				}
-				else if (unit->resourceType == 6) {
-					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-				}
-				else if (unit->resourceType == 7) {
-					SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
-				}
-				else if (unit->resourceType == 8) {
-					SDL_SetRenderDrawColor(gRenderer, 255, 126, 0, 0);
-				}
-				else if (unit->resourceType == 9) {
-					SDL_SetRenderDrawColor(gRenderer, 160, 207, 112, 0);
-				}*/
 				SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH - (MAP_WIDTH - unit->x) / ratio, unit->y / ratio);
 			}
 		}
