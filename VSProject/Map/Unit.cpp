@@ -30,8 +30,7 @@ Unit::Unit(int _x, int _y, int _z, int _life, int parentSeed) : Object(objectUni
 	}
 	slowness = 2 + rand() % 6;
 
-	consuming = false;
-	resetActivity();
+	resetActivity(true);
 
 	objects[(time + (rand() % slowness)) % BUCKETS].push_back(this);
 
@@ -176,12 +175,12 @@ Unit* Unit::master() {
 	}
 }
 
-void Unit::resetActivity() {
+void Unit::resetActivity(bool _consuming) {
 	storingResource = NO_RESOURCE;
 	searching1 = NO_RESOURCE;
 	searching2 = NO_RESOURCE;
 	carrying = NO_RESOURCE;
-	consuming = !consuming;
+	consuming = _consuming;
 	if (consuming) {
 		int r = rand() % RESOURCE_CATEGORIES;
 		searching1 = desiredResources[r] + RESOURCE_TYPES * r;
@@ -248,6 +247,8 @@ void Unit::resetActivity() {
 			}
 		}
 	}
+
+	searchTime = 0;
 
 	//Pathfinding stuff
 	hasToResetPath = true;

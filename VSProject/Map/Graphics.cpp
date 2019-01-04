@@ -176,21 +176,22 @@ void graphics_draw_text() {
 	while (currentObject != NULL) {
 #		ifdef DEBUG
 		drawText(xDisplacement + 20, 20, "Object's id: %d", currentObject->id);
-
-		if (currentObject->objectType == objectUnit) {
-			Unit* unit = (Unit*)selected;
-			if (unit->parent != NULL && unit->parent->alive) {
-				int dist = abs(unit->x - unit->parent->x) + abs(unit->y - unit->parent->y);
-				drawText(xDisplacement + 20, 60, "Parent distance: %d", dist);
-			}
-		}
 #		endif
+
 		if (currentObject->type() == objectUnit) {
-			Unit* currentUnit = (Unit*)currentObject;
+			Unit* currentUnit = (Unit*)selected;
+
 			drawText(xDisplacement + 20, 40, "Unit's life: %d", currentUnit->life);
 
+			if (currentUnit->parent != NULL && currentUnit->parent->alive) {
+				int dist = abs(currentUnit->x - currentUnit->parent->x) + abs(currentUnit->y - currentUnit->parent->y);
+				drawText(xDisplacement + 20, 60, "Parent distance: %d", dist);
+			}
+
+			drawText(xDisplacement + 20, 80, "Search timeout: %d", SEARCH_TIME_OUT - currentUnit->searchTime);
+
 			for (int i = 0; i < RESOURCE_CATEGORIES; i++) {
-				drawText(xDisplacement + 20, 100 + i * 15, "%s", stepName(currentUnit->desiredResources[i] + RESOURCE_TYPES * i).c_str());
+				drawText(xDisplacement + 20, 110 + i * 15, "%s", stepName(currentUnit->desiredResources[i] + RESOURCE_TYPES * i).c_str());
 			}
 
 			if (currentUnit->consuming) {

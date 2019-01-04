@@ -68,7 +68,12 @@ void Unit::pursueGoal() {
 		x = nextX;
 		y = nextY;
 
-		checkReachedGoal();
+		if (!checkReachedGoal()) {
+			searchTime++;
+			if (searchTime == SEARCH_TIME_OUT) {
+				resetActivity(true);
+			}
+		}
 
 		if (areasMap[x][y][z] == baseDestinationArea) {
 			reachedDestinationBaseArea = true;
@@ -136,7 +141,7 @@ bool Unit::checkReachedResourceSearch() {
 							life += LIFE;
 						}
 					}
-					resetActivity();
+					resetActivity(false);
 					return true;
 				}
 				else {
@@ -148,7 +153,7 @@ bool Unit::checkReachedResourceSearch() {
 						carrying = NO_RESOURCE;
 						Resource* resource = new Resource(x, y, z, storingResource);
 						resource->addToTile();
-						resetActivity();
+						resetActivity(true);
 					}
 					return true;
 				}

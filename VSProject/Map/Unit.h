@@ -7,6 +7,8 @@
 #define PATH_NOT_FOUND -1
 #define PATH_OUTDATED -2
 
+#define SEARCH_TIME_OUT 120
+
 #ifdef DEBUG
 extern int debug_unitCount;
 #endif
@@ -15,10 +17,6 @@ class Area;
 
 class Unit : public Object{
 private:
-	bool checkReachedGoal();
-	bool checkReachedResourceSearch();
-	void pursueGoal();
-
 	//Pathfinding towards point
 	int resetPathTowardsObject();
 	int adjustPathTowardsObject();
@@ -71,6 +69,8 @@ public:
 
 	char desiredResources[RESOURCE_CATEGORIES];
 
+	int searchTime;
+
 	int seed;
 
 	//Pathfinding vars
@@ -104,8 +104,11 @@ public:
 	void removeFromTileExtra();
 	Unit* findNearObjective();
 	Unit* master();
-	void resetActivity();
+	void resetActivity(bool _consuming);
 	void detachFromParent();
 	bool isOrphan();
 	bool isEnemyOf(Unit* unit);
+	bool checkReachedGoal();
+	bool checkReachedResourceSearch();
+	void pursueGoal();
 };
