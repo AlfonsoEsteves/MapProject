@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 142
+#define SEED 143
 
 #define UNIT_COUNT 100
 
@@ -50,15 +50,15 @@
 #define RESOURCE_CATEGORIES 3
 #define NO_RESOURCE (RESOURCE_TYPES * RESOURCE_CATEGORIES)
 
-#define FAST_FOWARD 1000
+#define FAST_FOWARD 650
 //#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME 0
-#define DEBUG_OBJECT -1
+#define DEBUG_TIME 44
+#define DEBUG_OBJECT 1454
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

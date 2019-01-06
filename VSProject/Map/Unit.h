@@ -102,7 +102,7 @@ public:
 	unsigned char type();
 	void addToTileExtra();
 	void removeFromTileExtra();
-	Unit* findNearObjective();
+	Unit* findObjective();
 	Unit* master();
 	void resetActivity(bool _consuming);
 	void detachFromParent();

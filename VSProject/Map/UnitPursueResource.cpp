@@ -85,7 +85,12 @@ bool Unit::checkReachedGoal() {
 	if (destinationObject != NULL) {
 		if (destinationObject->x == x && destinationObject->y == y && destinationObject->z == z) {
 			//It adopts the orphan
-			if (destinationObject->parent == NULL) {
+			if (destinationObject == parent) {
+				int transference = (2 * life - parent->life ) / 3;
+				life -= transference;
+				parent->life += transference;
+			}
+			else if (destinationObject->isOrphan()) {
 				destinationObject->parent = this;
 				childs++;
 			}

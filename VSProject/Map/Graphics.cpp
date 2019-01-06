@@ -244,7 +244,12 @@ void drawUnit(Unit* unit, int i, int j, int k) {
 		image = unitImage[7];
 	}
 	else {
-		image = unitImage[4];
+		if (unit->parent == NULL) {
+			image = unitImage[0];
+		}
+		else {
+			image = unitImage[4];
+		}
 	}
 	drawImage(image, sX, sY);
 	if (unit->childs > 0) {

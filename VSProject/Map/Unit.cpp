@@ -73,6 +73,13 @@ void Unit::addToTileExtra() {
 }
 
 void Unit::removeFromTileExtra() {
+
+
+	if (id == 1454 && time == 788) {
+		printf("");
+	}
+
+
 	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].removeUnit(this);
 }
 
@@ -104,7 +111,7 @@ void Unit::execute() {
 		return;
 	}
 
-	destinationObject = findNearObjective();
+	destinationObject = findObjective();
 
 	pursueGoal();
 
@@ -115,9 +122,11 @@ void Unit::execute() {
 }
 
 //Returns the nearest orphan or enemy if there is any near
-Unit* Unit::findNearObjective() {
-	Unit* nearestOrphan = NULL;
-	Unit* nearestEnemy = NULL;
+Unit* Unit::findObjective() {
+	if (parent != NULL && parent->life < life) {
+		return parent;
+	}
+	Unit* nearest = NULL;
 	int nearestDistance = NEAR_ZONE_DISTANCE;
 	int xB = x / NEAR_ZONE_DISTANCE - 1;
 	if (xB < 0) {
@@ -144,13 +153,13 @@ Unit* Unit::findNearObjective() {
 					//It checks that it is an orphan or an enemy
 					if (unit->isOrphan() || isEnemyOf(unit)) {
 						nearestDistance = dist;
-						nearestEnemy = unit;
+						nearest = unit;
 					}
 				}
 			}
 		}
 	}
-	return nearestEnemy;
+	return nearest;
 }
 
 bool Unit::isEnemyOf(Unit* unit) {
