@@ -50,7 +50,7 @@
 #define RESOURCE_CATEGORIES 3
 #define NO_RESOURCE (RESOURCE_TYPES * RESOURCE_CATEGORIES)
 
-#define FAST_FOWARD 650
+#define FAST_FOWARD 4000
 //#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency

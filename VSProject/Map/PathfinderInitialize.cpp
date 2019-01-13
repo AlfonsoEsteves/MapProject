@@ -20,7 +20,7 @@ Area * areasMap[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];
 
 Chunk**** chunks[LEVELS];
 
-NearZone nearZones[MAP_WIDTH / NEAR_ZONE_DISTANCE][MAP_WIDTH / NEAR_ZONE_DISTANCE];
+NearZone* nearZones[MAP_WIDTH / NEAR_ZONE_DISTANCE][MAP_WIDTH / NEAR_ZONE_DISTANCE];
 
 PFTile circularArrayOfTiles[CIRCULAR_ARRAY_OF_TILES];
 Area* circularArrayOfAreas[CIRCULAR_ARRAY_OF_AREAS];
@@ -113,6 +113,13 @@ void pathfinderInitialize() {
 		mapHeightInChunks /= SUPER_CHUNK_SIZE;
 		if (mapHeightInChunks == 0) {
 			mapHeightInChunks = 1;
+		}
+	}
+
+	//Initialize NearZones
+	for (int i = 0; i < MAP_WIDTH / NEAR_ZONE_DISTANCE; i++) {
+		for (int j = 0; j < MAP_WIDTH / NEAR_ZONE_DISTANCE; j++) {
+			nearZones[i][j] = new NearZone();
 		}
 	}
 
@@ -223,5 +230,11 @@ void pathfinderClose() {
 			mapHeightInChunks = 1;
 		}
 		chunkWidthInTiles *= SUPER_CHUNK_SIZE;
+	}
+
+	for (int i = 0; i < MAP_WIDTH / NEAR_ZONE_DISTANCE; i++) {
+		for (int j = 0; j < MAP_WIDTH / NEAR_ZONE_DISTANCE; j++) {
+			delete nearZones[i][j];
+		}
 	}
 }

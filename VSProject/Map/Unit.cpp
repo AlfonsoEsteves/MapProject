@@ -69,18 +69,11 @@ void Unit::detachFromParent() {
 }
 
 void Unit::addToTileExtra() {
-	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].addUnit(this);
+	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE]->addUnit(this);
 }
 
 void Unit::removeFromTileExtra() {
-
-
-	if (id == 1454 && time == 788) {
-		printf("");
-	}
-
-
-	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE].removeUnit(this);
+	nearZones[x / NEAR_ZONE_DISTANCE][y / NEAR_ZONE_DISTANCE]->removeUnit(this);
 }
 
 unsigned char Unit::type() {
@@ -146,8 +139,8 @@ Unit* Unit::findObjective() {
 	}
 	for (int i = xB; i <= xE; i++) {
 		for (int j = yB; j <= yE; j++) {
-			for (int k = 0; k < nearZones[i][j].units.size(); k++) {
-				Unit* unit = nearZones[i][j].units[k];
+			for (int k = 0; k < nearZones[i][j]->units.size(); k++) {
+				Unit* unit = nearZones[i][j]->units[k];
 				int dist = abs(x - unit->x) + abs(y - unit->y);
 				if (dist < nearestDistance) {
 					//It checks that it is an orphan or an enemy

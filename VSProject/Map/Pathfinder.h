@@ -10,7 +10,7 @@ extern Area * areasMap[MAP_WIDTH][MAP_WIDTH][MAP_HEIGHT];//It indicates the area
 
 extern Chunk**** chunks[LEVELS];
 
-extern NearZone nearZones[MAP_WIDTH / NEAR_ZONE_DISTANCE][MAP_WIDTH / NEAR_ZONE_DISTANCE];
+extern NearZone* nearZones[MAP_WIDTH / NEAR_ZONE_DISTANCE][MAP_WIDTH / NEAR_ZONE_DISTANCE];
 
 struct PFTile {
 	int x, y, z;
