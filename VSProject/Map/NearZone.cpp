@@ -13,6 +13,16 @@ void NearZone::addUnit(Unit* unit) {
 }
 
 void NearZone::removeUnit(Unit* unit) {
+	vector<Unit*>::iterator it = find(units.begin(), units.end(), unit);
+	if (it == units.end()) {
+		error("Unit not found");
+	}
+	else {
+		units.erase(it);
+	}
+}
+/*
+void NearZone::removeUnit(Unit* unit) {
 	vector<Unit*>::iterator it = units.begin();
 	while (*it != unit) {
 		it++;
@@ -23,4 +33,4 @@ void NearZone::removeUnit(Unit* unit) {
 #		endif
 	}
 	units.erase(it);
-}
+}*/
