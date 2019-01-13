@@ -1,0 +1,5 @@
+cuando un padre adopta un hijo le setea 1 o 2 necesidades,
+
+
+
+podria crar fauna que come 3 recursos y produce uno nuevo del mismo nivel

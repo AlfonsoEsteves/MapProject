@@ -1,20 +1,20 @@
 #pragma once
 
-#define SEED 143
+#define SEED 144
 
 #define UNIT_COUNT 100
 
-/*#define MAP_WIDTH 875 //7*5*5*5
+#define MAP_WIDTH 875 //7*5*5*5
 #define MAP_HEIGHT 35 //7*5
 
 #define BASE_CHUNK_SIZE 7
-#define SUPER_CHUNK_SIZE 5*/
+#define SUPER_CHUNK_SIZE 5
 
-#define MAP_WIDTH 750 //6*5*5*5
+/*#define MAP_WIDTH 750 //6*5*5*5
 #define MAP_HEIGHT 30 //6*5
 
 #define BASE_CHUNK_SIZE 6
-#define SUPER_CHUNK_SIZE 5
+#define SUPER_CHUNK_SIZE 5*/
 
 /*#define MAP_WIDTH 448 //7*4*4*4
 #define MAP_HEIGHT 28 //7*4
@@ -46,7 +46,7 @@
 #define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 1000)
 #define	GENERATION_DURATION 800
 
-#define RESOURCE_TYPES 5
+#define RESOURCE_TYPES 7
 #define RESOURCE_CATEGORIES 3
 #define NO_RESOURCE (RESOURCE_TYPES * RESOURCE_CATEGORIES)
 
