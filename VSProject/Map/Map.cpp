@@ -43,6 +43,32 @@ void execute_frame()
 	}
 	objects[time % BUCKETS].clear();
 	time++;
+
+
+
+
+
+	int max = 0;
+	for (int i = 0; i < BUCKETS; i++) {
+		for (std::list<Object*>::iterator it = objects[i].begin(); it != objects[i].end(); it++) {
+			Object* object = (*it);
+			if (object->objectType == objectUnit) {
+				Unit* unit = (Unit*)object;
+				if (unit->life > max) {
+					max = unit->life;
+					selected = unit;
+				}
+			}
+		}
+	}
+
+
+
+
+
+
+
+
 }
 
 void map_close() {

@@ -10,10 +10,8 @@ char formated[256];
 #ifdef DEBUG
 int lastExecutedObject = -999999;
 
-void bp(int id) {
-	if (id == DEBUG_OBJECT && time >= FAST_FOWARD) {
-		printf("");
-	}
+void bp() {
+	printf("");
 }
 #endif
 
@@ -46,9 +44,9 @@ int getY(const int& dir) {
 	return 0;
 }
 
-int randFunction(int seed) {
+/*int randFunction(int seed) {
 	return (seed * 27 + 777769) % MAX_SEED;
-}
+}*/
 
 /*
 void format(const char *fmt, ...)

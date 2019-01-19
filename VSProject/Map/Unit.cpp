@@ -4,7 +4,7 @@
 int debug_unitCount = 0;
 #endif
 
-Unit::Unit(int _x, int _y, int _z, int _life, int parentSeed) : Object(objectUnit, _x, _y, _z)
+Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 {
 	life = _life;
 	parent = NULL;
@@ -12,17 +12,8 @@ Unit::Unit(int _x, int _y, int _z, int _life, int parentSeed) : Object(objectUni
 	inBucket = true;
 	destinationObject = NULL;
 
-	if (parentSeed == -1) {
-		seed = rand() % MAX_SEED;
-	}
-	else {
-		seed = randFunction(parentSeed);
-	}
-
-	int aux = seed;
 	for (int i = 0; i < RESOURCE_CATEGORIES;i++) {
-		aux = randFunction(aux);
-		desiredResources[i] = aux % RESOURCE_TYPES;
+		desiredResources[i] = rand() % RESOURCE_TYPES;
 	}
 
 	for (int i = 0; i < LEVELS - 1; i++) {
@@ -186,6 +177,7 @@ void Unit::resetActivity(bool _consuming) {
 	if (consuming) {
 		int r = rand() % RESOURCE_CATEGORIES;
 		searching1 = desiredResources[r] + RESOURCE_TYPES * r;
+		searchTime = SEARCH_TIME_OUT_SIMPLE_RESOURCE;
 	}
 	else {
 #		ifdef DEBUG
@@ -197,6 +189,7 @@ void Unit::resetActivity(bool _consuming) {
 		if (r == 0) {//First category resource
 			storingResource = desiredResources[0];
 			searching1 = storingResource;
+			searchTime = SEARCH_TIME_OUT_SIMPLE_RESOURCE;
 		}
 		else if (r == 1) {
 			r = rand() % 3;
@@ -213,6 +206,7 @@ void Unit::resetActivity(bool _consuming) {
 				storingResource = (desiredResources[1] + 1) % RESOURCE_TYPES;
 				searching1 = storingResource;
 			}
+			searchTime = SEARCH_TIME_OUT_COMPLEX_RESOURCE;
 		}
 		else if(r == 2) {
 			r = rand() % 7;
@@ -247,10 +241,9 @@ void Unit::resetActivity(bool _consuming) {
 				storingResource = desiredResources[2] + 3;
 				searching1 = storingResource;
 			}
+			searchTime = SEARCH_TIME_OUT_COMPLEX_RESOURCE;
 		}
 	}
-
-	searchTime = 0;
 
 	//Pathfinding stuff
 	hasToResetPath = true;

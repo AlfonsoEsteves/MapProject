@@ -6,8 +6,8 @@
 #define RESOURCES_PATH string("C:/Users/Usuario/Documents/Projects/MapProject/Resources/")
 //#define RESOURCES_PATH string("C:/Users/alfonso.esteves/Documents/Otros/MapProject/Resources/")
 
-#define VIEW_WIDTH 100
-#define VIEW_HEIGHT 45
+#define VIEW_WIDTH 85
+#define VIEW_HEIGHT 41
 
 //#define DRAW_GRAPHICS_EVERY_X_FRAMES 7
 

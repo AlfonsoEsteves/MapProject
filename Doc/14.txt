@@ -1,0 +1,14 @@
+primero voy a empezar por hacer que haya que storear cerca del lider
+
+luego:
+
+voy a hacer que los lideres tengan un ponta/zona base
+  este punte se va ajustando lentamente
+    la idea es que el lider pueda salir de su base
+      lo cual va a obligarlo volver a entrar para depositar recursos
+        y esto va a permirir que los lideres no se mueven con libertad absoluta por todo el mapa
+
+
+
+otra cosa que habria que ver
+  el timeout no es muy corta para crear recursos complejos???

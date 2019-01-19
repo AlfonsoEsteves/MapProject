@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 144
+#define SEED 150
 
 #define UNIT_COUNT 100
 
@@ -36,21 +36,21 @@
 #define CIRCULAR_ARRAY_OF_TILES 10000
 #define CIRCULAR_ARRAY_OF_AREAS 10000
 
-//This should be grater than the slowest object cycle
-#define BUCKETS 801
-
 //This variable must be equal or bigger than BASE_CHUNK_SIZE*2
 //If the unit exceeds this distance to its destination, it must be in a different area
 //#define DUMMY_MOVEMENT_TOWARDS_POINT_DISTANCE 12
 
-#define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 1000)
-#define	GENERATION_DURATION 800
+#define GENERATORS_COUNT (MAP_WIDTH * MAP_WIDTH / 1100)
+#define	GENERATION_DURATION 730
+
+//This should be grater than the slowest object cycle
+#define BUCKETS (GENERATION_DURATION + 1)
 
 #define RESOURCE_TYPES 7
 #define RESOURCE_CATEGORIES 3
 #define NO_RESOURCE (RESOURCE_TYPES * RESOURCE_CATEGORIES)
 
-#define FAST_FOWARD 4000
+#define FAST_FOWARD 1000
 //#define CALCULATE_HASH_AT_TIME 5001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency

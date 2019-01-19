@@ -29,7 +29,7 @@ void Resource::execute() {
 			if (current->type() == objectResource) {
 				Resource* currentResource = (Resource*)current;
 				if (currentResource->resourceType == resourceType) {
-					Unit* unit = new Unit(x, y, z, LIFE, -1);
+					Unit* unit = new Unit(x, y, z, LIFE);
 					unit->addToTile();
 					current->removeFromTile();
 					current->alive = false;

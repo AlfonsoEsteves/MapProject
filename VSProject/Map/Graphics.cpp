@@ -188,7 +188,7 @@ void graphics_draw_text() {
 				drawText(xDisplacement + 20, 60, "Parent distance: %d", dist);
 			}
 
-			drawText(xDisplacement + 20, 80, "Search timeout: %d", SEARCH_TIME_OUT - currentUnit->searchTime);
+			drawText(xDisplacement + 20, 80, "Search timeout: %d", currentUnit->searchTime);
 
 			for (int i = 0; i < RESOURCE_CATEGORIES; i++) {
 				drawText(xDisplacement + 20, 110 + i * 15, "%s", stepName(currentUnit->desiredResources[i] + RESOURCE_TYPES * i).c_str());

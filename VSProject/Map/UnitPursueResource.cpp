@@ -69,8 +69,8 @@ void Unit::pursueGoal() {
 		y = nextY;
 
 		if (!checkReachedGoal()) {
-			searchTime++;
-			if (searchTime == SEARCH_TIME_OUT) {
+			searchTime--;
+			if (searchTime == 0) {
 				resetActivity(true);
 			}
 		}
@@ -92,6 +92,12 @@ bool Unit::checkReachedGoal() {
 			}
 			else if (destinationObject->isOrphan()) {
 				destinationObject->parent = this;
+				int r = rand() % 3;
+				for (int i = 0; i < 3; i++) {
+					if (i != r) {
+						destinationObject->desiredResources[i] = desiredResources[i];
+					}
+				}
 				childs++;
 			}
 			else {//It attacks the enemy
@@ -143,7 +149,7 @@ bool Unit::checkReachedResourceSearch() {
 					if (currentResource->resourceType > RESOURCE_TYPES) {
 						life += LIFE;
 						if (currentResource->resourceType > RESOURCE_TYPES * 2) {
-							life += LIFE;
+							life += LIFE * 2;
 						}
 					}
 					resetActivity(false);

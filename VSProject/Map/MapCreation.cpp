@@ -70,7 +70,7 @@ void map_init()
 			z = rand() % MAP_HEIGHT;
 		} while (!tileIsSteppable(x, y, z));
 
-		Unit * unit = new Unit(x, y, z, rand() % LIFE + 10, -1);
+		Unit * unit = new Unit(x, y, z, rand() % LIFE + 10);
 		unit->addToTile();
 	}
 

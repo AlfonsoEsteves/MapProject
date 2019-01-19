@@ -2,12 +2,13 @@
 
 #include <vector>
 
-#define LIFE 220
+#define LIFE 200
 
 #define PATH_NOT_FOUND -1
 #define PATH_OUTDATED -2
 
-#define SEARCH_TIME_OUT 120
+#define SEARCH_TIME_OUT_SIMPLE_RESOURCE 100
+#define SEARCH_TIME_OUT_COMPLEX_RESOURCE (SEARCH_TIME_OUT_SIMPLE_RESOURCE * 2)
 
 #ifdef DEBUG
 extern int debug_unitCount;
@@ -71,8 +72,6 @@ public:
 
 	int searchTime;
 
-	int seed;
-
 	//Pathfinding vars
 	bool hasToResetPath;
 	bool reachedDestinationBaseArea;
@@ -96,7 +95,7 @@ public:
 
 	//bool dummyMovementSeemsFine;
 
-	Unit(int _x, int _y, int _z, int _life, int parentSeed);
+	Unit(int _x, int _y, int _z, int _life);
 	~Unit();
 	void execute();
 	unsigned char type();
