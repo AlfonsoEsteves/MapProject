@@ -170,13 +170,13 @@ Unit* Unit::master() {
 
 void Unit::resetActivity(bool _consuming) {
 	storingResource = NO_RESOURCE;
-	searching1 = NO_RESOURCE;
-	searching2 = NO_RESOURCE;
-	carrying = NO_RESOURCE;
+	searchingResource1 = NO_RESOURCE;
+	searchingResource2 = NO_RESOURCE;
+	carryingResource = NO_RESOURCE;
 	consuming = _consuming;
 	if (consuming) {
 		int r = rand() % RESOURCE_CATEGORIES;
-		searching1 = desiredResources[r] + RESOURCE_TYPES * r;
+		searchingResource1 = desiredResources[r] + RESOURCE_TYPES * r;
 		searchTime = SEARCH_TIME_OUT_SIMPLE_RESOURCE;
 	}
 	else {
@@ -188,23 +188,23 @@ void Unit::resetActivity(bool _consuming) {
 		int r = rand() % RESOURCE_CATEGORIES;
 		if (r == 0) {//First category resource
 			storingResource = desiredResources[0];
-			searching1 = storingResource;
+			searchingResource1 = storingResource;
 			searchTime = SEARCH_TIME_OUT_SIMPLE_RESOURCE;
 		}
 		else if (r == 1) {
 			r = rand() % 3;
 			if (r == 0) {//Second category resource
 				storingResource = desiredResources[1] + RESOURCE_TYPES;
-				searching1 = desiredResources[1];
-				searching2 = (desiredResources[1] + 1) % RESOURCE_TYPES;
+				searchingResource1 = desiredResources[1];
+				searchingResource2 = (desiredResources[1] + 1) % RESOURCE_TYPES;
 			}
 			else if (r == 1) {//First component
 				storingResource = desiredResources[1];
-				searching1 = storingResource;
+				searchingResource1 = storingResource;
 			}
 			else if (r == 2) {//Second component
 				storingResource = (desiredResources[1] + 1) % RESOURCE_TYPES;
-				searching1 = storingResource;
+				searchingResource1 = storingResource;
 			}
 			searchTime = SEARCH_TIME_OUT_COMPLEX_RESOURCE;
 		}
@@ -212,34 +212,34 @@ void Unit::resetActivity(bool _consuming) {
 			r = rand() % 7;
 			if (r == 0) {//Third category resource
 				storingResource = desiredResources[2] + RESOURCE_TYPES * 2;
-				searching1 = desiredResources[2] + RESOURCE_TYPES;
-				searching2 = desiredResources[2] + 2 + RESOURCE_TYPES;
+				searchingResource1 = desiredResources[2] + RESOURCE_TYPES;
+				searchingResource2 = desiredResources[2] + 2 + RESOURCE_TYPES;
 			}
 			else if (r == 1) {//First component
 				storingResource = desiredResources[2] + RESOURCE_TYPES;
-				searching1 = desiredResources[2];
-				searching2 = desiredResources[2] + 1;
+				searchingResource1 = desiredResources[2];
+				searchingResource2 = desiredResources[2] + 1;
 			}
 			else if (r == 2) {//Second component
 				storingResource = desiredResources[2] + 2 + RESOURCE_TYPES;
-				searching1 = desiredResources[2] + 2;
-				searching2 = desiredResources[2] + 3;
+				searchingResource1 = desiredResources[2] + 2;
+				searchingResource2 = desiredResources[2] + 3;
 			}
 			else if (r == 3) {//First component first subcomponent
 				storingResource = desiredResources[2];
-				searching1 = storingResource;
+				searchingResource1 = storingResource;
 			}
 			else if (r == 4) {//First component second subcomponent
 				storingResource = desiredResources[2] + 1;
-				searching1 = storingResource;
+				searchingResource1 = storingResource;
 			}
 			else if (r == 5) {//Second component first subcomponent
 				storingResource = desiredResources[2] + 2;
-				searching1 = storingResource;
+				searchingResource1 = storingResource;
 			}
 			else if (r == 6) {//Second component second subcomponent
 				storingResource = desiredResources[2] + 3;
-				searching1 = storingResource;
+				searchingResource1 = storingResource;
 			}
 			searchTime = SEARCH_TIME_OUT_COMPLEX_RESOURCE;
 		}

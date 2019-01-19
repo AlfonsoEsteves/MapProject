@@ -1,4 +1,4 @@
-primero voy a empezar por hacer que haya que storear cerca del lider
+primero voy a empezar por hacer que haya que storear cerca del padre
 
 luego:
 
@@ -12,3 +12,14 @@ voy a hacer que los lideres tengan un ponta/zona base
 
 otra cosa que habria que ver
   el timeout no es muy corta para crear recursos complejos???
+
+
+
+
+pregunta, una unidad tiene que storiear en la zona de super padre, o solamente del padre???
+  
+  cuando implemente las fortalezas talvez combenga que sea el super padre, porque el padre
+    de lo contrario la fortaleza deberia ser muy grande
+
+  pero si no hay fortalezas entonces capas sea mejor en la sona del padre
+    ya que generaria como subsonas dentre de la lo que seria el reino del superpadre

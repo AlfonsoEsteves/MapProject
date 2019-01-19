@@ -201,16 +201,16 @@ void graphics_draw_text() {
 				drawText(xDisplacement + 20, 350, "store");
 			}
 
-			if(currentUnit->carrying != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 370, "carrying %s", stepName(currentUnit->carrying).c_str());
+			if(currentUnit->carryingResource != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 370, "carrying %s", stepName(currentUnit->carryingResource).c_str());
 			}
 
-			if (currentUnit->searching1 != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 390, "searching1 %s", stepName(currentUnit->searching1).c_str());
+			if (currentUnit->searchingResource1 != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 390, "searching1 %s", stepName(currentUnit->searchingResource1).c_str());
 			}
 
-			if (currentUnit->searching2 != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 410, "searching2 %s", stepName(currentUnit->searching2).c_str());
+			if (currentUnit->searchingResource2 != NO_RESOURCE) {
+				drawText(xDisplacement + 20, 410, "searching2 %s", stepName(currentUnit->searchingResource2).c_str());
 			}
 
 			if (currentUnit->storingResource != NO_RESOURCE) {

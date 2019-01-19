@@ -48,3 +48,5 @@ int getY(const int& dir);
 #define MAX_SEED 1000000
 
 int randFunction(int seed);
+
+int dist(Object* o1, Object* o2);

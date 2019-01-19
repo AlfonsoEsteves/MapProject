@@ -68,7 +68,7 @@ void Unit::pursueGoal() {
 		x = nextX;
 		y = nextY;
 
-		if (!checkReachedGoal()) {
+		if (!checkReachedGoal() && carryingResource != storingResource) {
 			searchTime--;
 			if (searchTime == 0) {
 				resetActivity(true);
@@ -113,12 +113,20 @@ bool Unit::checkReachedGoal() {
 				}
 			}
 
-			/*
+			/*estaria bueno checkear si este codigo no hace falta
 			//Reset pathfinding
 			hasToResetPath = true;
 			destinationObject = NULL;*/
 
 			return true;
+		}
+		if (!consuming && carryingResource == storingResource) {
+			if (dist(this, destinationObject) < BASE_AREA_RADIUS) {
+				carryingResource = NO_RESOURCE;
+				Resource* resource = new Resource(x, y, z, storingResource);
+				resource->addToTile();
+				resetActivity(true);
+			}
 		}
 	}
 
@@ -133,12 +141,12 @@ bool Unit::checkReachedResourceSearch() {
 		if (current->type() == objectResource) {
 			Resource* currentResource = (Resource*)current;
 			bool rightResource = false;
-			if (currentResource->resourceType == searching1) {
-				searching1 = NO_RESOURCE;
+			if (currentResource->resourceType == searchingResource1) {
+				searchingResource1 = NO_RESOURCE;
 				rightResource = true;
 			}
-			if (currentResource->resourceType == searching2) {
-				searching2 = NO_RESOURCE;
+			if (currentResource->resourceType == searchingResource2) {
+				searchingResource2 = NO_RESOURCE;
 				rightResource = true;
 			}
 			if (rightResource) {
@@ -156,15 +164,25 @@ bool Unit::checkReachedResourceSearch() {
 					return true;
 				}
 				else {
-					if (carrying == NO_RESOURCE && storingResource > RESOURCE_TYPES) {
-						carrying = currentResource->resourceType;
-						life += LIFE * 3;
+					if (carryingResource == NO_RESOURCE && storingResource > RESOURCE_TYPES) {
+						//It acquired the first part of the complex resource
+						carryingResource = currentResource->resourceType;
+						
+						
+						//life += LIFE * 3;
+
+
+
 					}
-					else {//It stores the resource (for the time being it just drops it)
-						carrying = NO_RESOURCE;
-						Resource* resource = new Resource(x, y, z, storingResource);
-						resource->addToTile();
-						resetActivity(true);
+					else {
+						//It goes to store the resource
+						if (parent != NULL) {
+							destinationObject = parent;
+						}
+						else {
+							destinationObject = this;
+						}
+						carryingResource = storingResource;
 					}
 					return true;
 				}

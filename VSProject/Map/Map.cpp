@@ -47,7 +47,8 @@ void execute_frame()
 
 
 
-
+	
+	//code for selecting the unit with the most life
 	int max = 0;
 	for (int i = 0; i < BUCKETS; i++) {
 		for (std::list<Object*>::iterator it = objects[i].begin(); it != objects[i].end(); it++) {

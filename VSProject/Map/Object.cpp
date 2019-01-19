@@ -54,6 +54,10 @@ void Object::removeFromTile() {
 	removeFromTileExtra();
 }
 
+int dist(Object* o1, Object* o2) {
+	return abs(o1->x - o2->x) + abs(o1->y - o2->y) + abs(o1->z - o2->z);
+}
+
 #ifdef DEBUG
 void Object::checkTileIsOccupiedByAliveObjects() {
 	Object* current = unitsMap[x][y][z];

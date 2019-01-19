@@ -10,6 +10,8 @@
 #define SEARCH_TIME_OUT_SIMPLE_RESOURCE 100
 #define SEARCH_TIME_OUT_COMPLEX_RESOURCE (SEARCH_TIME_OUT_SIMPLE_RESOURCE * 2)
 
+#define BASE_AREA_RADIUS 50
+
 #ifdef DEBUG
 extern int debug_unitCount;
 #endif
@@ -63,10 +65,10 @@ public:
 
 	bool consuming;//Indicates if the unit is looking for a resource to consume it or to store it
 	char storingResource;
-	char searching1;
-	char searching2;
+	char searchingResource1;
+	char searchingResource2;
 
-	char carrying;
+	char carryingResource;
 
 	char desiredResources[RESOURCE_CATEGORIES];
 
