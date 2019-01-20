@@ -121,7 +121,7 @@ bool Unit::checkReachedGoal() {
 			return true;
 		}
 		if (!consuming && carryingResource == storingResource) {
-			if (dist(this, destinationObject) < BASE_AREA_RADIUS) {
+			if (dist(this, destinationObject) < REGION_CENTER_INNER_RADIUS) {
 				carryingResource = NO_RESOURCE;
 				Resource* resource = new Resource(x, y, z, storingResource);
 				resource->addToTile();
@@ -132,7 +132,6 @@ bool Unit::checkReachedGoal() {
 
 	//Checks if it reached a resource
 	return checkReachedResourceSearch();
-
 }
 
 bool Unit::checkReachedResourceSearch() {
@@ -167,12 +166,6 @@ bool Unit::checkReachedResourceSearch() {
 					if (carryingResource == NO_RESOURCE && storingResource > RESOURCE_TYPES) {
 						//It acquired the first part of the complex resource
 						carryingResource = currentResource->resourceType;
-						
-						
-						//life += LIFE * 3;
-
-
-
 					}
 					else {
 						//It goes to store the resource

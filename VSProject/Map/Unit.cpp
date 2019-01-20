@@ -12,6 +12,8 @@ Unit::Unit(int _x, int _y, int _z, int _life) : Object(objectUnit, _x, _y, _z)
 	inBucket = true;
 	destinationObject = NULL;
 
+	regionCenter = new Object(objectBasePoint, x, y, z);
+
 	for (int i = 0; i < RESOURCE_CATEGORIES;i++) {
 		desiredResources[i] = rand() % RESOURCE_TYPES;
 	}
@@ -50,6 +52,8 @@ Unit::~Unit(){
 	if (parent != NULL) {
 		detachFromParent();
 	}
+
+	delete regionCenter;
 }
 
 void Unit::detachFromParent() {
@@ -93,6 +97,26 @@ void Unit::execute() {
 	if (life <= 0) {
 		alive = false;
 		return;
+	}
+
+	//Region center displacement
+	if (x < regionCenter->x - REGION_CENTER_OUTER_RADIUS) {
+		regionCenter->x--;
+	}
+	else if (x > regionCenter->x + REGION_CENTER_OUTER_RADIUS) {
+		regionCenter->x++;
+	}
+	if (y < regionCenter->y - REGION_CENTER_OUTER_RADIUS) {
+		regionCenter->y--;
+	}
+	else if (y > regionCenter->y + REGION_CENTER_OUTER_RADIUS) {
+		regionCenter->y++;
+	}
+	if (z < regionCenter->z - REGION_CENTER_OUTER_RADIUS) {
+		regionCenter->z--;
+	}
+	else if (z > regionCenter->z + REGION_CENTER_OUTER_RADIUS) {
+		regionCenter->z++;
 	}
 
 	destinationObject = findObjective();

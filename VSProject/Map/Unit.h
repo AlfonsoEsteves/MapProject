@@ -10,7 +10,8 @@
 #define SEARCH_TIME_OUT_SIMPLE_RESOURCE 100
 #define SEARCH_TIME_OUT_COMPLEX_RESOURCE (SEARCH_TIME_OUT_SIMPLE_RESOURCE * 2)
 
-#define BASE_AREA_RADIUS 50
+#define REGION_CENTER_INNER_RADIUS 40
+#define REGION_CENTER_OUTER_RADIUS (REGION_CENTER_INNER_RADIUS * 2)
 
 #ifdef DEBUG
 extern int debug_unitCount;
@@ -53,6 +54,8 @@ public:
 
 	Unit* parent;
 	int childs;
+
+	Object* regionCenter;
 
 	//This can be used to go to a specific point
 	//For instance going to an enemy

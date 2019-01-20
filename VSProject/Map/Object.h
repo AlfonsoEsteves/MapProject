@@ -3,6 +3,7 @@
 const unsigned char objectUnit = 0;
 const unsigned char objectGenerator = 1;
 const unsigned char objectResource = 2;
+const unsigned char objectBasePoint = 3;
 
 #ifdef DEBUG
 extern int debug_objectsCreated;
@@ -26,8 +27,8 @@ public:
 
 	Object(unsigned char _objectType, int _x, int _y, int _z);
 	virtual ~Object();
-	virtual void execute() = 0;
-	virtual unsigned char type() = 0;
+	virtual void execute() {};
+	virtual unsigned char type() { return 255; };
 	void addToTile();
 	void virtual addToTileExtra() {}
 	void removeFromTile();
