@@ -1,6 +1,6 @@
 #pragma once
 
-#define SEED 151
+#define SEED 152
 
 #define UNIT_COUNT 100
 
@@ -46,12 +46,12 @@
 //This should be grater than the slowest object cycle
 #define BUCKETS (GENERATION_DURATION + 1)
 
-#define RESOURCE_TYPES 7
+#define RESOURCE_TYPES 8
 #define RESOURCE_CATEGORIES 3
 #define NO_RESOURCE (RESOURCE_TYPES * RESOURCE_CATEGORIES)
 
-#define FAST_FOWARD 2000
-#define CALCULATE_HASH_AT_TIME 2001
+#define FAST_FOWARD 4000
+//#define CALCULATE_HASH_AT_TIME 2001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
