@@ -183,38 +183,45 @@ void graphics_draw_text() {
 
 			drawText(xDisplacement + 20, 40, "Unit's life: %d", currentUnit->life);
 
+
 			if (currentUnit->parent != NULL && currentUnit->parent->alive) {
-				int dist = abs(currentUnit->x - currentUnit->parent->x) + abs(currentUnit->y - currentUnit->parent->y);
-				drawText(xDisplacement + 20, 60, "Parent distance: %d", dist);
+				int distParent = dist(currentUnit, currentUnit->parent);
+				drawText(xDisplacement + 20, 60, "Parent distance: %d", distParent);
+				int distRegion = dist(currentUnit, currentUnit->parent->regionCenter);
+				drawText(xDisplacement + 20, 80, "Parent region distance: %d", distRegion);
+			}
+			else {
+				int distRegion = dist(currentUnit, currentUnit->regionCenter);
+				drawText(xDisplacement + 20, 80, "Own region distance: %d", distRegion);
 			}
 
-			drawText(xDisplacement + 20, 80, "Search timeout: %d", currentUnit->searchTime);
+			drawText(xDisplacement + 20, 100, "Search timeout: %d", currentUnit->searchTime);
 
 			for (int i = 0; i < RESOURCE_CATEGORIES; i++) {
-				drawText(xDisplacement + 20, 110 + i * 15, "%s", stepName(currentUnit->desiredResources[i] + RESOURCE_TYPES * i).c_str());
+				drawText(xDisplacement + 20, 130 + i * 15, "%s", stepName(currentUnit->desiredResources[i] + RESOURCE_TYPES * i).c_str());
 			}
 
 			if (currentUnit->consuming) {
-				drawText(xDisplacement + 20, 350, "consume");
+				drawText(xDisplacement + 20, 370, "consume");
 			}
 			else {
-				drawText(xDisplacement + 20, 350, "store");
+				drawText(xDisplacement + 20, 370, "store");
 			}
 
 			if(currentUnit->carryingResource != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 370, "carrying %s", stepName(currentUnit->carryingResource).c_str());
+				drawText(xDisplacement + 20, 390, "carrying %s", stepName(currentUnit->carryingResource).c_str());
 			}
 
 			if (currentUnit->searchingResource1 != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 390, "searching1 %s", stepName(currentUnit->searchingResource1).c_str());
+				drawText(xDisplacement + 20, 410, "searching1 %s", stepName(currentUnit->searchingResource1).c_str());
 			}
 
 			if (currentUnit->searchingResource2 != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 410, "searching2 %s", stepName(currentUnit->searchingResource2).c_str());
+				drawText(xDisplacement + 20, 430, "searching2 %s", stepName(currentUnit->searchingResource2).c_str());
 			}
 
 			if (currentUnit->storingResource != NO_RESOURCE) {
-				drawText(xDisplacement + 20, 430, "storing %s", stepName(currentUnit->storingResource).c_str());
+				drawText(xDisplacement + 20, 450, "storing %s", stepName(currentUnit->storingResource).c_str());
 			}
 		}
 		currentObject = currentObject->sharesTileWithObject;

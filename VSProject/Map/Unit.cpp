@@ -121,6 +121,13 @@ void Unit::execute() {
 	else if (z > regionCenter->z + REGION_CENTER_OUTER_RADIUS) {
 		regionCenter->z++;
 	}
+	//Raise or lower the center to make it a steppable tile
+	while (tilesMap[regionCenter->x][regionCenter->y][regionCenter->z] < tileEmpty) {
+		regionCenter->z++;
+	}
+	while (tilesMap[regionCenter->x][regionCenter->y][regionCenter->z - 1] == tileEmpty) {
+		regionCenter->z--;
+	}
 
 	destinationObject = findObjective();
 
@@ -183,7 +190,7 @@ Object* Unit::findObjective() {
 		else {
 			nearest = regionCenter;
 			if (dist(this, regionCenter) > REGION_CENTER_INNER_RADIUS + 5 && !isOrphan()) {
-				selected = this; 
+				//selected = this; 
 			}
 		}
 	}
