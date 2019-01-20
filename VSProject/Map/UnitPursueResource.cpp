@@ -84,13 +84,14 @@ void Unit::pursueGoal() {
 bool Unit::checkReachedGoal() {
 	if (destinationObject != NULL) {
 		if (destinationObject->x == x && destinationObject->y == y && destinationObject->z == z) {
-			//It adopts the orphan
 			if (destinationObject == parent) {
+				//It feeds its parent
 				int transference = (2 * life - parent->life ) / 3;
 				life -= transference;
 				parent->life += transference;
 			}
 			else if (destinationObject->isOrphan()) {
+				//It adopts the orphan
 				destinationObject->parent = this;
 				int r = rand() % 3;
 				for (int i = 0; i < 3; i++) {
@@ -100,7 +101,8 @@ bool Unit::checkReachedGoal() {
 				}
 				childs++;
 			}
-			else {//It attacks the enemy
+			else {
+				//It attacks the enemy
 				int auxLife = life;
 				if (destinationObject->life <= life) {
 					destinationObject->alive = false;
@@ -113,10 +115,8 @@ bool Unit::checkReachedGoal() {
 				}
 			}
 
-			/*estaria bueno checkear si este codigo no hace falta
 			//Reset pathfinding
 			hasToResetPath = true;
-			destinationObject = NULL;*/
 
 			return true;
 		}
