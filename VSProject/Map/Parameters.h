@@ -50,15 +50,15 @@
 #define RESOURCE_CATEGORIES 3
 #define NO_RESOURCE (RESOURCE_TYPES * RESOURCE_CATEGORIES)
 
-#define FAST_FOWARD 2000
+#define FAST_FOWARD 700
 //#define CALCULATE_HASH_AT_TIME 2001
 #define DEBUG true
 #define SAFE true //Unneeded assignment of variables to maintain consistency
 #define LOG_TIME true
 //#define LOG_PF true
 
-#define DEBUG_TIME 44
-#define DEBUG_OBJECT 1454
+#define DEBUG_TIME 746
+#define DEBUG_OBJECT 24
 
 #ifdef DEBUG
 void debug_checkGlobalVariableCorrectness();

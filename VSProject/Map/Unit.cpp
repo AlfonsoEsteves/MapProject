@@ -86,6 +86,9 @@ void Unit::execute() {
 #	endif
 
 	if (parent != NULL && !parent->alive) {
+		if (destinationObject == parent->regionCenter) {
+			destinationObject = regionCenter;
+		}
 		detachFromParent();
 		parent = NULL;
 	}
@@ -130,11 +133,14 @@ void Unit::execute() {
 }
 
 //Returns the nearest orphan or enemy if there is any near
-Unit* Unit::findObjective() {
+Object* Unit::findObjective() {
+	//It checks if it has to feed its parent
 	if (parent != NULL && parent->life < life) {
 		return parent;
 	}
-	Unit* nearest = NULL;
+
+	//It checks if there is an enemy or orphan near
+	Object* nearest = NULL;
 	int nearestDistance = NEAR_ZONE_DISTANCE;
 	int xB = x / NEAR_ZONE_DISTANCE - 1;
 	if (xB < 0) {
@@ -164,6 +170,20 @@ Unit* Unit::findObjective() {
 						nearest = unit;
 					}
 				}
+			}
+		}
+	}
+
+	//It checks if it should go to store a resource
+	if (!consuming && carryingResource == storingResource) {
+		//It goes to store the resource
+		if (parent != NULL) {
+			nearest = parent->regionCenter;
+		}
+		else {
+			nearest = regionCenter;
+			if (dist(this, regionCenter) > REGION_CENTER_INNER_RADIUS + 5 && !isOrphan()) {
+				selected = this; 
 			}
 		}
 	}

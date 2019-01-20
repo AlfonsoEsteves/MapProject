@@ -83,49 +83,54 @@ void Unit::pursueGoal() {
 
 bool Unit::checkReachedGoal() {
 	if (destinationObject != NULL) {
-		if (destinationObject->x == x && destinationObject->y == y && destinationObject->z == z) {
-			if (destinationObject == parent) {
-				//It feeds its parent
-				int transference = (2 * life - parent->life ) / 3;
-				life -= transference;
-				parent->life += transference;
-			}
-			else if (destinationObject->isOrphan()) {
-				//It adopts the orphan
-				destinationObject->parent = this;
-				int r = rand() % 3;
-				for (int i = 0; i < 3; i++) {
-					if (i != r) {
-						destinationObject->desiredResources[i] = desiredResources[i];
+		if (destinationObject->objectType == objectUnit) {
+			Unit* destinationUnit = (Unit*)destinationObject;
+			if (destinationUnit->x == x && destinationUnit->y == y && destinationUnit->z == z) {
+				if (destinationUnit == parent) {
+					//It feeds its parent
+					int transference = (2 * life - parent->life) / 3;
+					life -= transference;
+					parent->life += transference;
+				}
+				else if (destinationUnit->isOrphan()) {
+					//It adopts the orphan
+					destinationUnit->parent = this;
+					int r = rand() % 3;
+					for (int i = 0; i < 3; i++) {
+						if (i != r) {
+							destinationUnit->desiredResources[i] = desiredResources[i];
+						}
+					}
+					childs++;
+				}
+				else {
+					//It attacks the enemy
+					int auxLife = life;
+					if (destinationUnit->life <= life) {
+						destinationUnit->alive = false;
+						destinationUnit->removeFromTile();
+						life -= destinationUnit->life;
+					}
+					if (auxLife <= destinationUnit->life) {
+						alive = false;
+						destinationUnit->life -= auxLife;
 					}
 				}
-				childs++;
-			}
-			else {
-				//It attacks the enemy
-				int auxLife = life;
-				if (destinationObject->life <= life) {
-					destinationObject->alive = false;
-					destinationObject->removeFromTile();
-					life -= destinationObject->life;
-				}
-				if (auxLife <= destinationObject->life) {
-					alive = false;
-					destinationObject->life -= auxLife;
-				}
-			}
 
-			//Reset pathfinding
-			hasToResetPath = true;
+				//Reset pathfinding
+				hasToResetPath = true;
 
-			return true;
+				return true;
+			}
 		}
-		if (!consuming && carryingResource == storingResource) {
-			if (dist(this, destinationObject) < REGION_CENTER_INNER_RADIUS) {
-				carryingResource = NO_RESOURCE;
-				Resource* resource = new Resource(x, y, z, storingResource);
-				resource->addToTile();
-				resetActivity(true);
+		else {
+			if (!consuming && carryingResource == storingResource) {
+				if (dist(this, destinationObject) < REGION_CENTER_INNER_RADIUS) {
+					carryingResource = NO_RESOURCE;
+					Resource* resource = new Resource(x, y, z, storingResource);
+					resource->addToTile();
+					resetActivity(true);
+				}
 			}
 		}
 	}
@@ -168,15 +173,9 @@ bool Unit::checkReachedResourceSearch() {
 						carryingResource = currentResource->resourceType;
 					}
 					else {
-						//It goes to store the resource
-						if (parent != NULL) {
-							destinationObject = parent;
-						}
-						else {
-							destinationObject = this;
-						}
 						carryingResource = storingResource;
 					}
+					hasToResetPath = true;
 					return true;
 				}
 			}

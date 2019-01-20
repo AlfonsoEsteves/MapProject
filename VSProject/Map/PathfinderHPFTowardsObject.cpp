@@ -22,7 +22,7 @@ int Unit::resetPathTowardsObject() {
 		lowestDestinationAreaReached = destArea;
 		return dijkstraTowardsObject(false);
 	}
-
+	
 	Area * oriSuperArea = oriArea->superArea;
 	Area * destSuperArea = destArea->superArea;
 	while (oriSuperArea != destSuperArea) {

@@ -59,7 +59,7 @@ public:
 
 	//This can be used to go to a specific point
 	//For instance going to an enemy
-	Unit* destinationObject;
+	Object* destinationObject;
 	
 	//Whether the unit is in a bucket or not
 	//If the last child of a dead unit dies, the unit can be deleted only if it is not in a bucket
@@ -106,7 +106,7 @@ public:
 	unsigned char type();
 	void addToTileExtra();
 	void removeFromTileExtra();
-	Unit* findObjective();
+	Object* findObjective();
 	Unit* master();
 	void resetActivity(bool _consuming);
 	void detachFromParent();
