@@ -17,7 +17,7 @@ int Unit::resetPathTowardsObject() {
 
 	Area * oriArea = areasMap[x][y][z];
 	Area * destArea = areasMap[destinationObject->x][destinationObject->y][destinationObject->z];
-
+	
 	if (oriArea == destArea) {
 		lowestDestinationAreaReached = destArea;
 		return dijkstraTowardsObject(false);

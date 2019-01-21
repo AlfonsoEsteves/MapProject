@@ -102,6 +102,16 @@ void Unit::execute() {
 		return;
 	}
 
+	tengo que reimplementar esto del region center displacement
+	el problema actual es que (si bien el ponto se sube o baja para hacerlo steppable)
+	aveces cae un una zona de agua, por lo que no basta con subir o bajar para hacerlo
+	stepable.
+	Sulucion:
+	hacer que el punto se setee (en ves de que incremente/decremente su pocicion)
+	nuevaP = (viejaP * 40 + p) / 41
+	pero solamente setearlo, si puede ser combertido en un tile steplable
+		en caso contrario (que haya caide en el agua) no se setea, y queda con el valor viejo.
+
 	//Region center displacement
 	if (x < regionCenter->x - REGION_CENTER_OUTER_RADIUS) {
 		regionCenter->x--;
@@ -128,6 +138,11 @@ void Unit::execute() {
 	while (tilesMap[regionCenter->x][regionCenter->y][regionCenter->z - 1] == tileEmpty) {
 		regionCenter->z--;
 	}
+#	ifdef DEBUG
+	if (!tileIsSteppable(regionCenter->x, regionCenter->y, regionCenter->z)) {
+		error("regionCenter should always be steppable");
+	}
+#	endif
 
 	destinationObject = findObjective();
 
@@ -189,9 +204,6 @@ Object* Unit::findObjective() {
 		}
 		else {
 			nearest = regionCenter;
-			if (dist(this, regionCenter) > REGION_CENTER_INNER_RADIUS + 5 && !isOrphan()) {
-				//selected = this; 
-			}
 		}
 	}
 	return nearest;
