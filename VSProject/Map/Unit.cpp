@@ -102,41 +102,41 @@ void Unit::execute() {
 		return;
 	}
 
-	tengo que reimplementar esto del region center displacement
-	el problema actual es que (si bien el ponto se sube o baja para hacerlo steppable)
-	aveces cae un una zona de agua, por lo que no basta con subir o bajar para hacerlo
-	stepable.
-	Sulucion:
-	hacer que el punto se setee (en ves de que incremente/decremente su pocicion)
-	nuevaP = (viejaP * 40 + p) / 41
-	pero solamente setearlo, si puede ser combertido en un tile steplable
-		en caso contrario (que haya caide en el agua) no se setea, y queda con el valor viejo.
-
 	//Region center displacement
-	if (x < regionCenter->x - REGION_CENTER_OUTER_RADIUS) {
-		regionCenter->x--;
+	//If I am not careful the region center could end up in water
+	//I don't update the region center if that is the case
+	int newRegionCenterX = regionCenter->x;
+	int newRegionCenterY = regionCenter->y;
+	int newRegionCenterZ = regionCenter->z;
+	if (x < newRegionCenterX - REGION_CENTER_OUTER_RADIUS) {
+		newRegionCenterX--;
 	}
-	else if (x > regionCenter->x + REGION_CENTER_OUTER_RADIUS) {
-		regionCenter->x++;
+	else if (x > newRegionCenterX + REGION_CENTER_OUTER_RADIUS) {
+		newRegionCenterX++;
 	}
-	if (y < regionCenter->y - REGION_CENTER_OUTER_RADIUS) {
-		regionCenter->y--;
+	if (y < newRegionCenterY - REGION_CENTER_OUTER_RADIUS) {
+		newRegionCenterY--;
 	}
-	else if (y > regionCenter->y + REGION_CENTER_OUTER_RADIUS) {
-		regionCenter->y++;
+	else if (y > newRegionCenterY + REGION_CENTER_OUTER_RADIUS) {
+		newRegionCenterY++;
 	}
-	if (z < regionCenter->z - REGION_CENTER_OUTER_RADIUS) {
-		regionCenter->z--;
+	if (z < newRegionCenterZ - REGION_CENTER_OUTER_RADIUS) {
+		newRegionCenterZ--;
 	}
-	else if (z > regionCenter->z + REGION_CENTER_OUTER_RADIUS) {
-		regionCenter->z++;
+	else if (z > newRegionCenterZ + REGION_CENTER_OUTER_RADIUS) {
+		newRegionCenterZ++;
 	}
 	//Raise or lower the center to make it a steppable tile
-	while (tilesMap[regionCenter->x][regionCenter->y][regionCenter->z] < tileEmpty) {
-		regionCenter->z++;
+	while (tilesMap[newRegionCenterX][newRegionCenterY][newRegionCenterZ] < tileEmpty) {
+		newRegionCenterZ++;
 	}
-	while (tilesMap[regionCenter->x][regionCenter->y][regionCenter->z - 1] == tileEmpty) {
-		regionCenter->z--;
+	while (tilesMap[newRegionCenterX][newRegionCenterY][newRegionCenterZ - 1] == tileEmpty) {
+		newRegionCenterZ--;
+	}
+	if (tilesMap[newRegionCenterX][newRegionCenterY][newRegionCenterZ - 1] != tileWater) {
+		regionCenter->x = newRegionCenterX;
+		regionCenter->y = newRegionCenterY;
+		regionCenter->z = newRegionCenterZ;
 	}
 #	ifdef DEBUG
 	if (!tileIsSteppable(regionCenter->x, regionCenter->y, regionCenter->z)) {
