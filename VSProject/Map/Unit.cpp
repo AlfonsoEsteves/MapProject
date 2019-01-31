@@ -197,13 +197,15 @@ Object* Unit::findObjective() {
 	}
 
 	//It checks if it should go to store a resource
-	if (!consuming && carryingResource == storingResource) {
-		//It goes to store the resource
-		if (parent != NULL) {
-			nearest = parent->regionCenter;
-		}
-		else {
-			nearest = regionCenter;
+	if (nearest == NULL) {
+		if (!consuming && carryingResource == storingResource) {
+			//It goes to store the resource
+			if (parent != NULL) {
+				nearest = parent->regionCenter;
+			}
+			else {
+				nearest = regionCenter;
+			}
 		}
 	}
 	return nearest;

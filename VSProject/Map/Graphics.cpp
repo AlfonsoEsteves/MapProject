@@ -444,7 +444,7 @@ void graphics_draw() {
 }
 
 void graphics_draw_minimap() {
-	int ratio = 3;
+	int ratio = 4;
 	SDL_Rect rect = { SCREEN_WIDTH - MAP_WIDTH / ratio, 0, MAP_WIDTH / ratio, MAP_WIDTH / ratio };
 	SDL_FillRect(screenSurface, &rect, 120 * 256 * 256 + 120 * 256 + 120);
 	SDL_Rect rect2 = { SCREEN_WIDTH - (MAP_WIDTH - viewX) / ratio, viewY / ratio, VIEW_WIDTH / ratio, VIEW_WIDTH / ratio };
